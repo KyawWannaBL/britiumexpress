@@ -54,6 +54,7 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 export default function QuotePage() {
   const [tab, setTab] = React.useState<"domestic" | "international">("domestic");
 
+  const [origin, setOrigin] = React.useState("Yangon");
   const [region, setRegion] = React.useState<DomesticRegion>("yangon");
   const [townshipPrice, setTownshipPrice] = React.useState<number | "">("");
   const [weight, setWeight] = React.useState<number | "">("");
@@ -129,9 +130,17 @@ export default function QuotePage() {
                 <div className="mt-4 grid sm:grid-cols-2 gap-3">
                   <div className="sm:col-span-2">
                     <div className="text-xs font-extrabold text-slate-600 mb-1">Origin</div>
-                    <select disabled className="w-full rounded-xl border px-3 py-2 text-sm">
-                      <option>From: Yangon</option>
+                    <select className="w-full rounded-xl border px-3 py-2 text-sm" value={origin} onChange={(e) => setOrigin(e.target.value)}>
+                      <option value="Yangon">Yangon</option>
+                      <option value="Mandalay">Mandalay</option>
+                      <option value="Naypyitaw">Nay Pyi Taw</option>
+                      <option value="Other">Other</option>
                     </select>
+                    {origin !== "Yangon" ? (
+                      <div className="mt-2 text-xs text-amber-700 font-semibold">
+                        Rates in this calculator are optimized for Yangon origin. For other origins, please contact Britium Express.
+                      </div>
+                    ) : null}
                   </div>
 
                   <div>

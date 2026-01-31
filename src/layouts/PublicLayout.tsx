@@ -11,6 +11,14 @@ const nav: AppNavItem[] = [
   { to: "/contact", label: "Contact" },
 ];
 
+function roleToPortal(role: string): string {
+  const r = role.toLowerCase();
+  if (["super_admin", "admin", "manager", "accountant", "supervisor"].includes(r)) return "/admin/dashboard";
+  if (r === "merchant") return "/merchant/dashboard";
+  if (r === "rider") return "/rider/home";
+  return "/send";
+}
+
 export default function PublicLayout() {
   const { user, signOut } = useAuth();
 
@@ -41,7 +49,10 @@ export default function PublicLayout() {
 
           {user ? (
             <>
-              <NavLink to={`/${user.role}`} className="px-3 py-2 rounded-xl text-sm bg-neutral-900 text-white hover:bg-neutral-800 font-extrabold">
+              <NavLink
+                to={roleToPortal(user.role)}
+                className="px-3 py-2 rounded-xl text-sm bg-neutral-900 text-white hover:bg-neutral-800 font-extrabold"
+              >
                 Dashboard
               </NavLink>
               <button

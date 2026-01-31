@@ -1,7 +1,6 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "./AuthContext";
-import type { AppRole } from "../types/auth";
+import { AppRole, useAuth } from "./AuthContext";
 
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const { loading, user } = useAuth();
@@ -10,17 +9,25 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
   if (loading) return <div className="min-h-[50vh] grid place-items-center text-sm text-slate-600">Loading…</div>;
   if (!user) return <Navigate to="/login" replace state={{ from: loc.pathname + loc.search }} />;
 
-  if (user.mustChangePassword && loc.pathname !== "/change-password") {
-    return <Navigate to="/change-password" replace />;
-  }
-
   return <>{children}</>;
 }
 
-export function RequireRole({ role, children }: { role: AppRole; children: React.ReactNode }) {
+export function RequireRole({
+  role,
+  anyOf,
+  children,
+}: {
+  role?: AppRole;
+  anyOf?: AppRole[];
+  children: React.ReactNode;
+}) {
   const { loading, user } = useAuth();
+
   if (loading) return <div className="min-h-[50vh] grid place-items-center text-sm text-slate-600">Loading…</div>;
   if (!user) return <Navigate to="/login" replace />;
-  if (user.role !== role) return <Navigate to="/403" replace />;
+
+  const allowed = anyOf ?? (role ? [role] : []);
+  if (allowed.length && !allowed.includes(user.role)) return <Navigate to="/403" replace />;
+
   return <>{children}</>;
 }

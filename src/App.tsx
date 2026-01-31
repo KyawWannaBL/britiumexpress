@@ -15,6 +15,7 @@ import SendParcel from "./pages/public/SendParcel";
 
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
+import PortalRedirect from "./pages/auth/PortalRedirect";
 import Forbidden from "./pages/errors/Forbidden";
 
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -43,6 +44,7 @@ export default function App() {
 
         <Route path="login" element={<LoginPage />} />
         <Route path="signup" element={<SignupPage />} />
+        <Route path="portal" element={<PortalRedirect />} />
         <Route path="403" element={<Forbidden />} />
 
         {/* Convenience: customer dashboard */}

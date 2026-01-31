@@ -19,8 +19,8 @@ export default function ReceiverTracking({ initialTrackingCode = "" }: Props) {
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <div className="h-64 bg-blue-900 relative">
-        <div className="absolute inset-0 opacity-20 bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/Yangon_map.png')] bg-cover bg-center mix-blend-overlay" />
-        <div className="absolute top-4 left-4 right-4">
+        <div className="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/Yangon_map.png')] bg-cover bg-center mix-blend-overlay" />
+        <div className="absolute top-4 left-4 right-4 z-10">
           <div className="bg-white/95 backdrop-blur rounded-2xl shadow-soft border p-3 flex items-center gap-3">
             <img src="/assets/britium-logo.png" alt="Britium Express" className="h-10 w-10 rounded-xl bg-white p-1" />
             <div className="flex-1">

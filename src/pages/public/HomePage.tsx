@@ -19,8 +19,8 @@ export default function HomePage() {
     <div className="space-y-10 slide-up">
       <section className="rounded-3xl overflow-hidden border shadow-soft">
         <div className="brand-gradient text-white p-8 md:p-12 relative">
-          <div className="absolute inset-0 opacity-30 bg-[radial-gradient(600px_280px_at_20%_10%,rgba(255,107,0,.35),transparent_60%),radial-gradient(700px_360px_at_85%_20%,rgba(255,255,255,.12),transparent_60%)]" />
-          <div className="relative grid md:grid-cols-[auto,1fr] gap-6 items-center">
+          <div className="absolute inset-0 opacity-30 pointer-events-none bg-[radial-gradient(600px_280px_at_20%_10%,rgba(255,107,0,.35),transparent_60%),radial-gradient(700px_360px_at_85%_20%,rgba(255,255,255,.12),transparent_60%)]" />
+          <div className="relative z-10 grid md:grid-cols-[auto,1fr] gap-6 items-center">
             <img
               src="/assets/britium-logo.png"
               alt="Britium Express"

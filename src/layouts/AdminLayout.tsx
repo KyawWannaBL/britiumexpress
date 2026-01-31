@@ -14,7 +14,7 @@ export default function AdminLayout() {
   const { signOut } = useAuth();
 
   return (
-    <RequireRole role="admin">
+    <RequireRole anyOf={["super_admin", "admin", "manager", "accountant", "supervisor"]}>
       <AppShell
         title="Admin • Britium Express"
         brand={{ name: "Britium Express", href: "/admin/dashboard", logoSrc: "/assets/britium-logo.png" }}
