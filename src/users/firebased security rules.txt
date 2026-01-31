@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // --- HELPER FUNCTIONS ---
+    
+    // Check if the user is logged in
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Get the user's role from their document in the 'users' collection
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    // Role-based helper functions
+    function isSuperAdmin() {
+      return isSignedIn() && getUserRole() == 'super_admin';
+    }
+    
+    function isAccountant() {
+      return isSignedIn() && getUserRole() == 'accountant';
+    }
+
+    function isManager() {
+      return isSignedIn() && getUserRole() == 'manager';
+    }
+
+    // --- COLLECTION RULES ---
+
+    // Users Collection: Only Super Admins can manage all users
+    match /users/{userId} {
+      allow read: if isSignedIn(); // Basic info may be readable by others
+      allow write: if isSuperAdmin(); // Only Super Admin manages roles
+      allow update: if isSignedIn() && request.auth.uid == userId; // Users can update own profile
+    }
+
+    // Shipments Collection: Complex access based on roles
+    match /shipments/{shipmentId} {
+      // Super Admins, Accountants, and Managers can see all shipments
+      allow read: if isSuperAdmin() || isAccountant() || isManager();
+      
+      // Merchants can only see their own shipments
+      allow read: if isSignedIn() && getUserRole() == 'merchant' 
+                  && resource.data.merchantId == request.auth.uid;
+
+      // Riders can see assigned shipments
+      allow read: if isSignedIn() && getUserRole() == 'rider' 
+                  && resource.data.riderId == request.auth.uid;
+
+      // Customers can track via public tracking ID
+      allow get: if resource.data.trackingId == shipmentId; 
+
+      // Managers and Supervisors can assign drivers
+      allow update: if isManager() || (isSignedIn() && getUserRole() == 'supervisor');
+    }
+
+    // Financial Records: Restricted to Super Admin and Accountant
+    match /financials/{recordId} {
+      allow read, write: if isSuperAdmin() || isAccountant();
+    }
+  }
+}

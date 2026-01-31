@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --brand-blue:#0d2c54;
+  --brand-blue2:#123d73;
+  --brand-orange:#ff6b00;
+  --bg:#f8fafc;
+}
+
+html, body { height: 100%; }
+body{
+  background:
+    radial-gradient(900px 420px at 20% -10%, rgba(255,107,0,.10), transparent 60%),
+    radial-gradient(900px 420px at 80% 0%, rgba(13,44,84,.12), transparent 55%),
+    var(--bg);
+}
+
+@layer utilities {
+  .brand-gradient { background: linear-gradient(135deg, var(--brand-blue), var(--brand-blue2)); }
+  .brand-accent   { background: linear-gradient(135deg, var(--brand-orange), #ff9a57); }
+  .shadow-soft    { box-shadow: 0 18px 46px rgba(2,6,23,.12); }
+  .ring-soft      { box-shadow: 0 0 0 4px rgba(2,6,23,.06); }
+  .fade-in        { animation: fadeIn .25s ease-out both; }
+  .slide-up       { animation: slideUp .35s ease-out both; }
+  .animate-slide-up { animation: slideUp .35s ease-out both; }
+  .animate-fade-in { animation: fadeIn .25s ease-out both; }
+}
+
+@keyframes slideUp { from {opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
+@keyframes fadeIn  { from {opacity:0;} to {opacity:1;} }
