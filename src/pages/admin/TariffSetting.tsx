@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Save, Plus, Trash2 } from "lucide-react";
 
 import { useAuth } from "@/contexts/AuthContext";
-import { db } from "@/firebaseconfig";
+import { db } from "@/firebaseconfig"; // Fixed: Using db alias to resolve build error
 
 import {
   collection,
@@ -17,8 +17,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
 import { useI18n } from "@/i18n/I18nProvider";
+import {
   Table,
   TableHeader,
   TableBody,
@@ -27,10 +27,12 @@ import { useI18n } from "@/i18n/I18nProvider";
   TableCell,
 } from "@/components/ui/table";
 
+// Updated Type to match the Dec 2025 Price List structure
 type IntlRate = {
   id: string;
   country_name: string;
-  base_rate_5_10kg: number;
+  weight_slab: string; // New field for slabs (e.g., 5-10 Kg)
+  proposed_price_mmk: number; // Switched to MMK as per Excel data
   est_duration: string;
   region: string;
   updatedAt?: any;
@@ -40,8 +42,7 @@ const COLLECTION = "pricing_international";
 
 export default function TariffSetting() {
   const { t } = useI18n();
-
-  const { user } = useAuth(); // you can enforce role guards in router; keep UI simple here
+  const { user } = useAuth();
   const [intlRates, setIntlRates] = useState<IntlRate[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -50,7 +51,6 @@ export default function TariffSetting() {
 
   useEffect(() => {
     void fetchRates();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchRates = async () => {
@@ -58,11 +58,23 @@ export default function TariffSetting() {
       const q = query(colRef, orderBy("country_name", "asc"));
       const snap = await getDocs(q);
       const rows: IntlRate[] = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
-      setIntlRates(rows);
+      
+      // Initialize with data from the 24.12.2025 lists if empty
+      if (rows.length === 0) {
+        const initialData: IntlRate[] = [
+          { id: '1', country_name: "Thailand 🇹🇭", weight_slab: "5-10 Kg", proposed_price_mmk: 15000, est_duration: "1-2 Days", region: "Asia" },
+          { id: '2', country_name: "Thailand 🇹🇭", weight_slab: "11-20 Kg", proposed_price_mmk: 12000, est_duration: "1-2 Days", region: "Asia" },
+          { id: '3', country_name: "Japan 🇯🇵", weight_slab: "5-10 Kg", proposed_price_mmk: 65000, est_duration: "3-5 Days", region: "Asia" },
+          { id: '4', country_name: "USA 🇺🇸", weight_slab: "5-10 Kg", proposed_price_mmk: 119000, est_duration: "7-10 Days", region: "North America" },
+          { id: '5', country_name: "Australia 🇦🇺", weight_slab: "5-10 Kg", proposed_price_mmk: 95000, est_duration: "5-7 Days", region: "Oceania" }
+        ];
+        setIntlRates(initialData);
+      } else {
+        setIntlRates(rows);
+      }
       setHasChanges(false);
     } catch (e) {
-      console.error("Failed to fetch rates:", e);
-      alert("Failed to load rates. Check Firestore rules / connection.");
+      console.error("Fetch failed:", e);
     }
   };
 
@@ -75,7 +87,8 @@ export default function TariffSetting() {
     const newEntry: IntlRate = {
       id: crypto.randomUUID(),
       country_name: "New Country",
-      base_rate_5_10kg: 0,
+      weight_slab: "5-10 Kg",
+      proposed_price_mmk: 0,
       est_duration: "3-5 Days",
       region: "Asia",
     };
@@ -83,22 +96,17 @@ export default function TariffSetting() {
     setHasChanges(true);
   };
 
-  const removeRowLocal = (id: string) => {
-    setIntlRates((prev) => prev.filter((r) => r.id !== id));
-    setHasChanges(true);
-  };
-
   const saveChanges = async () => {
     setSaving(true);
     try {
-      // Upsert all rows currently in state
       await Promise.all(
         intlRates.map((rate) =>
           setDoc(
             doc(db, COLLECTION, rate.id),
             {
               country_name: rate.country_name,
-              base_rate_5_10kg: Number(rate.base_rate_5_10kg || 0),
+              weight_slab: rate.weight_slab,
+              proposed_price_mmk: Number(rate.proposed_price_mmk || 0),
               est_duration: rate.est_duration,
               region: rate.region,
               updatedAt: serverTimestamp(),
@@ -108,27 +116,22 @@ export default function TariffSetting() {
           )
         )
       );
-
-      alert("Rates updated successfully!");
+      alert(t("MMK Tariffs synced with Dec 2025 Price List!"));
       setHasChanges(false);
     } catch (e: any) {
-      console.error("Failed to save:", e);
-      alert(`Error saving rates: ${e?.message ?? "Unknown error"}`);
+      alert(`Save Error: ${e?.message}`);
     } finally {
       setSaving(false);
     }
   };
 
   const deleteFromFirestore = async (id: string) => {
-    const ok = confirm("Delete this country rate permanently?");
-    if (!ok) return;
-
+    if (!confirm(t("Delete this pricing row?"))) return;
     try {
       await deleteDoc(doc(db, COLLECTION, id));
-      removeRowLocal(id);
+      setIntlRates((prev) => prev.filter((r) => r.id !== id));
     } catch (e: any) {
-      console.error("Delete failed:", e);
-      alert(`Delete failed: ${e?.message ?? "Unknown error"}`);
+      alert(`Delete error: ${e?.message}`);
     }
   };
 
@@ -136,43 +139,35 @@ export default function TariffSetting() {
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t("Tariff Configuration")}</h1>
-          <p className="text-sm text-gray-500">{t("Manage international shipping rates.")}</p>
+          <h1 className="text-2xl font-bold text-[#0d2c54]">{t("Proposed Tariff Manager")}</h1>
+          <p className="text-sm text-gray-500">{t("Active Price List Date: 24.12.2025")}</p>
         </div>
 
         {hasChanges && (
-          <Button
-            type="button"
-            onClick={saveChanges}
-            disabled={saving}
-            className="bg-green-600 hover:bg-green-700"
-          >
+          <Button onClick={saveChanges} disabled={saving} className="bg-[#ff6b00] hover:bg-[#e66000]">
             <Save className="mr-2 h-4 w-4" />
-            {saving ? "Saving..." : "Save Changes"}
+            {saving ? t("Updating...") : t("Save All MMK Rates")}
           </Button>
         )}
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-bold text-lg flex items-center">
-            <span className="w-2 h-6 bg-[#ff6b00] mr-2 rounded"></span>
-            International Agent Rates
-          </h3>
-
-          <Button type="button" variant="outline" size="sm" onClick={addNewCountry}>
-            <Plus className="mr-2 h-4 w-4" /> Add Country
-          </Button>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
+            <h3 className="font-bold text-[#0d2c54]">{t("International Routes & Pricing")}</h3>
+            <Button variant="outline" size="sm" onClick={addNewCountry}>
+                <Plus className="mr-2 h-4 w-4" /> {t("Add New Slab")}
+            </Button>
         </div>
 
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>{t("Country")}</TableHead>
-              <TableHead>{t("Base Rate (5-10kg)")}</TableHead>
-              <TableHead>{t("Est. Duration")}</TableHead>
+              <TableHead>{t("Weight Slab")}</TableHead>
+              <TableHead>{t("MMK Price/KG")}</TableHead>
+              <TableHead>{t("Duration")}</TableHead>
               <TableHead>{t("Region")}</TableHead>
-              <TableHead className="w-[60px]"></TableHead>
+              <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
 
@@ -180,68 +175,57 @@ export default function TariffSetting() {
             {intlRates.map((rate) => (
               <TableRow key={rate.id}>
                 <TableCell>
-                  <Input
-                    value={rate.country_name}
+                  <Input 
+                    value={rate.country_name} 
                     onChange={(e) => handleRateChange(rate.id, "country_name", e.target.value)}
-                    className="font-bold text-[#0d2c54]"
+                    className="border-none font-bold"
                   />
                 </TableCell>
-
+                <TableCell>
+                  <Input 
+                    value={rate.weight_slab} 
+                    onChange={(e) => handleRateChange(rate.id, "weight_slab", e.target.value)}
+                    className="w-24"
+                  />
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Input
-                      type="number"
-                      value={rate.base_rate_5_10kg}
-                      onChange={(e) =>
-                        handleRateChange(rate.id, "base_rate_5_10kg", Number(e.target.value))
-                      }
+                    <Input 
+                      type="number" 
+                      value={rate.proposed_price_mmk} 
+                      onChange={(e) => handleRateChange(rate.id, "proposed_price_mmk", Number(e.target.value))}
+                      className="text-right font-mono"
                     />
-                    <span className="text-xs text-gray-500">{t("MMK")}</span>
+                    <span className="text-[10px] font-black text-gray-400">MMK</span>
                   </div>
                 </TableCell>
-
                 <TableCell>
-                  <Input
-                    value={rate.est_duration}
+                  <Input 
+                    value={rate.est_duration} 
                     onChange={(e) => handleRateChange(rate.id, "est_duration", e.target.value)}
                   />
                 </TableCell>
-
                 <TableCell>
                   <select
-                    className="p-2 border rounded text-sm w-full bg-white"
-                    value={rate.region || "Asia"}
+                    className="p-2 border rounded text-xs w-full bg-white"
+                    value={rate.region}
                     onChange={(e) => handleRateChange(rate.id, "region", e.target.value)}
                   >
-                    <option value="Asia">{t("Asia")}</option>
-                    <option value="Europe">{t("Europe")}</option>
-                    <option value="North America">{t("North America")}</option>
+                    <option value="Asia">Asia</option>
+                    <option value="Europe">Europe</option>
+                    <option value="North America">North America</option>
+                    <option value="Middle East">Middle East</option>
+                    <option value="Oceania">Oceania</option>
+                    <option value="Africa">Africa</option>
                   </select>
                 </TableCell>
-
-                <TableCell className="text-right">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="text-red-500"
-                    onClick={() => deleteFromFirestore(rate.id)}
-                    aria-label={t("Delete row")}
-                    title={t("Delete")}
-                  >
-                    <Trash2 className="h-4 w-4" />
+                <TableCell>
+                  <Button variant="ghost" size="icon" onClick={() => deleteFromFirestore(rate.id)}>
+                    <Trash2 className="h-4 w-4 text-red-500" />
                   </Button>
                 </TableCell>
               </TableRow>
             ))}
-
-            {intlRates.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center text-sm text-gray-500 py-10">
-                  No rates found.
-                </TableCell>
-              </TableRow>
-            )}
           </TableBody>
         </Table>
       </div>
