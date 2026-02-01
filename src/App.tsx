@@ -5,6 +5,7 @@ import PublicLayout from "./layouts/PublicLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import MerchantLayout from "./layouts/MerchantLayout";
 import RiderLayout from "./layouts/RiderLayout";
+import VendorLayout from "./layouts/VendorLayout";
 
 import HomePage from "./pages/public/HomePage";
 import ServicesPage from "./pages/public/ServicesPage";
@@ -16,7 +17,9 @@ import SendParcel from "./pages/public/SendParcel";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
 import PortalRedirect from "./pages/auth/PortalRedirect";
+import ForceChangePassword from "./pages/auth/ForceChangePassword";
 import Forbidden from "./pages/errors/Forbidden";
+import PendingApproval from "./pages/errors/PendingApproval";
 
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminManagement from "./pages/admin/AdminManagement";
@@ -29,6 +32,7 @@ import MerchantFinance from "./pages/merchant/MerchantFinance";
 import CreateShipment from "./pages/merchant/CreateShipment";
 
 import RiderHome from "./pages/rider/RiderHome";
+import VendorDashboard from "./pages/vendor/VendorDashboard";
 
 export default function App() {
   return (
@@ -45,7 +49,9 @@ export default function App() {
         <Route path="login" element={<LoginPage />} />
         <Route path="signup" element={<SignupPage />} />
         <Route path="portal" element={<PortalRedirect />} />
+        <Route path="force-change-password" element={<ForceChangePassword />} />
         <Route path="403" element={<Forbidden />} />
+        <Route path="pending" element={<PendingApproval />} />
 
         {/* Convenience: customer dashboard */}
         <Route path="customer" element={<Navigate to="/send" replace />} />
@@ -70,7 +76,13 @@ export default function App() {
       <Route path="/rider" element={<RiderLayout />}>
         <Route index element={<Navigate to="/rider/home" replace />} />
         <Route path="home" element={<RiderHome />} />
+      
+
+      <Route path="/vendor" element={<VendorLayout />}>
+        <Route index element={<Navigate to="/vendor/dashboard" replace />} />
+        <Route path="dashboard" element={<VendorDashboard />} />
       </Route>
+</Route>
 
       <Route path="*" element={<div className="p-8 text-sm text-slate-600">404</div>} />
     </Routes>

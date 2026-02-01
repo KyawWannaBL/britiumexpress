@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "860118014216",
+    "firebase_url": "https://britium-express-bb380-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "britium-express-bb380",
+    "storage_bucket": "britium-express-bb380.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860118014216:android:a847378ef09888435df4bd",
+        "android_client_info": {
+          "package_name": "com.britium.express"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860118014216-tn3csef5stcc4jsur79ihiv12tik6466.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.britium.express",
+            "certificate_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+          }
+        },
+        {
+          "client_id": "860118014216-p4l0iktlc8kjoc4t4ts7nh1hmqkneu9u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLxRCdT4P78oUtHEfVwGwDc9XYqI9H_SE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "860118014216-p4l0iktlc8kjoc4t4ts7nh1hmqkneu9u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "860118014216-fildrt06nhbc61ufrjcblajg3lc26er6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.britium.express"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,7 +14,7 @@ export default function MerchantLayout() {
   const { signOut } = useAuth();
 
   return (
-    <RequireRole role="merchant">
+    <RequireRole anyOf={["merchant", "super_admin", "admin", "manager"]}>
       <AppShell
         title="Merchant • Britium Express"
         brand={{ name: "Britium Express", href: "/merchant/dashboard", logoSrc: "/assets/britium-logo.png" }}

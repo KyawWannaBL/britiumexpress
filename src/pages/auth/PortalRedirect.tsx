@@ -4,15 +4,40 @@ import { useAuth } from "../../auth/AuthContext";
 
 function roleToDashboard(role: string): string {
   const r = role.toLowerCase();
-  if (["super_admin", "admin", "manager", "accountant", "supervisor"].includes(r)) return "/admin/dashboard";
+
+  // Staff dashboards (web + mobile)
+  if (
+    [
+      "super_admin",
+      "admin",
+      "manager",
+      "sub_station_manager",
+      "supervisor",
+      "warehouse",
+      "accountant",
+    ].includes(r)
+  )
+    return "/admin/dashboard";
+
   if (r === "merchant") return "/merchant/dashboard";
+  if (r === "vendor") return "/vendor/dashboard";
   if (r === "rider") return "/rider/home";
+
   return "/send";
+}
+
+function needsForcedPasswordChange(role: string, mustChangePassword?: boolean) {
+  if (!mustChangePassword) return false;
+  return ["super_admin", "admin", "manager"].includes(role.toLowerCase());
 }
 
 export default function PortalRedirect() {
   const { loading, user } = useAuth();
+
   if (loading) return <div className="min-h-[50vh] grid place-items-center text-sm text-slate-600">Loading…</div>;
   if (!user) return <Navigate to="/login" replace />;
+  if (user.status && user.status !== "approved") return <Navigate to="/pending" replace />;
+  if (needsForcedPasswordChange(user.role, user.mustChangePassword)) return <Navigate to="/force-change-password" replace />;
+
   return <Navigate to={roleToDashboard(user.role)} replace />;
 }

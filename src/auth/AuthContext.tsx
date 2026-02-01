@@ -21,9 +21,12 @@ export type AppRole =
   | "super_admin"
   | "admin"
   | "manager"
-  | "accountant"
+  | "sub_station_manager"
   | "supervisor"
+  | "warehouse"
+  | "accountant"
   | "merchant"
+  | "vendor"
   | "rider"
   | "customer";
 
@@ -38,6 +41,8 @@ export type AuthUser = {
 type AuthState = {
   loading: boolean;
   user: AuthUser | null;
+  /** non-fatal profile/read error */
+  error: string | null;
   signIn(email: string, password: string): Promise<void>;
   signUp(email: string, password: string, role: AppRole): Promise<void>;
   signOut(): Promise<void>;
@@ -47,18 +52,53 @@ type AuthState = {
 const Ctx = React.createContext<AuthState | null>(null);
 
 function normalizeRole(raw: unknown): AppRole {
-  const r = String(raw ?? "").trim().toLowerCase().replace(/\s+/g, "_");
+  const cleaned = String(raw ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+
+  const aliases: Record<string, AppRole> = {
+    superadmin: "super_admin",
+    super_admin: "super_admin",
+    admin: "admin",
+    manager: "manager",
+    substationmanager: "sub_station_manager",
+    sub_station_manager: "sub_station_manager",
+    sub_station: "sub_station_manager",
+    sub_station_mgr: "sub_station_manager",
+    supervisor: "supervisor",
+    warehouse: "warehouse",
+    warehousestaff: "warehouse",
+    warehouse_staff: "warehouse",
+    accountant: "accountant",
+    finance: "accountant",
+    merchant: "merchant",
+    vendor: "vendor",
+    rider: "rider",
+    driver: "rider",
+    rider_driver: "rider",
+    rider_driver_driver: "rider",
+    customer: "customer",
+  };
+
+  const mapped = aliases[cleaned];
+  if (mapped) return mapped;
+
   const allowed: AppRole[] = [
     "super_admin",
     "admin",
     "manager",
-    "accountant",
+    "sub_station_manager",
     "supervisor",
+    "warehouse",
+    "accountant",
     "merchant",
+    "vendor",
     "rider",
     "customer",
   ];
-  return allowed.includes(r as AppRole) ? (r as AppRole) : "customer";
+  return allowed.includes(cleaned as AppRole) ? (cleaned as AppRole) : "customer";
 }
 
 function normalizeStatus(raw: unknown): "approved" | "pending" | "rejected" {
@@ -87,10 +127,9 @@ async function findUserDocByEmail(email: string) {
 
 /**
  * Read profile/role for the signed in user.
- * Why: your 'users' collection may be stored as users/{uid} OR auto-id docs.
  * Strategy: try users/{uid}, fallback to query by email.
  */
-async function readUser(uid: string, email: string): Promise<AuthUser> {
+async function readUser(uid: string, email: string): Promise<AuthUser | null> {
   const uidSnap = await getDoc(doc(db, "users", uid));
   let data: any | null = uidSnap.exists() ? uidSnap.data() : null;
 
@@ -113,10 +152,12 @@ async function readUser(uid: string, email: string): Promise<AuthUser> {
           { merge: true }
         );
       } catch {
-        // ignored
+        // ignored: rules may restrict writes to super_admin only
       }
     }
   }
+
+  if (!data) return null;
 
   return {
     uid,
@@ -127,35 +168,73 @@ async function readUser(uid: string, email: string): Promise<AuthUser> {
   };
 }
 
+function humanizeProfileError(e: unknown): string {
+  const code = String((e as any)?.code ?? "");
+  if (code.includes("permission-denied")) {
+    return "Firestore permission denied while reading your user profile. Please update Firestore rules to allow signed-in users to read the 'users' collection.";
+  }
+  return String((e as any)?.message ?? e ?? "Failed to load profile.");
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState(true);
   const [user, setUser] = React.useState<AuthUser | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
   async function refresh() {
     const fb = auth.currentUser;
     if (!fb?.uid || !fb.email) return;
-    setUser(await readUser(fb.uid, fb.email));
+    try {
+      const u = await readUser(fb.uid, fb.email);
+      setUser(u);
+      setError(null);
+    } catch (e) {
+      setError(humanizeProfileError(e));
+    }
   }
 
   React.useEffect(() => {
     const off = onAuthStateChanged(auth, async (fbUser) => {
+      setLoading(true);
+      setError(null);
+
       if (!fbUser?.uid || !fbUser.email) {
         setUser(null);
         setLoading(false);
         return;
       }
 
-      const u = await readUser(fbUser.uid, fbUser.email);
+      try {
+        const u = await readUser(fbUser.uid, fbUser.email);
 
-      if (u.status !== "approved") {
-        await fbSignOut(auth);
-        setUser(null);
+        if (!u) {
+          // Auth account exists but profile not provisioned in Firestore
+          setUser({
+            uid: fbUser.uid,
+            email: fbUser.email,
+            role: "customer",
+            status: "pending",
+            mustChangePassword: false,
+          });
+          setError("Your account is not provisioned in Firestore 'users' yet. Please contact an administrator.");
+          setLoading(false);
+          return;
+        }
+
+        setUser(u);
         setLoading(false);
-        return;
+      } catch (e) {
+        // Avoid infinite loading → show something and let user proceed to /pending
+        setUser({
+          uid: fbUser.uid,
+          email: fbUser.email,
+          role: "customer",
+          status: "pending",
+          mustChangePassword: false,
+        });
+        setError(humanizeProfileError(e));
+        setLoading(false);
       }
-
-      setUser(u);
-      setLoading(false);
     });
 
     return () => off();
@@ -182,9 +261,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function signOut() {
     await fbSignOut(auth);
+    setUser(null);
   }
 
-  return <Ctx.Provider value={{ loading, user, signIn, signUp, signOut, refresh }}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={{ loading, user, error, signIn, signUp, signOut, refresh }}>
+      {children}
+    </Ctx.Provider>
+  );
 }
 
 export function useAuth() {

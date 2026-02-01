@@ -29,7 +29,10 @@ function roleLabel(role: string) {
   if (r === "admin") return "Admin";
   if (r === "manager") return "Manager";
   if (r === "accountant") return "Accountant";
+  if (r === "sub_station_manager") return "Sub-station Manager";
   if (r === "supervisor") return "Supervisor";
+  if (r === "warehouse") return "Warehouse";
+  if (r === "vendor") return "Vendor";
   return r;
 }
 

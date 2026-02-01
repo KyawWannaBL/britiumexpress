@@ -1,19 +1,31 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
+import { getStorage } from "firebase/storage";
 
-export function initFirebase() {
-  if (getApps().length) return getApps()[0];
-  return initializeApp({
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY as string,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN as string,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID as string,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET as string,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID as string,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID as string,
-  });
-}
+/**
+ * Britium Express Firebase bootstrap.
+ *
+ * Why: Vercel deployments often miss VITE_* envs. This file uses the supplied
+ * Firebase config directly and exports all services used by the app.
+ */
+const firebaseConfig = {
+  apiKey: "AIzaSyCUZuhS-pIb4I1lOtW7Xc_KN6qbGxu8Qfo",
+  authDomain: "britium-express-bb380.firebaseapp.com",
+  databaseURL:
+    "https://britium-express-bb380-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "britium-express-bb380",
+  storageBucket: "britium-express-bb380.firebasestorage.app",
+  messagingSenderId: "860118014216",
+  appId: "1:860118014216:web:91e7f75df72d17d95df4bd",
+};
 
-export const firebaseApp = initFirebase();
-export const auth = getAuth(firebaseApp);
-export const db = getFirestore(firebaseApp);
+export const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const rtdb = getDatabase(app);
+export const storage = getStorage(app);
+
+export { firebaseConfig };

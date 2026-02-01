@@ -3,17 +3,17 @@ import AppShell, { AppNavItem } from "./AppShell";
 import { useAuth } from "../auth/AuthContext";
 import { RequireRole } from "../auth/RequireAuth";
 
-const riderNav: AppNavItem[] = [{ to: "/rider/home", label: "Home", icon: "Home", end: true }];
+const nav: AppNavItem[] = [{ to: "/vendor/dashboard", label: "Dashboard", icon: "Home", end: true }];
 
-export default function RiderLayout() {
+export default function VendorLayout() {
   const { signOut } = useAuth();
 
   return (
-    <RequireRole anyOf={["rider", "super_admin", "admin", "manager"]}>
+    <RequireRole anyOf={["vendor", "super_admin", "admin", "manager"]}>
       <AppShell
-        title="Rider • Britium Express"
-        brand={{ name: "Britium Express", href: "/rider/home", logoSrc: "/assets/britium-logo.png" }}
-        nav={riderNav}
+        title="Vendor • Britium Express"
+        brand={{ name: "Britium Express", href: "/vendor/dashboard", logoSrc: "/assets/britium-logo.png" }}
+        nav={nav}
         headerRight={
           <button
             type="button"
@@ -23,7 +23,7 @@ export default function RiderLayout() {
             Logout
           </button>
         }
-        footer={<div className="px-6 py-4 text-xs text-neutral-500">Ride safe. Always verify pickup codes.</div>}
+        footer={<div className="px-6 py-4 text-xs text-neutral-500">Vendor portal • Limited access.</div>}
       />
     </RequireRole>
   );
