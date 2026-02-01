@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helpers
+    function isSignedIn() { return request.auth != null; }
+    function getUserRole() { 
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role; 
+    }
+
+    // User Profile Rules
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && (getUserRole() == 'super_admin' || request.auth.uid == userId);
+    }
+
+    // Shipment & Parcel Rules
+    match /shipments/{shipmentId} {
+      allow read: if isSignedIn() && (getUserRole() in ['super_admin', 'accountant', 'manager']);
+      allow read: if isSignedIn() && getUserRole() == 'merchant' && resource.data.merchantId == request.auth.uid;
+      allow read: if isSignedIn() && getUserRole() == 'rider' && resource.data.riderId == request.auth.uid;
+      allow get: if true; // Public tracking
+    }
+
+    // Financial Records
+    match /financials/{recordId} {
+      allow read, write: if isSignedIn() && (getUserRole() == 'super_admin' || getUserRole() == 'accountant');
+    }
+  }
+}
