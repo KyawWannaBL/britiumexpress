@@ -95,7 +95,7 @@ const AUTO_EN: Record<string, string> = {
     "ByMerchantPage (scaffold)": "ByMerchantPage (scaffold)",
     "ByTownPage (scaffold)": "ByTownPage (scaffold)",
     "CALCULATE ESTIMATE": "CALCULATE ESTIMATE",
-    "COD": "COD",
+    "COD": "ကုန်ပစ္စည်းရောက်ငွေချေ",
     "COD & E-Commerce": "COD & E-Commerce",
     "COD On-Hand": "COD On-Hand",
     "COD:": "COD:",
@@ -317,7 +317,7 @@ const AUTO_EN: Record<string, string> = {
     "Manager": "Manager",
     "Mandalay": "Mandalay",
     "Mandalay Region": "Mandalay Region",
-    "Manifest": "Manifest",
+    "Manifest": "ကုန်ပါစာရင်း",
     "Manifested": "Manifested",
     "Manifests": "Manifests",
     "Maung Maung": "Maung Maung",
@@ -1381,6 +1381,13 @@ const AUTO_MM: Record<string, string> = {
 };
 
 const BASE_EN: Record<string, string> = {
+    "Dispatch": "Dispatch",
+    "Waybill": "Waybill",
+    "Manifest": "Manifest",
+    "SLA": "SLA",
+    "COD": "COD",
+    "COD Outstanding": "COD Outstanding",
+    "Dispatch Center": "Dispatch Center",
     "acct.simpleTxn": "Simple Transaction",
     "admin.accounting": "Accounting",
     "admin.bulkUpload": "Bulk Upload",
@@ -1428,6 +1435,13 @@ const BASE_EN: Record<string, string> = {
 };
 
 const BASE_MM: Record<string, string> = {
+    "Dispatch": "ကုန်ပစ္စည်းပို့ဆောင်ခြင်း",
+    "Waybill": "ကုန်တင်တန်ဆာ",
+    "Manifest": "ကုန်ပါစာရင်း",
+    "SLA": "ဝန်ဆောင်မှုအဆင့်သဘောတူညီချက်",
+    "COD": "ကုန်ပစ္စည်းရောက်ငွေချေ",
+    "COD Outstanding": "ကုန်ပစ္စည်းရောက်ငွေချေ ကျန်ရှိ",
+    "Dispatch Center": "ကုန်ပစ္စည်းပို့ဆောင်ခြင်း ဌာန",
     "acct.simpleTxn": "ရိုးရှင်းသောစာရင်း",
     "admin.accounting": "စာရင်းကိုင်",
     "admin.bulkUpload": "အစုလိုက်တင်သွင်း",

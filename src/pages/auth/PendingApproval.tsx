@@ -1,9 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Hourglass, Bell, CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/i18n/I18nProvider";
 
 export default function PendingApproval(): JSX.Element {
+  const loc = useLocation() as any;
   const { t } = useI18n();
 
   return (
@@ -16,10 +17,17 @@ export default function PendingApproval(): JSX.Element {
 
         <h1 className="mb-3 text-2xl font-bold text-gray-900">{t("Registration Submitted")}</h1>
 
+        {loc.state?.message ? (
+          <div className="mb-4 rounded-xl border bg-amber-50 p-3 text-left text-xs font-bold text-amber-900">
+            {String(loc.state.message)}
+          </div>
+        ) : null}
+
         <p className="mb-6 leading-relaxed text-gray-600">
-          Thank you for joining Britium Express! Your account is currently{" "}
+          {t("Thank you for joining Britium Express! Your account is currently")}
+          {" "}
           <span className="ml-1 inline-flex items-center rounded bg-orange-50 px-2 py-1 font-bold text-orange-700">
-            Pending Approval
+            {t("Pending Approval")}
           </span>
           .
         </p>
@@ -64,7 +72,7 @@ export default function PendingApproval(): JSX.Element {
           to="/login"
           className="block w-full rounded-xl border-2 border-gray-200 bg-white py-3 font-bold text-gray-700 transition-all hover:border-gray-300 hover:bg-gray-50"
         >
-          Return to Login
+          {t("Return to Login")}
         </Link>
       </div>
     </div>

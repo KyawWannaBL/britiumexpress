@@ -1,4 +1,5 @@
 import React from "react";
+import LanguageSwitcher from "../i18n/LanguageSwitcher";
 import { useI18n } from "../i18n/I18nProvider";
 import { NavLink, Outlet } from "react-router-dom";
 
@@ -243,7 +244,7 @@ export default function AppShell({
           <span>{brand.name}</span>
         </a>
 
-        <div className="ml-auto flex items-center gap-2">{headerRight}</div>
+        <div className="ml-auto flex items-center gap-2">{headerRight}<LanguageSwitcher /></div>
       </div>
     </header>
   );
