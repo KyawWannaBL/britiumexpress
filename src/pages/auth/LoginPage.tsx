@@ -1,7 +1,8 @@
 import React from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { useAuth } from "../../auth/AuthContext";
+import { useI18n } from "../../i18n/I18nProvider";
 import { humanizeFirebaseAuthError } from "../../auth/firebaseErrors";
 import { auth } from "../../lib/firebase";
 
@@ -14,6 +15,7 @@ function pickSafeRedirect(from?: unknown): string {
 }
 
 export default function LoginPage() {
+  const { t } = useI18n();
   const { loading, user, signIn, refresh, error: profileError } = useAuth();
   const nav = useNavigate();
   const loc = useLocation() as any;
@@ -37,7 +39,7 @@ export default function LoginPage() {
     try {
       await signIn(email.trim(), password);
       await refresh(); // ensure profile is loaded before redirect
-      nav(pickSafeRedirect(loc.state?.from), { replace: true });
+      nav("/portal", { replace: true });
     } catch (e: unknown) {
       setErr(humanizeFirebaseAuthError(e));
     } finally {
@@ -76,8 +78,8 @@ export default function LoginPage() {
             alt="Britium Express"
           />
           <div>
-            <div className="text-xl font-extrabold text-slate-900">Sign in</div>
-            <div className="text-xs text-slate-500">Britium Express Portal</div>
+            <div className="text-xl font-extrabold text-slate-900">{t("auth.signin")}</div>
+            <div className="text-xs text-slate-500">{t("auth.portalTitle")}</div>
           </div>
         </div>
 

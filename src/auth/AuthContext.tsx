@@ -183,16 +183,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = React.useState<string | null>(null);
 
   async function refresh() {
-    const fb = auth.currentUser;
-    if (!fb?.uid || !fb.email) return;
-    try {
-      const u = await readUser(fb.uid, fb.email);
-      setUser(u);
-      setError(null);
-    } catch (e) {
-      setError(humanizeProfileError(e));
+  const fb = auth.currentUser;
+  if (!fb?.uid || !fb.email) return;
+
+  try {
+    const u = await readUser(fb.uid, fb.email);
+
+    if (!u) {
+      setUser({
+        uid: fb.uid,
+        email: fb.email,
+        role: "customer",
+        status: "pending",
+        mustChangePassword: false,
+      });
+      setError("Your account is not provisioned in Firestore 'users' yet. Please contact an administrator.");
+      return;
     }
+
+    setUser(u);
+    setError(null);
+  } catch (e) {
+    setUser({
+      uid: fb.uid,
+      email: fb.email,
+      role: "customer",
+      status: "pending",
+      mustChangePassword: false,
+    });
+    setError(humanizeProfileError(e));
   }
+}
 
   React.useEffect(() => {
     const off = onAuthStateChanged(auth, async (fbUser) => {

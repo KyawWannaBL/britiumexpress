@@ -1,18 +1,31 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
+import { getStorage } from "firebase/storage";
 
+/**
+ * Britium Express Firebase bootstrap.
+ *
+ * Why: Vercel deployments often miss VITE_* envs. This file uses the supplied
+ * Firebase config directly and exports all services used by the app.
+ */
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyCUZuhS-pIb4I1lOtW7Xc_KN6qbGxu8Qfo",
+  authDomain: "britium-express-bb380.firebaseapp.com",
+  databaseURL:
+    "https://britium-express-bb380-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "britium-express-bb380",
+  storageBucket: "britium-express-bb380.firebasestorage.app",
+  messagingSenderId: "860118014216",
+  appId: "1:860118014216:web:91e7f75df72d17d95df4bd",
 };
 
-// Initialize Singleton
-export const firebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-export const auth = getAuth(firebaseApp);
-export const db = getFirestore(firebaseApp); // Crucial alias for AuthContext
-export const firestore = db;
+export const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const rtdb = getDatabase(app);
+export const storage = getStorage(app);
+
+export { firebaseConfig };

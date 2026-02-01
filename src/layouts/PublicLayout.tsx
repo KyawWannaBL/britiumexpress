@@ -38,7 +38,7 @@ export default function PublicLayout() {
                     : "px-3 py-2 rounded-xl text-sm text-neutral-700 hover:bg-neutral-100 font-extrabold"
                 }
               >
-                {i.label}
+                {t(i.label)}
               </NavLink>
             ))}
           </nav>
@@ -49,14 +49,14 @@ export default function PublicLayout() {
                 to="/portal"
                 className="px-3 py-2 rounded-xl text-sm bg-neutral-900 text-white hover:bg-neutral-800 font-extrabold"
               >
-                Dashboard
+                {t("auth.dashboard")}
               </NavLink>
               <button
                 type="button"
                 onClick={() => void signOut()}
                 className="px-3 py-2 rounded-xl text-sm bg-white border hover:bg-neutral-50 font-extrabold"
               >
-                Logout
+                {t("auth.logout")}
               </button>
             </>
           ) : (
@@ -64,7 +64,7 @@ export default function PublicLayout() {
               to="/login"
               className="px-3 py-2 rounded-xl text-sm bg-neutral-900 text-white hover:bg-neutral-800 font-extrabold"
             >
-              Sign in
+              {t("auth.signin")}
             </NavLink>
           )}
         </div>

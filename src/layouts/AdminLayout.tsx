@@ -20,6 +20,7 @@ function buildAdminNav(role: string): AppNavItem[] {
     return [
       ...base,
       { to: "/admin/management", label: "admin.management", icon: "Users" },
+      ...(r === "super_admin" ? [{ to: "/admin/debug-auth", label: "admin.debugAuth", icon: "Shield" }] : []),
       { to: "/admin/bulk-upload", label: "admin.bulkUpload", icon: "Package" },
       { to: "/admin/tariffs", label: "admin.tariffs", icon: "Settings" },
     ];

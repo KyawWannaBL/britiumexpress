@@ -33,6 +33,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminManagement from "./pages/admin/AdminManagement";
 import BulkUpload from "./pages/admin/BulkUpload";
 import TariffSetting from "./pages/admin/TariffSetting";
+import DebugAuthPage from "./pages/admin/DebugAuthPage";
 
 import ShipmentsPage from "./pages/admin/ShipmentsPage";
 import ShipmentDetailsPage from "./pages/admin/ShipmentDetailsPage";
@@ -133,6 +134,7 @@ export default function App() {
         <Route path="management" element={<AdminManagement />} />
         <Route path="bulk-upload" element={<BulkUpload />} />
         <Route path="tariffs" element={<TariffSetting />} />
+        <Route path="debug-auth" element={<DebugAuthPage />} />
       </Route>
 
       {/* Merchant */}
