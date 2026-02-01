@@ -1,124 +1,100 @@
-/**
- * File: src/pages/merchant/MerchantDashboardPage.tsx
- * Description: Design-compliant Merchant portal featuring order tracking and COD stats.
- */
-
 import React, { useState } from "react";
+import { useI18n } from "@/i18n/I18nProvider"; // Fixed: Moved outside the open block
 import { 
-import { useI18n } from "@/i18n/I18nProvider";
-  Card, 
-  CardBody, 
-  CardHeader, 
-  DataTable, 
-  StatCard, 
-  TextInput, 
-  Badge 
-} from "../../components/ui/SharedComponents";
-
-// Mock data typed for merchant visibility
-type MerchantOrder = {
-  id: string;
-  customer: string;
-  status: "Processing" | "In Transit" | "Delivered" | "Canceled";
-  amount: string;
-  township: string;
-  date: string;
-};
-
-const MERCHANT_ORDERS: MerchantOrder[] = [
-  { id: "BE001400", customer: "May Thu", status: "In Transit", amount: "12,500 MMK", township: "Hlaing", date: "2026-01-31" },
-  { id: "BE001401", customer: "Ko Min", status: "Delivered", amount: "9,000 MMK", township: "Sanchaung", date: "2026-01-30" },
-  { id: "BE001402", customer: "Hnin Hnin", status: "Processing", amount: "15,000 MMK", township: "Tamwe", date: "2026-01-31" },
-];
+    Card, 
+    CardHeader, 
+    CardTitle, 
+    CardContent 
+} from "@/components/ui/card"; // Fixed: Properly closed and added source
+import { 
+    LayoutDashboard, 
+    Package, 
+    Truck, 
+    CheckCircle2, 
+    DollarSign, 
+    Plus, 
+    Search, 
+    MapPin 
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function MerchantDashboardPage() {
-  const { t } = useI18n();
+    const { t } = useI18n();
+    const [searchTerm, setSearchTerm] = useState("");
 
-  const [searchQuery, setSearchQuery] = useState("");
+    // Stats based on your MMK collection and shipment flow
+    const dashboardStats = [
+        { icon: Package, label: t("Pending Pickups"), value: "12", color: "blue" },
+        { icon: Truck, label: t("In Transit"), value: "5", color: "orange" },
+        { icon: CheckCircle2, label: t("Delivered"), value: "142", color: "green" },
+        { icon: DollarSign, label: t("COD Balance (MMK)"), value: "450,000", color: "red" },
+    ];
 
-  const filteredRows = MERCHANT_ORDERS.filter((order) => {
-    const searchString = `${order.id} ${order.customer} ${order.township}`.toLowerCase();
-    return searchString.includes(searchQuery.toLowerCase());
-  });
+    return (
+        <div className="p-6 bg-gray-50 min-h-screen">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-8">
+                <div>
+                    <h1 className="text-2xl font-bold text-[#0d2c54]">{t("Merchant Dashboard")}</h1>
+                    <p className="text-sm text-gray-500">{t("Track your shipments and COD collections.")}</p>
+                </div>
+                <Button className="bg-[#ff6b00] hover:bg-[#e66000]">
+                    <Plus className="mr-2 h-4 w-4" /> {t("New Shipment")}
+                </Button>
+            </div>
 
-  return (
-    <div className="space-y-6 animate-slide-up">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-extrabold text-slate-900">{t("Merchant Dashboard")}</h1>
-          <p className="text-sm text-slate-500">{t("Manage your store's shipments and COD collections.")}</p>
+            {/* Quick Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                {dashboardStats.map((stat, idx) => (
+                    <DashboardStatCard key={idx} {...stat} />
+                ))}
+            </div>
+
+            {/* Tracking Search Card */}
+            <Card className="mb-8 border-none shadow-sm">
+                <CardHeader>
+                    <CardTitle className="text-lg font-bold text-[#0d2c54]">{t("Quick Tracking")}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex gap-4">
+                        <div className="relative flex-1">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                            <Input 
+                                placeholder={t("Enter Tracking ID (e.g., BE-12345)")} 
+                                className="pl-10"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <Button className="bg-[#0d2c54] hover:bg-slate-800">{t("Search")}</Button>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
-        <TextInput 
-          value={searchQuery} 
-          onChange={(e) => setSearchQuery(e.target.value)} 
-          placeholder={t("Search by ID, customer, or township...")} 
-          className="md:w-80 shadow-sm"
-        />
-      </div>
+    );
+}
 
-      {/* Stats Overview using StatCard with tone compliance */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <StatCard 
-          title={t("Orders This Week")} 
-          value="74" 
-          hint="+12% from last week" 
-          tone="blue" 
-        />
-        <StatCard 
-          title={t("Total COD Collected")} 
-          value="1,420,000 MMK" 
-          hint="Verified funds" 
-          tone="green" 
-        />
-        <StatCard 
-          title={t("Pending Payout")} 
-          value="320,000 MMK" 
-          hint="Next batch: Feb 2" 
-          tone="orange" 
-        />
-      </div>
-
-      {/* Recent Orders Table */}
-      <Card className="overflow-hidden border-slate-100 shadow-soft">
-        <CardHeader 
-          title={t("Recent Orders")} 
-          subtitle={t("Real-time status updates for your latest store deliveries.")}
-        />
-        <CardBody className="p-0">
-          <DataTable<MerchantOrder>
-            rowKey={(order) => order.id}
-            rows={filteredRows}
-            columns={[
-              { 
-                key: "id", 
-                title: "Tracking ID", 
-                render: (row) => <span className="font-mono font-bold text-blue-700">{row.id}</span> 
-              },
-              { key: "customer", title: "Customer" },
-              { key: "township", title: "Township" },
-              { 
-                key: "status", 
-                title: "Status",
-                render: (row) => {
-                  const tones: Record<string, "blue" | "green" | "orange" | "red"> = {
-                    "In Transit": "blue",
-                    "Delivered": "green",
-                    "Processing": "orange",
-                    "Canceled": "red"
-                  };
-                  return <Badge tone={tones[row.status]}>{row.status}</Badge>;
-                }
-              },
-              { 
-                key: "amount", 
-                title: "Amount", 
-                className: "text-right font-bold" 
-              },
-            ]}
-          />
-        </CardBody>
-      </Card>
-    </div>
-  );
+function DashboardStatCard({ icon: Icon, label, value, color }: any) {
+    const colors: any = {
+        blue: "text-blue-600 bg-blue-50",
+        orange: "text-orange-600 bg-orange-50",
+        green: "text-green-600 bg-green-50",
+        red: "text-red-600 bg-red-50"
+    };
+    return (
+        <Card className="border-none shadow-sm">
+            <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                    <div className={`p-3 rounded-lg ${colors[color]}`}>
+                        <Icon className="h-6 w-6" />
+                    </div>
+                    <div>
+                        <p className="text-sm font-medium text-gray-500">{label}</p>
+                        <h3 className="text-xl font-bold text-gray-900">{value}</h3>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
 }
