@@ -54,19 +54,18 @@ export default function ForceChangePassword() {
 
     setBusy(true);
     try {
-      // Re-auth is required by Firebase for sensitive operations
+      // Re-auth is required by Firebase for sensitive operations.
       const cred = EmailAuthProvider.credential(fbUser.email, currentPassword);
       await reauthenticateWithCredential(fbUser, cred);
       await updatePassword(fbUser, newPassword);
 
-      // Clear the flag in Firestore
+      // Clear the flag in Firestore.
       try {
         await updateDoc(doc(db, "users", fbUser.uid), {
           mustChangePassword: false,
           mustChangePasswordClearedAt: serverTimestamp(),
         });
-      } catch (e) {
-        // If rules block update, avoid infinite loop by telling user what happened.
+      } catch {
         setErr(
           "Password updated in Firebase Auth, but your profile flag could not be updated in Firestore (permission denied). Please ask a Super Admin to set mustChangePassword=false for your user profile."
         );
@@ -149,11 +148,7 @@ export default function ForceChangePassword() {
         </form>
 
         <div className="mt-4 flex items-center justify-between text-sm">
-          <button
-            type="button"
-            onClick={() => void signOut()}
-            className="font-extrabold text-slate-700 hover:underline"
-          >
+          <button type="button" onClick={() => void signOut()} className="font-extrabold text-slate-700 hover:underline">
             Logout
           </button>
 

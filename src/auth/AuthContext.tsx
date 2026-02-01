@@ -96,6 +96,7 @@ function normalizeRole(raw: unknown): AppRole {
     "merchant",
     "vendor",
     "rider",
+    "driver",
     "customer",
   ];
   return allowed.includes(cleaned as AppRole) ? (cleaned as AppRole) : "customer";

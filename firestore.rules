@@ -1,0 +1,132 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+    function lower(v) {
+      return v is string ? v.toLowerCase() : "";
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function role() {
+      return isSignedIn() ? lower(userDoc().data.role) : "guest";
+    }
+
+    function status() {
+      return isSignedIn() ? lower(userDoc().data.status) : "pending";
+    }
+
+    function isApproved() {
+      return isSignedIn() && status() == "approved";
+    }
+
+    function isAny(roles) {
+      return isApproved() && roles.hasAny([role()]);
+    }
+
+    // 10-tier hierarchy (per your requirement)
+    function isSuperAdmin() { return isAny(["super_admin"]); }
+    function isAdmin() { return isAny(["admin"]); }
+    function isManager() { return isAny(["manager"]); }
+    function isSubStationManager() { return isAny(["sub_station_manager"]); }
+    function isSupervisor() { return isAny(["supervisor"]); }
+    function isWarehouse() { return isAny(["warehouse"]); }
+    function isRider() { return isAny(["rider", "driver"]); }
+    function isMerchant() { return isAny(["merchant"]); }
+    function isVendor() { return isAny(["vendor"]); }
+    function isAccountant() { return isAny(["accountant"]); }
+
+    function isHighAuthority() {
+      return isSuperAdmin() || isAdmin() || isManager();
+    }
+
+    function canViewAllShipments() {
+      return isHighAuthority() || isSupervisor() || isSubStationManager() || isWarehouse() || isAccountant();
+    }
+
+    // ---------- users ----------
+    match /users/{userId} {
+      // basic profile visibility
+      allow read: if isSignedIn();
+
+      // Super Admin manages roles & approvals (full CRUD)
+      allow create, delete: if isSuperAdmin();
+
+      // Allow a user to update their own profile fields, but not role/status.
+      allow update: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.status == resource.data.status;
+
+      // Admin can update users (optional)
+      allow update: if isAdmin();
+
+      // Super Admin can update anything
+      allow update: if isSuperAdmin();
+    }
+
+    // ---------- shipments ----------
+    match /shipments/{shipmentId} {
+      // Staff
+      allow read: if canViewAllShipments();
+
+      // Merchant only sees own shipments
+      allow read: if isMerchant()
+        && (resource.data.merchantId == request.auth.uid
+            || lower(resource.data.merchantEmail) == lower(request.auth.token.email));
+
+      // Rider sees assigned shipments
+      allow read: if isRider()
+        && (resource.data.riderId == request.auth.uid
+            || resource.data.driverId == request.auth.uid);
+
+      // Public tracking by trackingId (read-only).
+      // Recommended: store shipment docId == trackingId OR store trackingId field.
+      allow get: if resource.data.trackingId == shipmentId;
+
+      // Create
+      allow create: if isHighAuthority() || isSupervisor() || isSubStationManager() || isWarehouse()
+        || (isMerchant() && (request.resource.data.merchantId == request.auth.uid));
+
+      // Update (assignment/status changes)
+      allow update: if isHighAuthority() || isSupervisor() || isSubStationManager() || isWarehouse()
+        || (isRider() && (resource.data.riderId == request.auth.uid || resource.data.driverId == request.auth.uid));
+
+      // Delete restricted
+      allow delete: if isSuperAdmin() || isAdmin();
+    }
+
+    // ---------- financials ----------
+    match /financials/{recordId} {
+      // Super Admin/Admin/Accountant full access
+      allow read, write: if isSuperAdmin() || isAdmin() || isAccountant();
+
+      // Manager read-only (branch scoping needs a branchId field if you want strict scoping)
+      allow read: if isManager();
+    }
+
+    // ---------- branches ----------
+    match /branches/{branchId} {
+      allow read: if isApproved();
+      allow write: if isSuperAdmin() || isAdmin();
+    }
+
+    // ---------- reports / stats ----------
+    match /stats/{docId} {
+      allow read: if isApproved();
+      allow write: if isSuperAdmin(); // if later you generate server aggregates
+    }
+
+    // ---------- fallback ----------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

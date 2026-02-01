@@ -2,16 +2,19 @@ import React from "react";
 import AppShell, { AppNavItem } from "./AppShell";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { useI18n } from "../i18n/I18nProvider";
+import LanguageSwitcher from "../i18n/LanguageSwitcher";
 
 const nav: AppNavItem[] = [
-  { to: "/", label: "Home", end: true },
-  { to: "/services", label: "Services" },
-  { to: "/quote", label: "Get Quote" },
-  { to: "/tracking", label: "Track" },
-  { to: "/contact", label: "Contact" },
+  { to: "/", label: "nav.home", end: true },
+  { to: "/services", label: "nav.services" },
+  { to: "/quote", label: "nav.quote" },
+  { to: "/tracking", label: "nav.track" },
+  { to: "/contact", label: "nav.contact" },
 ];
 
 export default function PublicLayout() {
+  const { t } = useI18n();
   const { user, signOut } = useAuth();
 
   return (
@@ -22,6 +25,7 @@ export default function PublicLayout() {
       nav={nav}
       headerRight={
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
           <nav className="hidden md:flex items-center gap-1" aria-label="Public navigation">
             {nav.map((i) => (
               <NavLink

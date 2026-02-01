@@ -1,4 +1,5 @@
 import React from "react";
+import { useI18n } from "../i18n/I18nProvider";
 import { NavLink, Outlet } from "react-router-dom";
 
 type IconProps = { className?: string; "aria-hidden"?: true };
@@ -53,6 +54,15 @@ const Icons = {
       <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M19.4 15a7.9 7.9 0 0 0 .1-1l2-1.2-2-3.6-2.3.7a7.7 7.7 0 0 0-1.7-1L13.2 2h-2.4L9.5 8.9a7.7 7.7 0 0 0-1.7 1L5.5 9.2l-2 3.6 2 1.2a7.9 7.9 0 0 0 .1 1 7.9 7.9 0 0 0-.1 1l-2 1.2 2 3.6 2.3-.7a7.7 7.7 0 0 0 1.7 1L10.8 22h2.4l1.3-6.9a7.7 7.7 0 0 0 1.7-1l2.3.7 2-3.6-2-1.2a7.9 7.9 0 0 0-.1-1Z" />
     </svg>
   ),
+  BarChart: (p: IconProps) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className={p.className} aria-hidden="true">
+      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M4 19V5" />
+      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M4 19h16" />
+      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M8 17v-6" />
+      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 17V9" />
+      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M16 17V7" />
+    </svg>
+  ),
 };
 
 export type AppNavItem = {
@@ -79,6 +89,7 @@ export default function AppShell({
   title,
   variant = "app",
 }: AppShellProps) {
+  const { t } = useI18n();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -128,7 +139,7 @@ export default function AppShell({
                 }
               >
                 {item.icon ? React.createElement(Icons[item.icon], { className: "h-4 w-4" }) : null}
-                <span>{item.label}</span>
+                <span>{t(item.label)}</span>
               </NavLink>
             </li>
           ))}
@@ -196,7 +207,7 @@ export default function AppShell({
                   }
                 >
                   {item.icon ? React.createElement(Icons[item.icon], { className: "h-4 w-4" }) : null}
-                  <span>{item.label}</span>
+                  <span>{t(item.label)}</span>
                 </NavLink>
               </li>
             ))}

@@ -5,26 +5,27 @@ import { useAuth } from "../../auth/AuthContext";
 function roleToDashboard(role: string): string {
   const r = role.toLowerCase();
 
-  // Staff dashboards (web + mobile)
   if (
     [
       "super_admin",
       "admin",
       "manager",
-      "sub_station_manager",
-      "supervisor",
-      "warehouse",
       "accountant",
+      "supervisor",
+      "sub_station_manager",
+      "warehouse",
     ].includes(r)
-  )
+  ) {
     return "/admin/dashboard";
+  }
 
   if (r === "merchant") return "/merchant/dashboard";
+  if (r === "rider" || r === "driver") return "/rider/home";
   if (r === "vendor") return "/vendor/dashboard";
-  if (r === "rider") return "/rider/home";
 
   return "/send";
 }
+
 
 function needsForcedPasswordChange(role: string, mustChangePassword?: boolean) {
   if (!mustChangePassword) return false;
