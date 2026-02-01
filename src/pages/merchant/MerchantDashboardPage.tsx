@@ -5,7 +5,7 @@ import {
     CardHeader, 
     CardTitle, 
     CardContent 
-} from "@/components/ui/card"; // Fixed: Properly closed and added source
+} from "@/components/ui/card"; // Fixed: Properly closed block and added source
 import { 
     LayoutDashboard, 
     Package, 
