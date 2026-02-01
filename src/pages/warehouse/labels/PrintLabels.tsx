@@ -10,6 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../firebaseconfig";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Parcel = {
   trackingId?: string;
@@ -41,24 +42,24 @@ function buildPrintHtml(parcels: Array<{ id: string; data: Parcel }>) {
       return `
       <div class="label">
         <div class="row">
-          <div class="brand">BRITIUM EXPRESS</div>
+          <div class="brand">{t("BRITIUM EXPRESS")}</div>
           <div class="tracking">${tracking}</div>
         </div>
         <div class="grid">
           <div>
-            <div class="k">From</div>
+            <div class="k">{t("From")}</div>
             <div class="v">${escapeHtml(p.data.senderName ?? "-")} (${escapeHtml(p.data.senderPhone ?? "-")})</div>
             <div class="v">${escapeHtml(p.data.pickupAddress ?? "-")}</div>
           </div>
           <div>
-            <div class="k">To</div>
+            <div class="k">{t("To")}</div>
             <div class="v">${escapeHtml(p.data.receiverName ?? "-")} (${escapeHtml(p.data.receiverPhone ?? "-")})</div>
             <div class="v">${escapeHtml(p.data.deliveryAddress ?? "-")}</div>
           </div>
         </div>
         <div class="row2">
-          <div><span class="k">Service:</span> <span class="v">${escapeHtml(p.data.service ?? "-")}</span></div>
-          <div><span class="k">COD:</span> <span class="v">${p.data.codAmount ?? 0}</span></div>
+          <div><span class="k">{t("Service:")}</span> <span class="v">${escapeHtml(p.data.service ?? "-")}</span></div>
+          <div><span class="k">{t("COD:")}</span> <span class="v">${p.data.codAmount ?? 0}</span></div>
         </div>
       </div>
       `;
@@ -69,7 +70,7 @@ function buildPrintHtml(parcels: Array<{ id: string; data: Parcel }>) {
   <html>
     <head>
       <meta charset="utf-8" />
-      <title>Print Labels</title>
+      <title>{t("Print Labels")}</title>
       <style>
         @page { size: A4; margin: 10mm; }
         body { font-family: Arial, sans-serif; margin: 0; }
@@ -108,6 +109,8 @@ function escapeHtml(s: string) {
 }
 
 export default function PrintLabels() {
+  const { t } = useI18n();
+
   const [code, setCode] = React.useState("");
   const [queue, setQueue] = React.useState<Array<{ id: string; data: Parcel }>>([]);
   const [error, setError] = React.useState<string | null>(null);
@@ -151,8 +154,8 @@ export default function PrintLabels() {
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-2xl font-extrabold">Labels • Print</div>
-          <div className="text-sm text-neutral-600">Add parcels by tracking ID and print.</div>
+          <div className="text-2xl font-extrabold">{t("Labels • Print")}</div>
+          <div className="text-sm text-neutral-600">{t("Add parcels by tracking ID and print.")}</div>
         </div>
         <Link className="text-sm underline" to="/warehouse">
           Back to Dashboard
@@ -168,12 +171,12 @@ export default function PrintLabels() {
 
         <div className="flex flex-col gap-3 md:flex-row md:items-end">
           <div className="flex-1">
-            <label className="text-xs font-bold text-neutral-500 uppercase">Tracking ID</label>
+            <label className="text-xs font-bold text-neutral-500 uppercase">{t("Tracking ID")}</label>
             <input
               value={code}
               onChange={(e) => setCode(e.target.value)}
               className="mt-1 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/20"
-              placeholder="Enter tracking ID"
+              placeholder={t("Enter tracking ID")}
             />
           </div>
           <button
@@ -196,7 +199,7 @@ export default function PrintLabels() {
 
       <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
         <div className="px-4 py-3 border-b flex items-center justify-between">
-          <div className="text-sm font-semibold">Queue</div>
+          <div className="text-sm font-semibold">{t("Queue")}</div>
           <button className="text-sm underline" onClick={() => setQueue([])}>
             Clear
           </button>
@@ -205,9 +208,9 @@ export default function PrintLabels() {
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 text-neutral-600">
               <tr className="text-left">
-                <th className="px-4 py-3">Tracking</th>
-                <th className="px-4 py-3">Receiver</th>
-                <th className="px-4 py-3">Address</th>
+                <th className="px-4 py-3">{t("Tracking")}</th>
+                <th className="px-4 py-3">{t("Receiver")}</th>
+                <th className="px-4 py-3">{t("Address")}</th>
               </tr>
             </thead>
             <tbody>

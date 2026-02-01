@@ -1,8 +1,11 @@
 import React from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../lib/firebase";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export default function SendParcel() {
+  const { t } = useI18n();
+
   const [fromName, setFromName] = React.useState("");
   const [fromPhone, setFromPhone] = React.useState("");
   const [toName, setToName] = React.useState("");
@@ -38,22 +41,22 @@ export default function SendParcel() {
 
   return (
     <div className="max-w-3xl mx-auto rounded-3xl border bg-white shadow-soft p-6 slide-up">
-      <div className="text-2xl font-extrabold text-slate-900">Send a Parcel</div>
-      <div className="text-sm text-slate-600 mt-1">Create a shipment request (saved to Firestore).</div>
+      <div className="text-2xl font-extrabold text-slate-900">{t("Send a Parcel")}</div>
+      <div className="text-sm text-slate-600 mt-1">{t("Create a shipment request (saved to Firestore).")}</div>
 
       {status ? <div className="mt-4 rounded-xl border bg-slate-50 p-3 text-sm font-semibold">{status}</div> : null}
 
       <form onSubmit={submit} className="mt-5 grid gap-3">
         <div className="grid sm:grid-cols-2 gap-3">
-          <input className="rounded-xl border px-3 py-2 text-sm" value={fromName} onChange={(e) => setFromName(e.target.value)} placeholder="Sender Name" />
-          <input className="rounded-xl border px-3 py-2 text-sm" value={fromPhone} onChange={(e) => setFromPhone(e.target.value)} placeholder="Sender Phone" />
+          <input className="rounded-xl border px-3 py-2 text-sm" value={fromName} onChange={(e) => setFromName(e.target.value)} placeholder={t("Sender Name")} />
+          <input className="rounded-xl border px-3 py-2 text-sm" value={fromPhone} onChange={(e) => setFromPhone(e.target.value)} placeholder={t("Sender Phone")} />
         </div>
         <div className="grid sm:grid-cols-2 gap-3">
-          <input className="rounded-xl border px-3 py-2 text-sm" value={toName} onChange={(e) => setToName(e.target.value)} placeholder="Receiver Name" />
-          <input className="rounded-xl border px-3 py-2 text-sm" value={toPhone} onChange={(e) => setToPhone(e.target.value)} placeholder="Receiver Phone" />
+          <input className="rounded-xl border px-3 py-2 text-sm" value={toName} onChange={(e) => setToName(e.target.value)} placeholder={t("Receiver Name")} />
+          <input className="rounded-xl border px-3 py-2 text-sm" value={toPhone} onChange={(e) => setToPhone(e.target.value)} placeholder={t("Receiver Phone")} />
         </div>
-        <input className="rounded-xl border px-3 py-2 text-sm" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Delivery Address" />
-        <textarea className="rounded-xl border px-3 py-2 text-sm" value={note} onChange={(e) => setNote(e.target.value)} rows={5} placeholder="Notes (optional)" />
+        <input className="rounded-xl border px-3 py-2 text-sm" value={address} onChange={(e) => setAddress(e.target.value)} placeholder={t("Delivery Address")} />
+        <textarea className="rounded-xl border px-3 py-2 text-sm" value={note} onChange={(e) => setNote(e.target.value)} rows={5} placeholder={t("Notes (optional)")} />
 
         <button disabled={busy} className="rounded-xl py-3 font-extrabold brand-accent text-white disabled:opacity-60">
           {busy ? "CREATING…" : "CREATE SHIPMENT"}

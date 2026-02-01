@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Calculator, Truck, Plane } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Zone = { label: string; options: Array<{ name: string; price: number }> };
 
@@ -52,6 +53,8 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 }
 
 export default function QuotePage() {
+  const { t } = useI18n();
+
   const [tab, setTab] = React.useState<"domestic" | "international">("domestic");
 
   const [origin, setOrigin] = React.useState("Yangon");
@@ -90,8 +93,8 @@ export default function QuotePage() {
         <div className="brand-gradient text-white p-8 md:p-12 relative">
           <div className="absolute inset-0 opacity-30 bg-[radial-gradient(600px_280px_at_20%_10%,rgba(255,107,0,.35),transparent_60%),radial-gradient(700px_360px_at_85%_20%,rgba(255,255,255,.12),transparent_60%)]" />
           <div className="relative">
-            <h1 className="text-4xl md:text-5xl font-extrabold">Shipping Rate Calculator</h1>
-            <p className="mt-3 text-white/85 text-lg">Domestic (Yangon) and International (Air Cargo).</p>
+            <h1 className="text-4xl md:text-5xl font-extrabold">{t("Shipping Rate Calculator")}</h1>
+            <p className="mt-3 text-white/85 text-lg">{t("Domestic (Yangon) and International (Air Cargo).")}</p>
           </div>
         </div>
       </section>
@@ -129,12 +132,12 @@ export default function QuotePage() {
 
                 <div className="mt-4 grid sm:grid-cols-2 gap-3">
                   <div className="sm:col-span-2">
-                    <div className="text-xs font-extrabold text-slate-600 mb-1">Origin</div>
+                    <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Origin")}</div>
                     <select className="w-full rounded-xl border px-3 py-2 text-sm" value={origin} onChange={(e) => setOrigin(e.target.value)}>
-                      <option value="Yangon">Yangon</option>
-                      <option value="Mandalay">Mandalay</option>
-                      <option value="Naypyitaw">Nay Pyi Taw</option>
-                      <option value="Other">Other</option>
+                      <option value="Yangon">{t("Yangon")}</option>
+                      <option value="Mandalay">{t("Mandalay")}</option>
+                      <option value="Naypyitaw">{t("Nay Pyi Taw")}</option>
+                      <option value="Other">{t("Other")}</option>
                     </select>
                     {origin !== "Yangon" ? (
                       <div className="mt-2 text-xs text-amber-700 font-semibold">
@@ -144,7 +147,7 @@ export default function QuotePage() {
                   </div>
 
                   <div>
-                    <div className="text-xs font-extrabold text-slate-600 mb-1">Destination Region</div>
+                    <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Destination Region")}</div>
                     <select
                       className="w-full rounded-xl border px-3 py-2 text-sm"
                       value={region}
@@ -154,21 +157,21 @@ export default function QuotePage() {
                         setTownshipPrice("");
                       }}
                     >
-                      <option value="yangon">Yangon City</option>
-                      <option value="mandalay">Mandalay Region</option>
-                      <option value="other">Other States/Regions</option>
+                      <option value="yangon">{t("Yangon City")}</option>
+                      <option value="mandalay">{t("Mandalay Region")}</option>
+                      <option value="other">{t("Other States/Regions")}</option>
                     </select>
                   </div>
 
                   <div>
-                    <div className="text-xs font-extrabold text-slate-600 mb-1">Select Township</div>
+                    <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Select Township")}</div>
                     <select
                       className="w-full rounded-xl border px-3 py-2 text-sm"
                       disabled={region !== "yangon"}
                       value={townshipPrice}
                       onChange={(e) => setTownshipPrice(e.target.value === "" ? "" : Number(e.target.value))}
                     >
-                      <option value="" disabled>-- Select Area --</option>
+                      <option value="" disabled>{t("-- Select Area --")}</option>
                       {YANGON_ZONES.map((z) => (
                         <optgroup key={z.label} label={z.label}>
                           {z.options.map((o) => (
@@ -185,23 +188,23 @@ export default function QuotePage() {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <div className="text-xs font-extrabold text-slate-600 mb-1">Weight (KG)</div>
+                    <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Weight (KG)")}</div>
                     <input
                       className="w-full rounded-xl border px-3 py-2 text-sm"
                       type="number"
                       step="0.5"
                       value={weight}
                       onChange={(e) => setWeight(e.target.value === "" ? "" : Number(e.target.value))}
-                      placeholder="e.g. 1.0"
+                      placeholder={t("e.g. 1.0")}
                     />
-                    <div className="mt-1 text-xs text-slate-500 italic">*Base rate covers 1st Kg. Additional +500 MMK/Kg.</div>
+                    <div className="mt-1 text-xs text-slate-500 italic">{t("*Base rate covers 1st Kg. Additional +500 MMK/Kg.")}</div>
                   </div>
                 </div>
               </div>
 
               <div className="lg:col-span-5">
                 <div className="rounded-3xl border bg-slate-50 p-5">
-                  <div className="text-xs font-extrabold tracking-widest uppercase text-slate-500">Estimated Delivery Cost</div>
+                  <div className="text-xs font-extrabold tracking-widest uppercase text-slate-500">{t("Estimated Delivery Cost")}</div>
                   <div className="mt-2 text-4xl font-extrabold text-slate-900">{domesticTotal ? `${domesticTotal.toLocaleString()} MMK` : "-- MMK"}</div>
                   <div className="mt-2 text-sm font-extrabold text-green-700">{region === "yangon" ? "Delivery: 1-2 Days" : "Select Yangon for instant quote"}</div>
 
@@ -224,17 +227,17 @@ export default function QuotePage() {
         <Card>
           <div className="p-6">
             <div className="text-center">
-              <div className="text-2xl font-extrabold text-[var(--brand-blue)]">International Air Cargo Calculator</div>
-              <div className="mt-2 text-sm text-slate-600">Chargeable weight = max(actual, volumetric).</div>
+              <div className="text-2xl font-extrabold text-[var(--brand-blue)]">{t("International Air Cargo Calculator")}</div>
+              <div className="mt-2 text-sm text-slate-600">{t("Chargeable weight = max(actual, volumetric).")}</div>
             </div>
 
             <div className="mt-6 grid lg:grid-cols-2 gap-6 items-start">
               <div className="rounded-3xl border bg-white p-5">
                 <form onSubmit={calcIntl} className="space-y-4">
                   <div>
-                    <div className="text-xs font-extrabold text-slate-600 mb-1">Destination</div>
+                    <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Destination")}</div>
                     <select className="w-full rounded-xl border px-3 py-2 text-sm" value={destRate} onChange={(e) => setDestRate(e.target.value === "" ? "" : Number(e.target.value))}>
-                      <option value="" disabled>Choose Destination...</option>
+                      <option value="" disabled>{t("Choose Destination...")}</option>
                       {DESTS.map((d) => (
                         <option key={d.label} value={d.rate}>{d.label}</option>
                       ))}
@@ -242,48 +245,48 @@ export default function QuotePage() {
                   </div>
 
                   <div>
-                    <div className="text-xs font-extrabold text-slate-600 mb-1">Volumetric Standard</div>
+                    <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Volumetric Standard")}</div>
                     <select className="w-full rounded-xl border px-3 py-2 text-sm" value={divisor} onChange={(e) => setDivisor(Number(e.target.value))}>
-                      <option value={5000}>Standard Air Cargo (5000)</option>
-                      <option value={6000}>Express / Courier (6000)</option>
+                      <option value={5000}>{t("Standard Air Cargo (5000)")}</option>
+                      <option value={6000}>{t("Express / Courier (6000)")}</option>
                     </select>
                   </div>
 
                   <div>
-                    <div className="text-xs font-extrabold text-slate-600 mb-1">Actual Weight (KG)</div>
+                    <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Actual Weight (KG)")}</div>
                     <input className="w-full rounded-xl border px-3 py-2 text-sm" type="number" step="0.1" value={iWeight} onChange={(e) => setIWeight(e.target.value === "" ? "" : Number(e.target.value))} />
                   </div>
 
                   <div>
-                    <div className="text-xs font-extrabold tracking-widest uppercase text-slate-500 mb-2">Dimensions (CM)</div>
+                    <div className="text-xs font-extrabold tracking-widest uppercase text-slate-500 mb-2">{t("Dimensions (CM)")}</div>
                     <div className="grid grid-cols-3 gap-2">
-                      <input className="w-full rounded-xl border px-3 py-2 text-sm" value={l} onChange={(e) => setL(e.target.value === "" ? "" : Number(e.target.value))} type="number" placeholder="L" />
-                      <input className="w-full rounded-xl border px-3 py-2 text-sm" value={w} onChange={(e) => setW(e.target.value === "" ? "" : Number(e.target.value))} type="number" placeholder="W" />
-                      <input className="w-full rounded-xl border px-3 py-2 text-sm" value={h} onChange={(e) => setH(e.target.value === "" ? "" : Number(e.target.value))} type="number" placeholder="H" />
+                      <input className="w-full rounded-xl border px-3 py-2 text-sm" value={l} onChange={(e) => setL(e.target.value === "" ? "" : Number(e.target.value))} type="number" placeholder={t("L")} />
+                      <input className="w-full rounded-xl border px-3 py-2 text-sm" value={w} onChange={(e) => setW(e.target.value === "" ? "" : Number(e.target.value))} type="number" placeholder={t("W")} />
+                      <input className="w-full rounded-xl border px-3 py-2 text-sm" value={h} onChange={(e) => setH(e.target.value === "" ? "" : Number(e.target.value))} type="number" placeholder={t("H")} />
                     </div>
                   </div>
 
-                  <button type="submit" className="w-full rounded-xl py-3 font-extrabold brand-accent text-white">CALCULATE ESTIMATE</button>
+                  <button type="submit" className="w-full rounded-xl py-3 font-extrabold brand-accent text-white">{t("CALCULATE ESTIMATE")}</button>
                 </form>
               </div>
 
               <div className="rounded-3xl border bg-slate-50 p-5">
-                <div className="text-sm font-extrabold text-slate-900 border-b pb-3 text-center">Quote Breakdown</div>
+                <div className="text-sm font-extrabold text-slate-900 border-b pb-3 text-center">{t("Quote Breakdown")}</div>
 
                 <div className="mt-4 grid md:grid-cols-3 gap-3 text-center">
                   <div className="rounded-2xl border bg-white p-4">
-                    <div className="text-xs font-extrabold text-slate-500 uppercase">Actual</div>
+                    <div className="text-xs font-extrabold text-slate-500 uppercase">{t("Actual")}</div>
                     <div className="mt-2 text-2xl font-extrabold">{ires ? `${ires.actual.toFixed(2)} kg` : "0 kg"}</div>
                   </div>
 
                   <div className="rounded-2xl border bg-white p-4">
-                    <div className="text-xs font-extrabold text-slate-500 uppercase">Volumetric</div>
+                    <div className="text-xs font-extrabold text-slate-500 uppercase">{t("Volumetric")}</div>
                     <div className="mt-2 text-2xl font-extrabold text-[var(--brand-blue)]">{ires ? `${ires.vol.toFixed(2)} kg` : "0 kg"}</div>
                     <div className="mt-1 text-xs text-slate-500 italic">/ {ires?.divisor ?? divisor}</div>
                   </div>
 
                   <div className="rounded-2xl border bg-red-50 p-4">
-                    <div className="text-xs font-extrabold text-red-600 uppercase">Chargeable</div>
+                    <div className="text-xs font-extrabold text-red-600 uppercase">{t("Chargeable")}</div>
                     <div className="mt-2 text-3xl font-extrabold text-red-600">{ires ? `${ires.chargeable.toFixed(2)} kg` : "0 kg"}</div>
                   </div>
                 </div>
@@ -291,9 +294,9 @@ export default function QuotePage() {
                 <div className="my-5 h-px bg-slate-200" />
 
                 <div className="text-center">
-                  <div className="text-xs font-extrabold tracking-widest uppercase text-slate-500">Estimated Shipping Cost</div>
+                  <div className="text-xs font-extrabold tracking-widest uppercase text-slate-500">{t("Estimated Shipping Cost")}</div>
                   <div className="mt-2 text-5xl font-extrabold text-slate-900">{ires ? `$${ires.total.toFixed(2)}` : "$0.00"}</div>
-                  <div className="mt-2 text-xs text-slate-500">* Excludes tax/duties.</div>
+                  <div className="mt-2 text-xs text-slate-500">{t("* Excludes tax/duties.")}</div>
                 </div>
               </div>
             </div>

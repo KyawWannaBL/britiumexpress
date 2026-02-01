@@ -10,6 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../firebaseconfig";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Role =
   | "super_admin"
@@ -132,6 +133,8 @@ async function countParcels(stationId: string, status?: ParcelStatus) {
 }
 
 export default function WarehouseDashboard() {
+  const { t } = useI18n();
+
   const { user, profile, loading: profileLoading } = useUserProfile();
   const stationId = profile?.stationId ?? "";
   const stationName = profile?.stationName ?? "Warehouse";
@@ -184,14 +187,14 @@ export default function WarehouseDashboard() {
   }, [stationId]);
 
   if (profileLoading) {
-    return <div className="p-6">Loading…</div>;
+    return <div className="p-6">{t("Loading…")}</div>;
   }
 
   if (!user) {
     return (
       <div className="p-6">
         <div className="rounded-xl border bg-white p-6">
-          <div className="text-lg font-semibold">Please sign in</div>
+          <div className="text-lg font-semibold">{t("Please sign in")}</div>
           <div className="mt-1 text-sm text-neutral-600">
             You must be logged in to access warehouse operations.
           </div>
@@ -207,9 +210,9 @@ export default function WarehouseDashboard() {
     return (
       <div className="p-6">
         <div className="rounded-xl border bg-white p-6">
-          <div className="text-lg font-semibold">Station not configured</div>
+          <div className="text-lg font-semibold">{t("Station not configured")}</div>
           <div className="mt-1 text-sm text-neutral-600">
-            Your user profile is missing <code>stationId</code>. Add it in Firestore under{" "}
+            Your user profile is missing <code>{t("stationId")}</code>. Add it in Firestore under{" "}
             <code>users/{user.uid}</code>.
           </div>
         </div>
@@ -228,23 +231,23 @@ export default function WarehouseDashboard() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Inbound (Received)" value={stats.inbound} loading={loading} />
-        <StatCard label="Sorted" value={stats.sorted} loading={loading} />
-        <StatCard label="Manifested" value={stats.manifested} loading={loading} />
-        <StatCard label="Out for Delivery" value={stats.outForDelivery} loading={loading} />
-        <StatCard label="Returns (Received)" value={stats.returns} loading={loading} />
-        <StatCard label="Transfers (Dispatched)" value={stats.transfers} loading={loading} />
+        <StatCard label={t("Inbound (Received)")} value={stats.inbound} loading={loading} />
+        <StatCard label={t("Sorted")} value={stats.sorted} loading={loading} />
+        <StatCard label={t("Manifested")} value={stats.manifested} loading={loading} />
+        <StatCard label={t("Out for Delivery")} value={stats.outForDelivery} loading={loading} />
+        <StatCard label={t("Returns (Received)")} value={stats.returns} loading={loading} />
+        <StatCard label={t("Transfers (Dispatched)")} value={stats.transfers} loading={loading} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <QuickLink to="/warehouse/inbound" title="Scan In (Inbound)" desc="Receive parcels into this station." />
-        <QuickLink to="/warehouse/outbound" title="Scan Out (Outbound)" desc="Send parcels out for delivery or transfer." />
-        <QuickLink to="/warehouse/sorting" title="Sorting Board" desc="Assign inbound parcels to bins/routes." />
-        <QuickLink to="/warehouse/loading" title="Load Manifest" desc="Create manifests and load parcels to vehicles." />
-        <QuickLink to="/warehouse/transfers" title="Transit Routes" desc="Inter-station transfer management." />
-        <QuickLink to="/warehouse/returns" title="Returns" desc="Handle return parcels and reasons." />
-        <QuickLink to="/warehouse/labels" title="Print Labels" desc="Print shipping labels for parcels." />
-        <QuickLink to="/warehouse/inventory" title="Inventory" desc="Search and export inventory list." />
+        <QuickLink to="/warehouse/inbound" title={t("Scan In (Inbound)")} desc="Receive parcels into this station." />
+        <QuickLink to="/warehouse/outbound" title={t("Scan Out (Outbound)")} desc="Send parcels out for delivery or transfer." />
+        <QuickLink to="/warehouse/sorting" title={t("Sorting Board")} desc="Assign inbound parcels to bins/routes." />
+        <QuickLink to="/warehouse/loading" title={t("Load Manifest")} desc="Create manifests and load parcels to vehicles." />
+        <QuickLink to="/warehouse/transfers" title={t("Transit Routes")} desc="Inter-station transfer management." />
+        <QuickLink to="/warehouse/returns" title={t("Returns")} desc="Handle return parcels and reasons." />
+        <QuickLink to="/warehouse/labels" title={t("Print Labels")} desc="Print shipping labels for parcels." />
+        <QuickLink to="/warehouse/inventory" title={t("Inventory")} desc="Search and export inventory list." />
       </div>
     </div>
   );

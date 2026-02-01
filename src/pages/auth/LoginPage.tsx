@@ -102,7 +102,7 @@ export default function LoginPage() {
             className="w-full rounded-xl border px-3 py-2 text-sm"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
+            placeholder={t("Email")}
             inputMode="email"
             autoComplete="email"
           />
@@ -112,7 +112,7 @@ export default function LoginPage() {
               className="w-full rounded-xl border px-3 py-2 text-sm"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder={t("Password")}
               type="password"
               autoComplete="current-password"
             />

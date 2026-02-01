@@ -1,5 +1,6 @@
 import React from "react";
 import { createPortal } from "react-dom";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export interface ModalProps {
   open: boolean;
@@ -29,6 +30,8 @@ export default function Modal({
   closeOnEsc = true,
   maxWidth = 520,
 }: ModalProps) {
+  const { t } = useI18n();
+
   const dialogRef = React.useRef<HTMLDivElement | null>(null);
   const lastActiveRef = React.useRef<HTMLElement | null>(null);
 
@@ -104,7 +107,7 @@ export default function Modal({
               type="button"
               onClick={onClose}
               className="rounded-md px-2 py-1 text-sm hover:bg-neutral-100"
-              aria-label="Close modal"
+              aria-label={t("Close modal")}
             >
               ✕
             </button>

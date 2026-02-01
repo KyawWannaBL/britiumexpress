@@ -2,6 +2,7 @@
    File: src/components/AuthModal.tsx
    ========================================================= */
 import { X } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export function AuthModal({
   open,
@@ -32,6 +33,8 @@ export function AuthModal({
   if (!open) return null;
 
   async function onSubmit() {
+  const { t } = useI18n();
+
     setErr(null);
     setBusy(true);
     try {
@@ -52,7 +55,7 @@ export function AuthModal({
     <div className="fixed inset-0 z-[100] bg-black/50 flex items-end sm:items-center justify-center p-3">
       <div className="w-full sm:w-[420px] bg-white rounded-t-2xl sm:rounded-2xl shadow-xl overflow-hidden">
         <div className="p-4 border-b flex items-center justify-between">
-          <div className="font-extrabold text-[#0d2c54]">Britium Express</div>
+          <div className="font-extrabold text-[#0d2c54]">{t("Britium Express")}</div>
           <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100">
             <X className="w-5 h-5" />
           </button>
@@ -81,34 +84,34 @@ export function AuthModal({
           <div className="mt-4 space-y-3">
             {tab === "signup" && (
               <div>
-                <label className="text-xs font-bold text-gray-600 uppercase">Full Name</label>
+                <label className="text-xs font-bold text-gray-600 uppercase">{t("Full Name")}</label>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="mt-1 w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0d2c54]"
-                  placeholder="Your name"
+                  placeholder={t("Your name")}
                 />
               </div>
             )}
 
             <div>
-              <label className="text-xs font-bold text-gray-600 uppercase">Email</label>
+              <label className="text-xs font-bold text-gray-600 uppercase">{t("Email")}</label>
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0d2c54]"
-                placeholder="name@email.com"
+                placeholder={t("name@email.com")}
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold text-gray-600 uppercase">Password</label>
+              <label className="text-xs font-bold text-gray-600 uppercase">{t("Password")}</label>
               <input
                 value={pw}
                 onChange={(e) => setPw(e.target.value)}
                 type="password"
                 className="mt-1 w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0d2c54]"
-                placeholder="••••••••"
+                placeholder={t("••••••••")}
               />
             </div>
 

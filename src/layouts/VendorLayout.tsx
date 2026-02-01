@@ -14,7 +14,7 @@ export default function VendorLayout() {
   return (
     <RequireRole anyOf={["vendor"]}>
       <AppShell
-        title="Vendor • Britium Express"
+        title={t("Vendor • Britium Express")}
         brand={{ name: "Britium Express", href: "/vendor/dashboard", logoSrc: "/assets/britium-logo.png" }}
         nav={nav}
         headerRight={

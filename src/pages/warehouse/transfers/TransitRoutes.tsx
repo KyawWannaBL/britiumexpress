@@ -14,6 +14,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../../firebaseconfig";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type UserProfile = { stationId?: string; stationName?: string };
 
@@ -48,6 +49,8 @@ function useUserProfile() {
 }
 
 export default function TransitRoutes() {
+  const { t } = useI18n();
+
   const { user, profile } = useUserProfile();
   const stationId = profile?.stationId ?? "";
   const stationName = profile?.stationName ?? "Station";
@@ -107,7 +110,7 @@ export default function TransitRoutes() {
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-2xl font-extrabold">Transfers • Transit Routes</div>
+          <div className="text-2xl font-extrabold">{t("Transfers • Transit Routes")}</div>
           <div className="text-sm text-neutral-600">
             Create and manage inter-station transfer routes.
           </div>
@@ -118,33 +121,33 @@ export default function TransitRoutes() {
       </div>
 
       <div className="rounded-xl border bg-white p-4 shadow-sm space-y-3">
-        <div className="text-sm font-semibold">Create Transit Route</div>
+        <div className="text-sm font-semibold">{t("Create Transit Route")}</div>
         <div className="grid gap-3 md:grid-cols-4">
           <div className="md:col-span-2">
-            <label className="text-xs font-bold text-neutral-500 uppercase">To Station ID</label>
+            <label className="text-xs font-bold text-neutral-500 uppercase">{t("To Station ID")}</label>
             <input
               value={toStationId}
               onChange={(e) => setToStationId(e.target.value)}
               className="mt-1 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/20"
-              placeholder="e.g., STN-002"
+              placeholder={t("e.g., STN-002")}
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-neutral-500 uppercase">Vehicle No</label>
+            <label className="text-xs font-bold text-neutral-500 uppercase">{t("Vehicle No")}</label>
             <input
               value={vehicleNo}
               onChange={(e) => setVehicleNo(e.target.value)}
               className="mt-1 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/20"
-              placeholder="Optional"
+              placeholder={t("Optional")}
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-neutral-500 uppercase">Driver</label>
+            <label className="text-xs font-bold text-neutral-500 uppercase">{t("Driver")}</label>
             <input
               value={driverName}
               onChange={(e) => setDriverName(e.target.value)}
               className="mt-1 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/20"
-              placeholder="Optional"
+              placeholder={t("Optional")}
             />
           </div>
         </div>
@@ -162,18 +165,18 @@ export default function TransitRoutes() {
 
       <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
         <div className="px-4 py-3 border-b">
-          <div className="text-sm font-semibold">Routes</div>
+          <div className="text-sm font-semibold">{t("Routes")}</div>
         </div>
         <div className="overflow-auto">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 text-neutral-600">
               <tr className="text-left">
-                <th className="px-4 py-3">ID</th>
-                <th className="px-4 py-3">To</th>
-                <th className="px-4 py-3">Vehicle</th>
-                <th className="px-4 py-3">Driver</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3 w-56">Actions</th>
+                <th className="px-4 py-3">{t("ID")}</th>
+                <th className="px-4 py-3">{t("To")}</th>
+                <th className="px-4 py-3">{t("Vehicle")}</th>
+                <th className="px-4 py-3">{t("Driver")}</th>
+                <th className="px-4 py-3">{t("Status")}</th>
+                <th className="px-4 py-3 w-56">{t("Actions")}</th>
               </tr>
             </thead>
             <tbody>

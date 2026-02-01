@@ -1,6 +1,7 @@
 // src/pages/admin/AdminManagement.tsx (or wherever you keep this page)
 import React, { useEffect, useMemo, useState } from "react";
 import {
+import { useI18n } from "@/i18n/I18nProvider";
   Activity,
   AlertTriangle,
   Database,
@@ -102,6 +103,8 @@ type Monitoring = {
 };
 
 export default function AdminManagement(): JSX.Element {
+  const { t } = useI18n();
+
   const [metrics, setMetrics] = useState<Metrics>({
     uptime: 99.98,
     activeUsers: 2847,
@@ -193,15 +196,15 @@ export default function AdminManagement(): JSX.Element {
                 <ShieldCheck className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <h1 className="text-xl font-bold">System Administration Console</h1>
-                <p className="text-sm text-blue-100">Britium Express Enterprise</p>
+                <h1 className="text-xl font-bold">{t("System Administration Console")}</h1>
+                <p className="text-sm text-blue-100">{t("Britium Express Enterprise")}</p>
               </div>
             </div>
 
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 rounded-lg bg-white/20 px-3 py-2">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-green-400" />
-                <span className="text-sm">System Online</span>
+                <span className="text-sm">{t("System Online")}</span>
               </div>
 
               <button
@@ -237,7 +240,7 @@ export default function AdminManagement(): JSX.Element {
           <div className="space-y-8 lg:col-span-2">
             {/* USER MANAGEMENT */}
             <SectionCard
-              title="User Management"
+              title={t("User Management")}
               icon={<UserCog className="mr-2 h-5 w-5 text-blue-600" />}
               action={
                 <button
@@ -252,19 +255,19 @@ export default function AdminManagement(): JSX.Element {
             >
               <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
                 <StatBox
-                  label="Total Users"
+                  label={t("Total Users")}
                   value="15,847"
                   tone="gray"
                   icon={<Users className="h-8 w-8 text-gray-400" />}
                 />
                 <StatBox
-                  label="Active Today"
+                  label={t("Active Today")}
                   value={metrics.activeUsers.toLocaleString()}
                   tone="green"
                   icon={<UserCheck className="h-8 w-8 text-green-500" />}
                 />
                 <StatBox
-                  label="Suspended"
+                  label={t("Suspended")}
                   value="23"
                   tone="red"
                   icon={<UserX className="h-8 w-8 text-red-500" />}
@@ -279,24 +282,24 @@ export default function AdminManagement(): JSX.Element {
 
             {/* DATABASE ADMIN */}
             <SectionCard
-              title="Database Administration"
+              title={t("Database Administration")}
               icon={<Database className="mr-2 h-5 w-5 text-blue-600" />}
             >
               <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
                 <StatBox
-                  label="Total Records"
+                  label={t("Total Records")}
                   value="2.4M"
                   tone="blue"
                   icon={<FileText className="h-8 w-8 text-blue-500" />}
                 />
                 <StatBox
-                  label="Query Perf."
+                  label={t("Query Perf.")}
                   value="98.5%"
                   tone="green"
                   icon={<Zap className="h-8 w-8 text-green-500" />}
                 />
                 <StatBox
-                  label="Storage"
+                  label={t("Storage")}
                   value={`${metrics.storageGB} GB`}
                   tone="orange"
                   icon={<HardDrive className="h-8 w-8 text-orange-500" />}
@@ -305,13 +308,13 @@ export default function AdminManagement(): JSX.Element {
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <ActionButton
-                  label="Backup Database"
+                  label={t("Backup Database")}
                   tone="blue"
                   icon={<Download className="h-4 w-4" />}
                   onClick={() => alert("Backup Database (Simulation)")}
                 />
                 <ActionButton
-                  label="Optimize Tables"
+                  label={t("Optimize Tables")}
                   tone="green"
                   icon={<RefreshCw className="h-4 w-4" />}
                   onClick={() => alert("Optimize Tables (Simulation)")}
@@ -322,11 +325,11 @@ export default function AdminManagement(): JSX.Element {
 
           <div className="space-y-8">
             {/* SYSTEM MONITORING */}
-            <SectionCard title="System Monitoring" icon={<Monitor className="mr-2 h-5 w-5 text-blue-600" />}>
-              <ProgressBar label="CPU Usage" value={monitoring.cpu} barClass={TONE.green.bar} />
-              <ProgressBar label="Memory Usage" value={monitoring.memory} barClass={TONE.yellow.bar} />
-              <ProgressBar label="Disk Usage" value={monitoring.disk} barClass={TONE.blue.bar} />
-              <ProgressBar label="Network Usage" value={monitoring.network} barClass={TONE.purple.bar} />
+            <SectionCard title={t("System Monitoring")} icon={<Monitor className="mr-2 h-5 w-5 text-blue-600" />}>
+              <ProgressBar label={t("CPU Usage")} value={monitoring.cpu} barClass={TONE.green.bar} />
+              <ProgressBar label={t("Memory Usage")} value={monitoring.memory} barClass={TONE.yellow.bar} />
+              <ProgressBar label={t("Disk Usage")} value={monitoring.disk} barClass={TONE.blue.bar} />
+              <ProgressBar label={t("Network Usage")} value={monitoring.network} barClass={TONE.purple.bar} />
             </SectionCard>
 
             {/* DANGER ZONE */}
@@ -338,12 +341,12 @@ export default function AdminManagement(): JSX.Element {
 
               <div className="grid grid-cols-1 gap-4">
                 <DangerButton
-                  label="Purge Old Data"
+                  label={t("Purge Old Data")}
                   icon={<Trash2 className="h-4 w-4" />}
                   onClick={() => handleDangerAction("Purge Data")}
                 />
                 <DangerButton
-                  label="Reset System"
+                  label={t("Reset System")}
                   icon={<Power className="h-4 w-4" />}
                   onClick={() => handleDangerAction("Reset System")}
                 />

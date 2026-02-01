@@ -154,13 +154,13 @@ export default function ShipmentsPage() {
             <table className="w-full text-sm">
               <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-y">
                 <tr>
-                  <th className="px-3 py-3 text-left">Tracking</th>
-                  <th className="px-3 py-3 text-left">Merchant</th>
-                  <th className="px-3 py-3 text-left">Receiver</th>
-                  <th className="px-3 py-3 text-left">City</th>
+                  <th className="px-3 py-3 text-left">{t("Tracking")}</th>
+                  <th className="px-3 py-3 text-left">{t("Merchant")}</th>
+                  <th className="px-3 py-3 text-left">{t("Receiver")}</th>
+                  <th className="px-3 py-3 text-left">{t("City")}</th>
                   <th className="px-3 py-3 text-left">{t("common.status")}</th>
-                  <th className="px-3 py-3 text-right">COD</th>
-                  <th className="px-3 py-3 text-left">Updated</th>
+                  <th className="px-3 py-3 text-right">{t("COD")}</th>
+                  <th className="px-3 py-3 text-left">{t("Updated")}</th>
                   <th className="px-3 py-3 text-right">{t("common.details")}</th>
                 </tr>
               </thead>

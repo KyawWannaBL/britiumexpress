@@ -12,6 +12,7 @@ import { supabase } from "../../lib/supabase";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Plane, Truck, Info } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Mode = "domestic" | "international";
 
@@ -143,7 +144,7 @@ export const ShippingCalculator = () => {
             />
           </div>
           <div>
-            <h2 className="text-3xl font-extrabold text-[#0d2c54]">Shipping Rate Calculator</h2>
+            <h2 className="text-3xl font-extrabold text-[#0d2c54]">{t("Shipping Rate Calculator")}</h2>
             <p className="text-gray-600">
               Domestic (Yangon) + International (Chargeable Weight) estimator.
             </p>
@@ -152,7 +153,7 @@ export const ShippingCalculator = () => {
 
         <Card className="shadow-lg border-t-4 border-t-[#0d2c54] rounded-2xl overflow-hidden">
           <CardHeader className="pb-4">
-            <CardTitle className="text-[#0d2c54] font-extrabold">Calculate your shipping</CardTitle>
+            <CardTitle className="text-[#0d2c54] font-extrabold">{t("Calculate your shipping")}</CardTitle>
 
             <Tabs defaultValue="domestic" className="w-full mt-4" onValueChange={(v) => setMode(v as Mode)}>
               <TabsList className="grid w-full grid-cols-2 rounded-xl">
@@ -177,7 +178,7 @@ export const ShippingCalculator = () => {
               <div className="mt-4 flex items-start gap-2 text-xs text-gray-600 bg-white border rounded-xl p-3">
                 <Info className="w-4 h-4 mt-0.5 text-[#ff6b00]" />
                 <div>
-                  Domestic calculator is completed for <b>Yangon Township</b> pricing table.
+                  Domestic calculator is completed for <b>{t("Yangon Township")}</b> pricing table.
                   For other regions, you can add tables later or show “contact support”.
                 </div>
               </div>
@@ -190,6 +191,8 @@ export const ShippingCalculator = () => {
 };
 
 function DomesticCalculator() {
+  const { t } = useI18n();
+
   const [region, setRegion] = useState<"yangon" | "mandalay" | "other">("yangon");
   const [township, setTownship] = useState<string>("");
   const [baseRate, setBaseRate] = useState<number | null>(null);
@@ -211,7 +214,7 @@ function DomesticCalculator() {
     <div className="p-4 space-y-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">Destination Region</label>
+          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">{t("Destination Region")}</label>
           <select
             className="w-full p-3 border rounded-xl bg-white"
             value={region}
@@ -222,29 +225,29 @@ function DomesticCalculator() {
               setBaseRate(null);
             }}
           >
-            <option value="yangon">Yangon City</option>
-            <option value="mandalay">Mandalay Region</option>
-            <option value="other">Other States/Regions</option>
+            <option value="yangon">{t("Yangon City")}</option>
+            <option value="mandalay">{t("Mandalay Region")}</option>
+            <option value="other">{t("Other States/Regions")}</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">Weight (kg)</label>
+          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">{t("Weight (kg)")}</label>
           <input
             type="number"
             min={0}
             step={0.1}
-            placeholder="e.g. 1.5"
+            placeholder={t("e.g. 1.5")}
             className="w-full p-3 border rounded-xl bg-white"
             value={Number.isFinite(weightKg) ? weightKg : 0}
             onChange={(e) => setWeightKg(Number(e.target.value))}
           />
-          <p className="text-xs text-gray-500 mt-1">First 1kg included. +500 MMK per extra kg (rounded up).</p>
+          <p className="text-xs text-gray-500 mt-1">{t("First 1kg included. +500 MMK per extra kg (rounded up).")}</p>
         </div>
 
         {region === "yangon" ? (
           <div className="md:col-span-2">
-            <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">Select Township</label>
+            <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">{t("Select Township")}</label>
             <select
               className="w-full p-3 border rounded-xl bg-white"
               value={township}
@@ -277,7 +280,7 @@ function DomesticCalculator() {
       </div>
 
       <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center">
-        <p className="text-xs text-gray-500 uppercase font-extrabold">Estimated Cost</p>
+        <p className="text-xs text-gray-500 uppercase font-extrabold">{t("Estimated Cost")}</p>
         <h3 className="text-4xl font-extrabold text-[#0d2c54] my-2">
           {totalMmk === null ? "-- MMK" : `${totalMmk.toLocaleString()} MMK`}
         </h3>
@@ -373,7 +376,7 @@ function InternationalCalculator() {
     <div className="p-4 space-y-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">Destination Country</label>
+          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">{t("Destination Country")}</label>
           <select
             className="w-full p-3 border rounded-xl bg-white"
             value={selected}
@@ -397,19 +400,19 @@ function InternationalCalculator() {
         </div>
 
         <div>
-          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">Volumetric Divisor</label>
+          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">{t("Volumetric Divisor")}</label>
           <select
             className="w-full p-3 border rounded-xl bg-white"
             value={divisor}
             onChange={(e) => setDivisor(Number(e.target.value) as 5000 | 6000)}
           >
-            <option value={5000}>5000 (Standard Air Cargo)</option>
-            <option value={6000}>6000 (Light Cargo)</option>
+            <option value={5000}>{t("5000 (Standard Air Cargo)")}</option>
+            <option value={6000}>{t("6000 (Light Cargo)")}</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">Actual Weight (kg)</label>
+          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">{t("Actual Weight (kg)")}</label>
           <input
             type="number"
             min={0}
@@ -417,18 +420,18 @@ function InternationalCalculator() {
             className="w-full p-3 border rounded-xl bg-white"
             value={Number.isFinite(weightKg) ? weightKg : 0}
             onChange={(e) => setWeightKg(Number(e.target.value))}
-            placeholder="e.g. 2.0"
+            placeholder={t("e.g. 2.0")}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">Dimensions (cm)</label>
+          <label className="block text-sm font-extrabold text-[#0d2c54] mb-2">{t("Dimensions (cm)")}</label>
           <div className="grid grid-cols-3 gap-2">
             <input
               type="number"
               min={0}
               className="p-3 border rounded-xl bg-white"
-              placeholder="L"
+              placeholder={t("L")}
               value={dims.l || ""}
               onChange={(e) => setDims((d) => ({ ...d, l: Number(e.target.value) }))}
             />
@@ -436,7 +439,7 @@ function InternationalCalculator() {
               type="number"
               min={0}
               className="p-3 border rounded-xl bg-white"
-              placeholder="W"
+              placeholder={t("W")}
               value={dims.w || ""}
               onChange={(e) => setDims((d) => ({ ...d, w: Number(e.target.value) }))}
             />
@@ -444,7 +447,7 @@ function InternationalCalculator() {
               type="number"
               min={0}
               className="p-3 border rounded-xl bg-white"
-              placeholder="H"
+              placeholder={t("H")}
               value={dims.h || ""}
               onChange={(e) => setDims((d) => ({ ...d, h: Number(e.target.value) }))}
             />
@@ -463,17 +466,17 @@ function InternationalCalculator() {
 
       {result ? (
         <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6">
-          <div className="text-xs text-gray-500 uppercase font-extrabold">Result</div>
+          <div className="text-xs text-gray-500 uppercase font-extrabold">{t("Result")}</div>
 
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <Box label="Actual" value={`${result.actual.toFixed(2)} kg`} />
-            <Box label="Volumetric" value={`${result.volumetric.toFixed(2)} kg`} />
-            <Box label="Chargeable" value={`${result.chargeable.toFixed(2)} kg`} />
-            <Box label="Rate" value={`$${result.usdPerKg.toFixed(2)}/kg`} />
+            <Box label={t("Actual")} value={`${result.actual.toFixed(2)} kg`} />
+            <Box label={t("Volumetric")} value={`${result.volumetric.toFixed(2)} kg`} />
+            <Box label={t("Chargeable")} value={`${result.chargeable.toFixed(2)} kg`} />
+            <Box label={t("Rate")} value={`$${result.usdPerKg.toFixed(2)}/kg`} />
           </div>
 
           <div className="mt-5 bg-white border rounded-2xl p-5 text-center">
-            <div className="text-xs text-gray-500 uppercase font-extrabold">Estimated Total</div>
+            <div className="text-xs text-gray-500 uppercase font-extrabold">{t("Estimated Total")}</div>
             <div className="text-4xl font-extrabold text-[#0d2c54] mt-2">${result.totalUsd.toFixed(2)}</div>
             <div className="text-xs text-gray-600 mt-2">
               Chargeable weight is the greater of actual vs volumetric.

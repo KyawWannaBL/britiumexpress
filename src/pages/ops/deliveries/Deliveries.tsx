@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { collection, onSnapshot, orderBy, query, updateDoc, doc, where, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebaseconfig";
 import { useAuthProfile, requireStation } from "../../../shared/useAuthProfile";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Delivery = {
   stationId: string;
@@ -14,6 +15,8 @@ type Delivery = {
 };
 
 export default function Deliveries() {
+  const { t } = useI18n();
+
   const { user, profile, loading } = useAuthProfile();
   const [params] = useSearchParams();
   const highlight = params.get("highlight");
@@ -47,15 +50,15 @@ export default function Deliveries() {
     });
   };
 
-  if (loading) return <div className="p-6">Loading…</div>;
-  if (!user) return <div className="p-6">Please login.</div>;
+  if (loading) return <div className="p-6">{t("Loading…")}</div>;
+  if (!user) return <div className="p-6">{t("Please login.")}</div>;
 
   return (
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-2xl font-extrabold">Deliveries</div>
-          <div className="text-sm text-neutral-600">Create, monitor, and update delivery jobs.</div>
+          <div className="text-2xl font-extrabold">{t("Deliveries")}</div>
+          <div className="text-sm text-neutral-600">{t("Create, monitor, and update delivery jobs.")}</div>
         </div>
         <Link className="rounded-xl bg-black px-4 py-2 text-white font-bold" to="/ops/deliveries/create">
           + Create Delivery
@@ -67,34 +70,34 @@ export default function Deliveries() {
           Station: <span className="font-mono">{profile?.stationId ?? "N/A"}</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="text-xs font-bold uppercase text-neutral-500">Filter</div>
+          <div className="text-xs font-bold uppercase text-neutral-500">{t("Filter")}</div>
           <select value={status} onChange={(e) => setStatus(e.target.value)} className="rounded-xl border px-3 py-2 bg-white text-sm">
-            <option value="ALL">All</option>
-            <option value="pending">Pending</option>
-            <option value="active">Active</option>
-            <option value="completed">Completed</option>
-            <option value="failed">Failed</option>
-            <option value="returned">Returned</option>
+            <option value="ALL">{t("All")}</option>
+            <option value="pending">{t("Pending")}</option>
+            <option value="active">{t("Active")}</option>
+            <option value="completed">{t("Completed")}</option>
+            <option value="failed">{t("Failed")}</option>
+            <option value="returned">{t("Returned")}</option>
           </select>
         </div>
       </div>
 
       <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-        <div className="px-4 py-3 border-b text-sm font-semibold">Delivery List</div>
+        <div className="px-4 py-3 border-b text-sm font-semibold">{t("Delivery List")}</div>
         <div className="overflow-auto">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 text-neutral-600">
               <tr className="text-left">
-                <th className="px-4 py-3">ID</th>
-                <th className="px-4 py-3">Driver</th>
-                <th className="px-4 py-3">Parcels</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3 w-72">Actions</th>
+                <th className="px-4 py-3">{t("ID")}</th>
+                <th className="px-4 py-3">{t("Driver")}</th>
+                <th className="px-4 py-3">{t("Parcels")}</th>
+                <th className="px-4 py-3">{t("Status")}</th>
+                <th className="px-4 py-3 w-72">{t("Actions")}</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={5} className="px-4 py-6 text-neutral-600">No deliveries.</td></tr>
+                <tr><td colSpan={5} className="px-4 py-6 text-neutral-600">{t("No deliveries.")}</td></tr>
               ) : (
                 filtered.map((r) => (
                   <tr key={r.id} className={`border-t ${highlight === r.id ? "bg-yellow-50" : ""}`}>

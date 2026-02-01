@@ -6,6 +6,7 @@ import { RequireRole } from "../../auth/RequireAuth";
 import { useAuth } from "../../auth/AuthContext";
 import PageHeader from "@/components/admin/PageHeader";
 import { Badge, Button, Card, CardBody, CardHeader, cn } from "@/components/ui/SharedComponents";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type CheckResult = {
   name: string;
@@ -26,6 +27,8 @@ function pre(v: unknown) {
 }
 
 export default function DebugAuthPage() {
+  const { t } = useI18n();
+
   const { user, refresh } = useAuth();
   const [checks, setChecks] = React.useState<CheckResult[]>([]);
   const [token, setToken] = React.useState<any>(null);
@@ -108,7 +111,7 @@ export default function DebugAuthPage() {
       <div className="space-y-6">
         <PageHeader
           titleKey="admin.debugAuth"
-          subtitle="Shows auth/profile state + Firestore read health. Super Admin only."
+          subtitle={t("Shows auth/profile state + Firestore read health. Super Admin only.")}
           right={
             <div className="flex items-center gap-2">
               <Button variant="secondary" onClick={() => void refresh()}>
@@ -123,27 +126,27 @@ export default function DebugAuthPage() {
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <Card>
-            <CardHeader title="Current Profile (AuthContext)" subtitle="What UI sees after login" />
+            <CardHeader title={t("Current Profile (AuthContext)")} subtitle={t("What UI sees after login")} />
             <CardBody>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <div className="rounded-xl border bg-slate-50 p-3">
-                  <div className="text-xs text-slate-500 font-bold">uid</div>
+                  <div className="text-xs text-slate-500 font-bold">{t("uid")}</div>
                   <div className="mt-1 font-extrabold text-slate-900">{user?.uid ?? "-"}</div>
                 </div>
                 <div className="rounded-xl border bg-slate-50 p-3">
-                  <div className="text-xs text-slate-500 font-bold">email</div>
+                  <div className="text-xs text-slate-500 font-bold">{t("email")}</div>
                   <div className="mt-1 font-extrabold text-slate-900 break-all">{user?.email ?? "-"}</div>
                 </div>
                 <div className="rounded-xl border bg-slate-50 p-3">
-                  <div className="text-xs text-slate-500 font-bold">role</div>
+                  <div className="text-xs text-slate-500 font-bold">{t("role")}</div>
                   <div className="mt-1 font-extrabold text-slate-900">{user?.role ?? "-"}</div>
                 </div>
                 <div className="rounded-xl border bg-slate-50 p-3">
-                  <div className="text-xs text-slate-500 font-bold">status</div>
+                  <div className="text-xs text-slate-500 font-bold">{t("status")}</div>
                   <div className="mt-1 font-extrabold text-slate-900">{user?.status ?? "-"}</div>
                 </div>
                 <div className="rounded-xl border bg-slate-50 p-3">
-                  <div className="text-xs text-slate-500 font-bold">mustChangePassword</div>
+                  <div className="text-xs text-slate-500 font-bold">{t("mustChangePassword")}</div>
                   <div className="mt-1 font-extrabold text-slate-900">{String(Boolean(user?.mustChangePassword))}</div>
                 </div>
               </div>
@@ -151,7 +154,7 @@ export default function DebugAuthPage() {
           </Card>
 
           <Card>
-            <CardHeader title="Health Checks" subtitle="If these fail, you will be stuck on login/portal." />
+            <CardHeader title={t("Health Checks")} subtitle={t("If these fail, you will be stuck on login/portal.")} />
             <CardBody>
               <div className="space-y-2">
                 {checks.map((c) => (
@@ -163,7 +166,7 @@ export default function DebugAuthPage() {
                     <OkBadge ok={c.ok} />
                   </div>
                 ))}
-                {!checks.length ? <div className="text-sm text-slate-600">No checks yet.</div> : null}
+                {!checks.length ? <div className="text-sm text-slate-600">{t("No checks yet.")}</div> : null}
               </div>
 
               <div className="mt-4 text-xs text-slate-500">
@@ -175,7 +178,7 @@ export default function DebugAuthPage() {
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <Card>
-            <CardHeader title="Firestore user doc (users/{uid})" subtitle="Raw data the rules allow you to read" />
+            <CardHeader title={t("Firestore user doc (users/{uid})")} subtitle={t("Raw data the rules allow you to read")} />
             <CardBody>
               <pre className={cn("text-xs rounded-xl border bg-slate-50 p-3 overflow-auto max-h-[360px]")}>
 {pre(userDoc)}
@@ -184,7 +187,7 @@ export default function DebugAuthPage() {
           </Card>
 
           <Card>
-            <CardHeader title="Token claims" subtitle="Useful if you later move to server aggregation on z.com" />
+            <CardHeader title={t("Token claims")} subtitle={t("Useful if you later move to server aggregation on z.com")} />
             <CardBody>
               <pre className={cn("text-xs rounded-xl border bg-slate-50 p-3 overflow-auto max-h-[360px]")}>
 {pre(token)}

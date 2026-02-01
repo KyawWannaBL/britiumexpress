@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Bell, Map, Package, Truck, Wifi, WifiOff } from 'lucide-react';
 import { auth, db } from '../../firebase'; // Adjust path
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import { useI18n } from "@/i18n/I18nProvider";
 
 const RiderDashboard = () => {
+  const { t } = useI18n();
+
   const navigate = useNavigate();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isOnDuty, setIsOnDuty] = useState(false);
@@ -32,7 +35,7 @@ const RiderDashboard = () => {
         <div className="flex justify-between items-center mb-4">
           <div>
             <h1 className="text-xl font-bold">Hello, {auth.currentUser?.displayName || 'Rider'}</h1>
-            <p className="text-sm opacity-90">Zone: Downtown-A</p>
+            <p className="text-sm opacity-90">{t("Zone: Downtown-A")}</p>
           </div>
           <button onClick={() => navigate('/rider/notifications')} className="relative p-2">
             <Bell size={24} />
@@ -43,7 +46,7 @@ const RiderDashboard = () => {
         {/* Connectivity & Duty Toggle */}
         <div className="flex justify-between items-center bg-blue-700/50 p-3 rounded-xl">
           <div className="flex items-center gap-2">
-            {isOnline ? <Wifi size={18} className="text-green-300"/> : <WifiOff size={18} className="text-red-300"/>}
+            {isOnline ? <Wifi size={18} className="text-green-300"/>{t(":")}<WifiOff size={18} className="text-red-300"/>}
             <span className="text-sm font-medium">{isOnline ? 'Online' : 'Offline Mode'}</span>
           </div>
           <button 
@@ -62,33 +65,33 @@ const RiderDashboard = () => {
         <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center" onClick={() => navigate('/rider/tasks?filter=pending')}>
           <Package className="text-blue-500 mb-2" />
           <span className="text-2xl font-bold text-gray-800">{stats.pending}</span>
-          <span className="text-xs text-gray-500">Pending Tasks</span>
+          <span className="text-xs text-gray-500">{t("Pending Tasks")}</span>
         </div>
         <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
           <Truck className="text-green-500 mb-2" />
           <span className="text-2xl font-bold text-gray-800">{stats.completed}</span>
-          <span className="text-xs text-gray-500">Completed</span>
+          <span className="text-xs text-gray-500">{t("Completed")}</span>
         </div>
         <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
           <span className="text-2xl font-bold text-red-500">{stats.failed}</span>
-          <span className="text-xs text-gray-500">Failed/Return</span>
+          <span className="text-xs text-gray-500">{t("Failed/Return")}</span>
         </div>
         <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center" onClick={() => navigate('/rider/wallet')}>
           <span className="text-lg font-bold text-gray-800">{stats.cod.toLocaleString()} Ks</span>
-          <span className="text-xs text-gray-500">COD On-Hand</span>
+          <span className="text-xs text-gray-500">{t("COD On-Hand")}</span>
         </div>
       </div>
 
       {/* 3. Quick Actions */}
       <div className="p-4">
-        <h3 className="text-lg font-bold text-gray-800 mb-3">Today's Route</h3>
+        <h3 className="text-lg font-bold text-gray-800 mb-3">{t("Today's Route")}</h3>
         <div className="bg-white p-4 rounded-xl shadow-sm border border-l-4 border-l-orange-500 mb-3">
           <div className="flex justify-between items-start">
             <div>
-              <h4 className="font-bold text-gray-800">Next Stop: Golden City Condo</h4>
-              <p className="text-sm text-gray-500">Delivery • 2.4 km away</p>
+              <h4 className="font-bold text-gray-800">{t("Next Stop: Golden City Condo")}</h4>
+              <p className="text-sm text-gray-500">{t("Delivery • 2.4 km away")}</p>
             </div>
-            <span className="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded">Exp</span>
+            <span className="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded">{t("Exp")}</span>
           </div>
           <button 
             onClick={() => navigate('/rider/map')}

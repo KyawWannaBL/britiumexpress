@@ -14,6 +14,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../../firebaseconfig";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type ParcelStatus =
   | "created"
@@ -100,6 +101,8 @@ async function logWarehouseEvent(input: {
 }
 
 export default function ScanIn() {
+  const { t } = useI18n();
+
   const { user, profile } = useUserProfile();
   const stationId = profile?.stationId ?? "";
   const stationName = profile?.stationName ?? "Station";
@@ -170,7 +173,7 @@ export default function ScanIn() {
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-2xl font-extrabold">Inbound • Scan In</div>
+          <div className="text-2xl font-extrabold">{t("Inbound • Scan In")}</div>
           <div className="text-sm text-neutral-600">
             Receive parcels into <span className="font-semibold">{stationName}</span>
           </div>
@@ -199,7 +202,7 @@ export default function ScanIn() {
                 "mt-1 w-full rounded-xl border px-4 py-3 outline-none",
                 "focus:ring-2 focus:ring-black/20"
               )}
-              placeholder="Scan or enter tracking ID"
+              placeholder={t("Scan or enter tracking ID")}
               autoFocus
             />
           </div>
@@ -214,15 +217,15 @@ export default function ScanIn() {
         </form>
 
         <div className="mt-4 text-xs text-neutral-500">
-          Tip: If your parcels use docId = trackingId, Scan In is instant. Otherwise it searches by <code>trackingId</code> field.
+          Tip: If your parcels use docId = trackingId, Scan In is instant. Otherwise it searches by <code>{t("trackingId")}</code> field.
         </div>
       </div>
 
       <div className="rounded-xl border bg-white p-4 shadow-sm">
-        <div className="text-sm font-semibold">Recent Scans</div>
+        <div className="text-sm font-semibold">{t("Recent Scans")}</div>
         <div className="mt-3 space-y-2">
           {lastScans.length === 0 ? (
-            <div className="text-sm text-neutral-600">No scans yet.</div>
+            <div className="text-sm text-neutral-600">{t("No scans yet.")}</div>
           ) : (
             lastScans.map((s, idx) => (
               <div

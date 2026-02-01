@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { DollarSign, Download, ArrowUpRight, Clock, AlertCircle, Search, Filter } from 'lucide-react';
+import { useI18n } from "@/i18n/I18nProvider";
 
 const MerchantFinance = () => {
+  const { t } = useI18n();
+
   const [activeTab, setActiveTab] = useState<'ledger' | 'payouts'>('ledger');
 
   // Mock Data: COD Ledger
@@ -24,8 +27,8 @@ const MerchantFinance = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative overflow-hidden">
           <div className="relative z-10">
-            <p className="text-gray-500 font-bold text-sm uppercase">Unsettled COD</p>
-            <h2 className="text-3xl font-extrabold text-gray-900 mt-2">1,245,000 <span className="text-sm font-medium text-gray-400">MMK</span></h2>
+            <p className="text-gray-500 font-bold text-sm uppercase">{t("Unsettled COD")}</p>
+            <h2 className="text-3xl font-extrabold text-gray-900 mt-2">{t("1,245,000")}<span className="text-sm font-medium text-gray-400">{t("MMK")}</span></h2>
             <p className="text-xs text-orange-500 font-bold mt-2 flex items-center gap-1">
               <Clock size={12} /> Next Payout: Feb 1st
             </p>
@@ -34,8 +37,8 @@ const MerchantFinance = () => {
         </div>
 
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <p className="text-gray-500 font-bold text-sm uppercase">Wallet Balance</p>
-          <h2 className="text-3xl font-extrabold text-blue-600 mt-2">50,000 <span className="text-sm font-medium text-gray-400">MMK</span></h2>
+          <p className="text-gray-500 font-bold text-sm uppercase">{t("Wallet Balance")}</p>
+          <h2 className="text-3xl font-extrabold text-blue-600 mt-2">{t("50,000")}<span className="text-sm font-medium text-gray-400">{t("MMK")}</span></h2>
           <div className="flex gap-2 mt-3">
              <button className="text-xs bg-blue-50 text-blue-700 font-bold px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors">
                + Top Up
@@ -48,8 +51,8 @@ const MerchantFinance = () => {
 
         <div className="bg-gradient-to-br from-blue-900 to-blue-800 p-6 rounded-xl shadow-lg text-white flex flex-col justify-between">
           <div>
-            <p className="text-blue-200 font-bold text-sm uppercase">Action</p>
-            <h3 className="font-bold text-lg mt-1">Request Early Payout?</h3>
+            <p className="text-blue-200 font-bold text-sm uppercase">{t("Action")}</p>
+            <h3 className="font-bold text-lg mt-1">{t("Request Early Payout?")}</h3>
           </div>
           <button className="mt-4 w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-2 rounded-lg flex items-center justify-center gap-2 transition-all">
             <ArrowUpRight size={16} /> Request Withdrawal
@@ -78,7 +81,7 @@ const MerchantFinance = () => {
         <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
           <div className="relative">
             <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
-            <input type="text" placeholder="Search Order ID..." className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none w-64" />
+            <input type="text" placeholder={t("Search Order ID...")} className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none w-64" />
           </div>
           <div className="flex gap-2">
             <button className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-bold text-gray-600 hover:bg-gray-50">
@@ -96,11 +99,11 @@ const MerchantFinance = () => {
             <table className="w-full text-left text-sm">
               <thead className="bg-gray-50 text-gray-500 uppercase font-bold text-xs">
                 <tr>
-                  <th className="px-6 py-4">Date</th>
-                  <th className="px-6 py-4">Ref ID</th>
-                  <th className="px-6 py-4">Description</th>
-                  <th className="px-6 py-4 text-right">Amount</th>
-                  <th className="px-6 py-4 text-center">Status</th>
+                  <th className="px-6 py-4">{t("Date")}</th>
+                  <th className="px-6 py-4">{t("Ref ID")}</th>
+                  <th className="px-6 py-4">{t("Description")}</th>
+                  <th className="px-6 py-4 text-right">{t("Amount")}</th>
+                  <th className="px-6 py-4 text-center">{t("Status")}</th>
                   <th className="px-6 py-4"></th>
                 </tr>
               </thead>
@@ -122,7 +125,7 @@ const MerchantFinance = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                       <button title="Report Issue" className="text-gray-400 hover:text-red-500"><AlertCircle size={16}/></button>
+                       <button title={t("Report Issue")} className="text-gray-400 hover:text-red-500"><AlertCircle size={16}/></button>
                     </td>
                   </tr>
                 ))}
@@ -132,11 +135,11 @@ const MerchantFinance = () => {
             <table className="w-full text-left text-sm">
                <thead className="bg-gray-50 text-gray-500 uppercase font-bold text-xs">
                 <tr>
-                  <th className="px-6 py-4">Batch ID</th>
-                  <th className="px-6 py-4">Date</th>
-                  <th className="px-6 py-4">Amount</th>
-                  <th className="px-6 py-4">Method</th>
-                  <th className="px-6 py-4 text-center">Status</th>
+                  <th className="px-6 py-4">{t("Batch ID")}</th>
+                  <th className="px-6 py-4">{t("Date")}</th>
+                  <th className="px-6 py-4">{t("Amount")}</th>
+                  <th className="px-6 py-4">{t("Method")}</th>
+                  <th className="px-6 py-4 text-center">{t("Status")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">

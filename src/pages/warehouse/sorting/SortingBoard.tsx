@@ -14,6 +14,7 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { auth, db } from "../../../firebaseconfig";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type UserProfile = { stationId?: string; stationName?: string; role?: string };
 
@@ -52,6 +53,8 @@ const DEFAULT_BINS = ["A", "B", "C", "D", "E"];
 const DEFAULT_ROUTES = ["R1", "R2", "R3", "R4"];
 
 export default function SortingBoard() {
+  const { t } = useI18n();
+
   const { user, profile } = useUserProfile();
   const stationId = profile?.stationId ?? "";
   const stationName = profile?.stationName ?? "Station";
@@ -130,7 +133,7 @@ export default function SortingBoard() {
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-2xl font-extrabold">Sorting Board</div>
+          <div className="text-2xl font-extrabold">{t("Sorting Board")}</div>
           <div className="text-sm text-neutral-600">
             Station: <span className="font-semibold">{stationName}</span>
           </div>
@@ -142,17 +145,17 @@ export default function SortingBoard() {
 
       <div className="rounded-xl border bg-white p-4 shadow-sm grid gap-3 md:grid-cols-4">
         <div className="md:col-span-2">
-          <label className="text-xs font-bold text-neutral-500 uppercase">Search</label>
+          <label className="text-xs font-bold text-neutral-500 uppercase">{t("Search")}</label>
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="mt-1 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/20"
-            placeholder="Tracking ID"
+            placeholder={t("Tracking ID")}
           />
         </div>
 
         <div>
-          <label className="text-xs font-bold text-neutral-500 uppercase">Bin</label>
+          <label className="text-xs font-bold text-neutral-500 uppercase">{t("Bin")}</label>
           <select
             value={bin}
             onChange={(e) => setBin(e.target.value)}
@@ -167,7 +170,7 @@ export default function SortingBoard() {
         </div>
 
         <div>
-          <label className="text-xs font-bold text-neutral-500 uppercase">Route</label>
+          <label className="text-xs font-bold text-neutral-500 uppercase">{t("Route")}</label>
           <select
             value={routeCode}
             onChange={(e) => setRouteCode(e.target.value)}
@@ -209,7 +212,7 @@ export default function SortingBoard() {
 
       <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b">
-          <div className="text-sm font-semibold">Parcels</div>
+          <div className="text-sm font-semibold">{t("Parcels")}</div>
           <div className="text-xs text-neutral-500">
             {loading ? "Loading…" : `${filtered.length} shown / ${rows.length} total`}
           </div>
@@ -224,13 +227,13 @@ export default function SortingBoard() {
                     type="checkbox"
                     onChange={(e) => toggleAll(e.target.checked)}
                     checked={filtered.length > 0 && filtered.every((r) => selected[r.id])}
-                    aria-label="Select all filtered"
+                    aria-label={t("Select all filtered")}
                   />
                 </th>
-                <th className="px-4 py-3">Tracking</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Bin</th>
-                <th className="px-4 py-3">Route</th>
+                <th className="px-4 py-3">{t("Tracking")}</th>
+                <th className="px-4 py-3">{t("Status")}</th>
+                <th className="px-4 py-3">{t("Bin")}</th>
+                <th className="px-4 py-3">{t("Route")}</th>
               </tr>
             </thead>
             <tbody>

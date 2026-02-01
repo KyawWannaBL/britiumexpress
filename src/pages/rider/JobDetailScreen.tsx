@@ -1,8 +1,11 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Phone, MessageCircle, Navigation, ChevronLeft, Package, AlertTriangle } from 'lucide-react';
+import { useI18n } from "@/i18n/I18nProvider";
 
 const JobDetailScreen = () => {
+  const { t } = useI18n();
+
   const { jobId } = useParams();
   const navigate = useNavigate();
 
@@ -61,15 +64,15 @@ const JobDetailScreen = () => {
 
         {/* Parcel Details */}
         <div className="bg-white p-4 rounded-xl shadow-sm">
-          <h3 className="font-bold text-gray-500 text-sm uppercase mb-3">Shipment Details</h3>
+          <h3 className="font-bold text-gray-500 text-sm uppercase mb-3">{t("Shipment Details")}</h3>
           
           <div className="flex justify-between items-center py-2 border-b border-gray-100">
-            <span className="text-gray-600">Collect COD</span>
+            <span className="text-gray-600">{t("Collect COD")}</span>
             <span className="font-bold text-lg text-red-600">{job.codAmount.toLocaleString()} Ks</span>
           </div>
 
           <div className="flex justify-between items-center py-2 border-b border-gray-100">
-            <span className="text-gray-600">SLA Deadline</span>
+            <span className="text-gray-600">{t("SLA Deadline")}</span>
             <span className="font-bold text-red-500">{job.slaTime}</span>
           </div>
 

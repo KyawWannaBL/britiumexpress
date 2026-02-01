@@ -2,6 +2,7 @@ import React from "react";
 import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../../firebaseconfig";
 import { useAuthProfile, requireStation } from "../../../shared/useAuthProfile";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Order = {
   orderNo?: string;
@@ -12,6 +13,8 @@ type Order = {
 };
 
 export default function Orders() {
+  const { t } = useI18n();
+
   const { user, profile, loading } = useAuthProfile();
   const [rows, setRows] = React.useState<Array<{ id: string; data: Order }>>([]);
   const [status, setStatus] = React.useState("ALL");
@@ -25,16 +28,16 @@ export default function Orders() {
     return onSnapshot(q, (snap) => setRows(snap.docs.map((d) => ({ id: d.id, data: d.data() as Order }))));
   }, [user, profile]);
 
-  if (loading) return <div className="p-6">Loading…</div>;
-  if (!user) return <div className="p-6">Please login.</div>;
+  if (loading) return <div className="p-6">{t("Loading…")}</div>;
+  if (!user) return <div className="p-6">{t("Please login.")}</div>;
 
   const filtered = rows.filter((r) => status === "ALL" || (r.data.status ?? "") === status);
 
   return (
     <div className="p-6 space-y-5">
       <div>
-        <div className="text-2xl font-extrabold">Orders</div>
-        <div className="text-sm text-neutral-600">Shipment orders pipeline (station scope).</div>
+        <div className="text-2xl font-extrabold">{t("Orders")}</div>
+        <div className="text-sm text-neutral-600">{t("Shipment orders pipeline (station scope).")}</div>
       </div>
 
       <div className="rounded-xl border bg-white p-4 shadow-sm flex items-center justify-between">
@@ -42,31 +45,31 @@ export default function Orders() {
           Station: <span className="font-mono">{profile?.stationId ?? "N/A"}</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="text-xs font-bold uppercase text-neutral-500">Status</div>
+          <div className="text-xs font-bold uppercase text-neutral-500">{t("Status")}</div>
           <select value={status} onChange={(e) => setStatus(e.target.value)} className="rounded-xl border px-3 py-2 bg-white text-sm">
-            <option value="ALL">All</option>
-            <option value="created">Created</option>
-            <option value="in_transit">In transit</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="ALL">{t("All")}</option>
+            <option value="created">{t("Created")}</option>
+            <option value="in_transit">{t("In transit")}</option>
+            <option value="delivered">{t("Delivered")}</option>
+            <option value="cancelled">{t("Cancelled")}</option>
           </select>
         </div>
       </div>
 
       <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-        <div className="px-4 py-3 border-b text-sm font-semibold">Order List</div>
+        <div className="px-4 py-3 border-b text-sm font-semibold">{t("Order List")}</div>
         <div className="overflow-auto">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 text-neutral-600">
               <tr className="text-left">
-                <th className="px-4 py-3">Order</th>
-                <th className="px-4 py-3">Merchant</th>
-                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">{t("Order")}</th>
+                <th className="px-4 py-3">{t("Merchant")}</th>
+                <th className="px-4 py-3">{t("Status")}</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={3} className="px-4 py-6 text-neutral-600">No orders.</td></tr>
+                <tr><td colSpan={3} className="px-4 py-6 text-neutral-600">{t("No orders.")}</td></tr>
               ) : (
                 filtered.map((r) => (
                   <tr key={r.id} className="border-t">

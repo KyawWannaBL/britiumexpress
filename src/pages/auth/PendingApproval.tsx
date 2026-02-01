@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Hourglass, Bell, CheckCircle2 } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export default function PendingApproval(): JSX.Element {
+  const { t } = useI18n();
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
       <div className="w-full max-w-md rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-xl">
@@ -11,7 +14,7 @@ export default function PendingApproval(): JSX.Element {
           <Hourglass className="h-9 w-9 text-orange-600 animate-pulse" />
         </div>
 
-        <h1 className="mb-3 text-2xl font-bold text-gray-900">Registration Submitted</h1>
+        <h1 className="mb-3 text-2xl font-bold text-gray-900">{t("Registration Submitted")}</h1>
 
         <p className="mb-6 leading-relaxed text-gray-600">
           Thank you for joining Britium Express! Your account is currently{" "}
@@ -25,7 +28,7 @@ export default function PendingApproval(): JSX.Element {
         <div className="mb-8 rounded-xl border border-blue-100 bg-blue-50 p-5 text-left">
           <div className="mb-3 flex items-center gap-2 text-[#0D47A1]">
             <CheckCircle2 className="h-5 w-5" />
-            <p className="text-sm font-semibold">Status Update</p>
+            <p className="text-sm font-semibold">{t("Status Update")}</p>
           </div>
 
           <ul className="space-y-2 text-sm text-gray-600">
@@ -33,27 +36,27 @@ export default function PendingApproval(): JSX.Element {
               <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-[#0D47A1]">
                 1
               </span>
-              <span>Your documents have been received.</span>
+              <span>{t("Your documents have been received.")}</span>
             </li>
 
             <li className="flex items-start gap-2">
               <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-[#0D47A1]">
                 2
               </span>
-              <span>Admin verification is in progress.</span>
+              <span>{t("Admin verification is in progress.")}</span>
             </li>
 
             <li className="flex items-start gap-2">
               <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-[#0D47A1]">
                 3
               </span>
-              <span>You will be notified once approved.</span>
+              <span>{t("You will be notified once approved.")}</span>
             </li>
           </ul>
 
           <div className="mt-4 flex items-center gap-2 rounded-lg bg-white/60 px-3 py-2 text-xs text-gray-600">
             <Bell className="h-4 w-4 text-[#0D47A1]" />
-            <span>Please check your email regularly for updates.</span>
+            <span>{t("Please check your email regularly for updates.")}</span>
           </div>
         </div>
 

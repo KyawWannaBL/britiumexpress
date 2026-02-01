@@ -14,6 +14,7 @@ import {
   Button 
 } from "../../components/ui/SharedComponents";
 import { CheckCircle, Navigation, Package } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Assignment = {
   id: string;
@@ -30,6 +31,8 @@ const INITIAL_TASKS: Assignment[] = [
 ];
 
 export default function RiderDashboardPage() {
+  const { t } = useI18n();
+
   const [tasks, setTasks] = useState<Assignment[]>(INITIAL_TASKS);
 
   const updateStatus = (id: string, newStatus: Assignment["status"]) => {
@@ -40,15 +43,15 @@ export default function RiderDashboardPage() {
     <div className="space-y-6 animate-slide-up">
       {/* Rider Performance Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard title="Stops Today" value="12" hint="3 remaining" tone="blue" />
-        <StatCard title="Completed" value="9" hint="Great pace!" tone="green" />
-        <StatCard title="Daily Earnings" value="28,500 MMK" hint="Estimated" tone="orange" />
+        <StatCard title={t("Stops Today")} value="12" hint="3 remaining" tone="blue" />
+        <StatCard title={t("Completed")} value="9" hint="Great pace!" tone="green" />
+        <StatCard title={t("Daily Earnings")} value="28,500 MMK" hint="Estimated" tone="orange" />
       </div>
 
       <Card className="shadow-soft overflow-hidden">
         <CardHeader 
-          title="Daily Assignments" 
-          subtitle="Your route for today. Tap the button to update parcel status." 
+          title={t("Daily Assignments")} 
+          subtitle={t("Your route for today. Tap the button to update parcel status.")} 
         />
         <CardBody className="p-0">
           <DataTable<Assignment>

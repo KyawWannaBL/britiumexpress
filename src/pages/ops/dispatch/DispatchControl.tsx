@@ -2,6 +2,7 @@ import React from "react";
 import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../../firebaseconfig";
 import { useAuthProfile, requireStation } from "../../../shared/useAuthProfile";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Delivery = {
   stationId: string;
@@ -21,7 +22,7 @@ function Column({ title, items }: { title: string; items: Array<{ id: string; da
       </div>
       <div className="p-3 space-y-2">
         {items.length === 0 ? (
-          <div className="text-sm text-neutral-600">No items.</div>
+          <div className="text-sm text-neutral-600">{t("No items.")}</div>
         ) : (
           items.map((d) => (
             <div key={d.id} className="rounded-lg border p-3">
@@ -39,6 +40,8 @@ function Column({ title, items }: { title: string; items: Array<{ id: string; da
 }
 
 export default function DispatchControl() {
+  const { t } = useI18n();
+
   const { user, profile, loading } = useAuthProfile();
   const [rows, setRows] = React.useState<Array<{ id: string; data: Delivery }>>([]);
 
@@ -55,8 +58,8 @@ export default function DispatchControl() {
     return onSnapshot(q, (snap) => setRows(snap.docs.map((d) => ({ id: d.id, data: d.data() as Delivery }))));
   }, [user, profile]);
 
-  if (loading) return <div className="p-6">Loading…</div>;
-  if (!user) return <div className="p-6">Please login.</div>;
+  if (loading) return <div className="p-6">{t("Loading…")}</div>;
+  if (!user) return <div className="p-6">{t("Please login.")}</div>;
 
   const pending = rows.filter((x) => x.data.status === "pending");
   const active = rows.filter((x) => x.data.status === "active");
@@ -67,16 +70,16 @@ export default function DispatchControl() {
   return (
     <div className="p-6 space-y-5">
       <div>
-        <div className="text-2xl font-extrabold">Dispatch Control</div>
-        <div className="text-sm text-neutral-600">Live dispatch board by job status.</div>
+        <div className="text-2xl font-extrabold">{t("Dispatch Control")}</div>
+        <div className="text-sm text-neutral-600">{t("Live dispatch board by job status.")}</div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-5">
-        <Column title="Pending" items={pending} />
-        <Column title="Active" items={active} />
-        <Column title="Failed" items={failed} />
-        <Column title="Returned" items={returned} />
-        <Column title="Completed" items={completed} />
+        <Column title={t("Pending")} items={pending} />
+        <Column title={t("Active")} items={active} />
+        <Column title={t("Failed")} items={failed} />
+        <Column title={t("Returned")} items={returned} />
+        <Column title={t("Completed")} items={completed} />
       </div>
     </div>
   );

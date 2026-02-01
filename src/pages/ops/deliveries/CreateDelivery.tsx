@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../firebaseconfig";
 import { useAuthProfile, requireStation } from "../../../shared/useAuthProfile";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Parcel = {
   trackingId?: string;
@@ -43,6 +44,8 @@ async function findParcel(code: string): Promise<{ id: string; data: Parcel } | 
 }
 
 export default function CreateDelivery() {
+  const { t } = useI18n();
+
   const { user, profile, loading } = useAuthProfile();
   const navigate = useNavigate();
 
@@ -152,14 +155,14 @@ export default function CreateDelivery() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading…</div>;
+  if (loading) return <div className="p-6">{t("Loading…")}</div>;
 
   return (
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-2xl font-extrabold">Create Delivery</div>
-          <div className="text-sm text-neutral-600">Assign parcels to driver and dispatch.</div>
+          <div className="text-2xl font-extrabold">{t("Create Delivery")}</div>
+          <div className="text-sm text-neutral-600">{t("Assign parcels to driver and dispatch.")}</div>
         </div>
         <Link className="text-sm underline" to="/ops/deliveries">
           Back to Deliveries
@@ -172,12 +175,12 @@ export default function CreateDelivery() {
 
       <div className="rounded-xl border bg-white p-4 shadow-sm grid gap-3 md:grid-cols-3">
         <div className="md:col-span-2">
-          <label className="text-xs font-bold text-neutral-500 uppercase">Parcel tracking ID</label>
+          <label className="text-xs font-bold text-neutral-500 uppercase">{t("Parcel tracking ID")}</label>
           <input
             value={code}
             onChange={(e) => setCode(e.target.value)}
             className="mt-1 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/20"
-            placeholder="Scan or enter tracking"
+            placeholder={t("Scan or enter tracking")}
           />
         </div>
         <div className="flex items-end">
@@ -191,13 +194,13 @@ export default function CreateDelivery() {
         </div>
 
         <div className="md:col-span-3">
-          <label className="text-xs font-bold text-neutral-500 uppercase">Driver</label>
+          <label className="text-xs font-bold text-neutral-500 uppercase">{t("Driver")}</label>
           <select
             value={driverUid}
             onChange={(e) => setDriverUid(e.target.value)}
             className="mt-1 w-full rounded-xl border px-4 py-3 bg-white"
           >
-            <option value="">Select driver</option>
+            <option value="">{t("Select driver")}</option>
             {drivers.map((d) => (
               <option key={d.uid} value={d.uid}>
                 {d.data.displayName ?? d.uid} {d.data.phone ? `(${d.data.phone})` : ""}
@@ -221,20 +224,20 @@ export default function CreateDelivery() {
       </div>
 
       <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-        <div className="px-4 py-3 border-b text-sm font-semibold">Selected Parcels</div>
+        <div className="px-4 py-3 border-b text-sm font-semibold">{t("Selected Parcels")}</div>
         <div className="overflow-auto">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 text-neutral-600">
               <tr className="text-left">
-                <th className="px-4 py-3">Tracking</th>
-                <th className="px-4 py-3">Receiver</th>
-                <th className="px-4 py-3">Address</th>
-                <th className="px-4 py-3 w-24">Action</th>
+                <th className="px-4 py-3">{t("Tracking")}</th>
+                <th className="px-4 py-3">{t("Receiver")}</th>
+                <th className="px-4 py-3">{t("Address")}</th>
+                <th className="px-4 py-3 w-24">{t("Action")}</th>
               </tr>
             </thead>
             <tbody>
               {parcels.length === 0 ? (
-                <tr><td colSpan={4} className="px-4 py-6 text-neutral-600">No parcels added.</td></tr>
+                <tr><td colSpan={4} className="px-4 py-6 text-neutral-600">{t("No parcels added.")}</td></tr>
               ) : (
                 parcels.map((p) => (
                   <tr key={p.id} className="border-t">
@@ -242,7 +245,7 @@ export default function CreateDelivery() {
                     <td className="px-4 py-3">{p.data.receiverName ?? "-"}</td>
                     <td className="px-4 py-3">{p.data.deliveryAddress ?? "-"}</td>
                     <td className="px-4 py-3">
-                      <button className="text-sm underline" onClick={() => removeParcel(p.id)}>Remove</button>
+                      <button className="text-sm underline" onClick={() => removeParcel(p.id)}>{t("Remove")}</button>
                     </td>
                   </tr>
                 ))

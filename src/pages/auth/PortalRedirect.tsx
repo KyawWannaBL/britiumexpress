@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { auth } from "../../lib/firebase";
+import { useI18n } from "@/i18n/I18nProvider";
 
 function roleToDashboard(role: string): string {
   const r = role.toLowerCase();
@@ -34,6 +35,8 @@ function needsForcedPasswordChange(role: string, mustChangePassword?: boolean) {
 }
 
 export default function PortalRedirect() {
+  const { t } = useI18n();
+
   const { loading, user, refresh } = useAuth();
   const [tried, setTried] = React.useState(false);
 
@@ -45,12 +48,12 @@ export default function PortalRedirect() {
     }
   }, [tried, user, loading, refresh]);
 
-  if (loading) return <div className="min-h-[50vh] grid place-items-center text-sm text-slate-600">Loading…</div>;
+  if (loading) return <div className="min-h-[50vh] grid place-items-center text-sm text-slate-600">{t("Loading…")}</div>;
         if (!user) {
   // If Firebase has a session but profile hasn't loaded yet, do NOT bounce back to login.
   if (auth.currentUser) {
     void refresh();
-    return <div className="min-h-[50vh] grid place-items-center text-sm text-slate-600">Loading profile…</div>;
+    return <div className="min-h-[50vh] grid place-items-center text-sm text-slate-600">{t("Loading profile…")}</div>;
   }
   return <Navigate to="/login" replace />;
 }

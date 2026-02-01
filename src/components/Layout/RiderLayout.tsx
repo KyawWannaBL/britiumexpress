@@ -1,5 +1,6 @@
 import React from "react";
 import AppShell, { AppNavItem } from "./AppShell";
+import { useI18n } from "@/i18n/I18nProvider";
 
 const riderNav: AppNavItem[] = [
   { to: "/rider/home", label: "Home", icon: "Home", end: true },
@@ -10,9 +11,11 @@ const riderNav: AppNavItem[] = [
 ];
 
 export default function RiderLayout() {
+  const { t } = useI18n();
+
   return (
     <AppShell
-      title="Rider • Britium Express"
+      title={t("Rider • Britium Express")}
       brand={{
         name: "Rider App",
         href: "/rider/home",
@@ -22,8 +25,8 @@ export default function RiderLayout() {
       nav={riderNav}
       headerRight={
         <div className="flex items-center gap-2">
-          <span className="hidden sm:inline text-sm text-neutral-600">Rider</span>
-          <div className="h-8 w-8 rounded-full bg-neutral-200" aria-label="User avatar" />
+          <span className="hidden sm:inline text-sm text-neutral-600">{t("Rider")}</span>
+          <div className="h-8 w-8 rounded-full bg-neutral-200" aria-label={t("User avatar")} />
         </div>
       }
     />

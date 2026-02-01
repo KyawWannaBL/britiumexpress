@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AlertTriangle, Camera, X } from 'lucide-react';
+import { useI18n } from "@/i18n/I18nProvider";
 
 const RiderException = () => {
+  const { t } = useI18n();
+
   const { jobId } = useParams();
   const navigate = useNavigate();
 
@@ -40,7 +43,7 @@ const RiderException = () => {
       <div className="space-y-6">
         {/* 1. Reason Selection */}
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Select Reason</label>
+          <label className="block text-sm font-bold text-gray-700 mb-2">{t("Select Reason")}</label>
           <div className="grid grid-cols-2 gap-3">
             {reasons.map((r) => (
               <button
@@ -60,14 +63,14 @@ const RiderException = () => {
 
         {/* 2. Photo Proof (Conditional/Optional) */}
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Proof (Optional but Recommended)</label>
+          <label className="block text-sm font-bold text-gray-700 mb-2">{t("Proof (Optional but Recommended)")}</label>
           <label className="w-full h-32 bg-gray-200 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer overflow-hidden relative">
              {photo ? (
                <img src={photo} alt="Proof" className="absolute inset-0 w-full h-full object-cover" />
              ) : (
                <div className="text-gray-500 flex flex-col items-center">
                  <Camera size={24} className="mb-2" />
-                 <span className="text-xs">Take Photo of Location</span>
+                 <span className="text-xs">{t("Take Photo of Location")}</span>
                </div>
              )}
              <input type="file" accept="image/*" capture="environment" onChange={(e) => e.target.files && setPhoto(URL.createObjectURL(e.target.files[0]))} className="hidden" />
@@ -76,11 +79,11 @@ const RiderException = () => {
 
         {/* 3. Notes */}
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Additional Notes</label>
+          <label className="block text-sm font-bold text-gray-700 mb-2">{t("Additional Notes")}</label>
           <textarea 
             className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500 outline-none"
             rows={3}
-            placeholder="E.g., Called 3 times, neighbor said they moved..."
+            placeholder={t("E.g., Called 3 times, neighbor said they moved...")}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           />

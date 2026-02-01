@@ -16,6 +16,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../../firebaseconfig";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type UserProfile = { stationId?: string; stationName?: string };
 
@@ -56,6 +57,8 @@ async function findParcelByCode(code: string): Promise<{ id: string; data: Parce
 }
 
 export default function Returns() {
+  const { t } = useI18n();
+
   const { user, profile } = useUserProfile();
   const stationId = profile?.stationId ?? "";
   const stationName = profile?.stationName ?? "Station";
@@ -129,7 +132,7 @@ export default function Returns() {
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-2xl font-extrabold">Returns</div>
+          <div className="text-2xl font-extrabold">{t("Returns")}</div>
           <div className="text-sm text-neutral-600">
             Receive and manage return parcels.
           </div>
@@ -148,26 +151,26 @@ export default function Returns() {
 
         <form onSubmit={scanReturn} className="grid gap-3 md:grid-cols-4">
           <div className="md:col-span-2">
-            <label className="text-xs font-bold text-neutral-500 uppercase">Tracking ID</label>
+            <label className="text-xs font-bold text-neutral-500 uppercase">{t("Tracking ID")}</label>
             <input
               value={code}
               onChange={(e) => setCode(e.target.value)}
               className="mt-1 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/20"
-              placeholder="Scan return parcel"
+              placeholder={t("Scan return parcel")}
             />
           </div>
           <div className="md:col-span-2">
-            <label className="text-xs font-bold text-neutral-500 uppercase">Reason</label>
+            <label className="text-xs font-bold text-neutral-500 uppercase">{t("Reason")}</label>
             <select
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="mt-1 w-full rounded-xl border px-4 py-3 bg-white"
             >
-              <option>Customer not available</option>
-              <option>Address incorrect</option>
-              <option>Receiver refused</option>
-              <option>Damaged</option>
-              <option>Other</option>
+              <option>{t("Customer not available")}</option>
+              <option>{t("Address incorrect")}</option>
+              <option>{t("Receiver refused")}</option>
+              <option>{t("Damaged")}</option>
+              <option>{t("Other")}</option>
             </select>
           </div>
 
@@ -185,15 +188,15 @@ export default function Returns() {
 
       <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
         <div className="px-4 py-3 border-b">
-          <div className="text-sm font-semibold">Return Parcels</div>
+          <div className="text-sm font-semibold">{t("Return Parcels")}</div>
         </div>
         <div className="overflow-auto">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 text-neutral-600">
               <tr className="text-left">
-                <th className="px-4 py-3">Tracking</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Reason</th>
+                <th className="px-4 py-3">{t("Tracking")}</th>
+                <th className="px-4 py-3">{t("Status")}</th>
+                <th className="px-4 py-3">{t("Reason")}</th>
               </tr>
             </thead>
             <tbody>

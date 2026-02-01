@@ -2,12 +2,15 @@ import React from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { Clock, Headset, Mail, Phone, MapPin } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return <div className={`rounded-2xl border bg-white shadow-soft ${className}`}>{children}</div>;
 }
 
 export default function ContactPage() {
+  const { t } = useI18n();
+
   const [name, setName] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [subject, setSubject] = React.useState("General Inquiry");
@@ -48,8 +51,8 @@ export default function ContactPage() {
         <div className="brand-gradient text-white p-8 md:p-12 relative">
           <div className="absolute inset-0 opacity-30 bg-[radial-gradient(600px_280px_at_20%_10%,rgba(255,107,0,.35),transparent_60%),radial-gradient(700px_360px_at_85%_20%,rgba(255,255,255,.12),transparent_60%)]" />
           <div className="relative">
-            <h1 className="text-4xl md:text-5xl font-extrabold">Get in Touch</h1>
-            <p className="mt-3 text-white/85 text-lg">We are here to assist you with your logistics needs.</p>
+            <h1 className="text-4xl md:text-5xl font-extrabold">{t("Get in Touch")}</h1>
+            <p className="mt-3 text-white/85 text-lg">{t("We are here to assist you with your logistics needs.")}</p>
           </div>
         </div>
       </section>
@@ -77,8 +80,8 @@ export default function ContactPage() {
       <section className="grid lg:grid-cols-2 gap-6 items-start">
         <Card>
           <div className="p-6">
-            <div className="text-2xl font-extrabold text-slate-900">Send us a Message</div>
-            <div className="text-sm text-slate-600 mt-1">We will respond during operating hours.</div>
+            <div className="text-2xl font-extrabold text-slate-900">{t("Send us a Message")}</div>
+            <div className="text-sm text-slate-600 mt-1">{t("We will respond during operating hours.")}</div>
 
             {ok ? <div className="mt-4 rounded-xl border bg-green-50 text-green-700 text-sm font-semibold p-3">{ok}</div> : null}
             {err ? <div className="mt-4 rounded-xl border bg-red-50 text-red-700 text-sm font-semibold p-3">{err}</div> : null}
@@ -86,28 +89,28 @@ export default function ContactPage() {
             <form onSubmit={submit} className="mt-5 space-y-3">
               <div className="grid sm:grid-cols-2 gap-3">
                 <div>
-                  <div className="text-xs font-extrabold text-slate-600 mb-1">Your Name</div>
-                  <input className="w-full rounded-xl border px-3 py-2 text-sm" value={name} onChange={(e) => setName(e.target.value)} placeholder="U Ba Maung" />
+                  <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Your Name")}</div>
+                  <input className="w-full rounded-xl border px-3 py-2 text-sm" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("U Ba Maung")} />
                 </div>
                 <div>
-                  <div className="text-xs font-extrabold text-slate-600 mb-1">Phone Number</div>
-                  <input className="w-full rounded-xl border px-3 py-2 text-sm" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="09xxxxxxxxx" />
+                  <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Phone Number")}</div>
+                  <input className="w-full rounded-xl border px-3 py-2 text-sm" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("09xxxxxxxxx")} />
                 </div>
               </div>
 
               <div>
-                <div className="text-xs font-extrabold text-slate-600 mb-1">Subject</div>
+                <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Subject")}</div>
                 <select className="w-full rounded-xl border px-3 py-2 text-sm" value={subject} onChange={(e) => setSubject(e.target.value)}>
-                  <option>General Inquiry</option>
-                  <option>Rate Quotation</option>
-                  <option>Corporate Partnership</option>
-                  <option>Report an Issue</option>
+                  <option>{t("General Inquiry")}</option>
+                  <option>{t("Rate Quotation")}</option>
+                  <option>{t("Corporate Partnership")}</option>
+                  <option>{t("Report an Issue")}</option>
                 </select>
               </div>
 
               <div>
-                <div className="text-xs font-extrabold text-slate-600 mb-1">Message</div>
-                <textarea className="w-full rounded-xl border px-3 py-2 text-sm" value={message} onChange={(e) => setMessage(e.target.value)} rows={6} placeholder="How can we help you?" />
+                <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Message")}</div>
+                <textarea className="w-full rounded-xl border px-3 py-2 text-sm" value={message} onChange={(e) => setMessage(e.target.value)} rows={6} placeholder={t("How can we help you?")} />
               </div>
 
               <button type="submit" disabled={busy} className="w-full rounded-xl py-3 font-extrabold brand-accent text-white disabled:opacity-60">
@@ -118,11 +121,11 @@ export default function ContactPage() {
         </Card>
 
         <div className="space-y-4">
-          <div className="text-2xl font-extrabold text-slate-900">Our Locations</div>
+          <div className="text-2xl font-extrabold text-slate-900">{t("Our Locations")}</div>
 
           <div className="rounded-3xl overflow-hidden border shadow-soft h-[300px] bg-white">
             <iframe
-              title="Britium Express Location"
+              title={t("Britium Express Location")}
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3818.604245636043!2d96.1951!3d16.8458!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTbCsDUwJzQ0LjkiTiA5NsKwMTEnNDIuNCJF!5e0!3m2!1sen!2smm!4v1620000000000!5m2!1sen!2smm"
               width="100%"
               height="100%"

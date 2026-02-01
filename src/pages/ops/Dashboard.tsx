@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { collection, getCountFromServer, query, where } from "firebase/firestore";
 import { db } from "../../firebaseconfig";
 import { useAuthProfile, requireStation } from "../../shared/useAuthProfile";
+import { useI18n } from "@/i18n/I18nProvider";
 
 function Stat({ label, value, loading }: { label: string; value: number; loading: boolean }) {
   return (
@@ -14,6 +15,8 @@ function Stat({ label, value, loading }: { label: string; value: number; loading
 }
 
 export default function OpsDashboard() {
+  const { t } = useI18n();
+
   const { user, profile, loading: authLoading } = useAuthProfile();
   const [loading, setLoading] = React.useState(true);
   const [stats, setStats] = React.useState({
@@ -85,13 +88,13 @@ export default function OpsDashboard() {
     };
   }, [authLoading, user, profile]);
 
-  if (authLoading) return <div className="p-6">Loading…</div>;
-  if (!user) return <div className="p-6">Please login.</div>;
+  if (authLoading) return <div className="p-6">{t("Loading…")}</div>;
+  if (!user) return <div className="p-6">{t("Please login.")}</div>;
 
   return (
     <div className="p-6 space-y-6">
       <div>
-        <div className="text-2xl font-extrabold">Ops Dashboard</div>
+        <div className="text-2xl font-extrabold">{t("Ops Dashboard")}</div>
         <div className="text-sm text-neutral-600">
           Station: <span className="font-mono">{profile?.stationId ?? "N/A"}</span> • Role:{" "}
           <span className="font-semibold">{profile?.role ?? "unknown"}</span>
@@ -99,33 +102,33 @@ export default function OpsDashboard() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Stat label="Pending deliveries" value={stats.pendingDeliveries} loading={loading} />
-        <Stat label="Active deliveries" value={stats.activeDeliveries} loading={loading} />
-        <Stat label="Failed deliveries" value={stats.failedDeliveries} loading={loading} />
-        <Stat label="Drivers" value={stats.drivers} loading={loading} />
+        <Stat label={t("Pending deliveries")} value={stats.pendingDeliveries} loading={loading} />
+        <Stat label={t("Active deliveries")} value={stats.activeDeliveries} loading={loading} />
+        <Stat label={t("Failed deliveries")} value={stats.failedDeliveries} loading={loading} />
+        <Stat label={t("Drivers")} value={stats.drivers} loading={loading} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Stat label="Inbound parcels" value={stats.parcelsInbound} loading={loading} />
-        <Stat label="Manifested" value={stats.parcelsManifested} loading={loading} />
-        <Stat label="Out for delivery" value={stats.parcelsOutForDelivery} loading={loading} />
-        <Stat label="Returns" value={stats.returns} loading={loading} />
+        <Stat label={t("Inbound parcels")} value={stats.parcelsInbound} loading={loading} />
+        <Stat label={t("Manifested")} value={stats.parcelsManifested} loading={loading} />
+        <Stat label={t("Out for delivery")} value={stats.parcelsOutForDelivery} loading={loading} />
+        <Stat label={t("Returns")} value={stats.returns} loading={loading} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Link className="rounded-xl border bg-white p-4 shadow-sm hover:shadow-md" to="/ops/deliveries/create">
-          <div className="font-semibold">Create Delivery</div>
-          <div className="text-sm text-neutral-600">Assign parcels to a driver and dispatch.</div>
+          <div className="font-semibold">{t("Create Delivery")}</div>
+          <div className="text-sm text-neutral-600">{t("Assign parcels to a driver and dispatch.")}</div>
         </Link>
 
         <Link className="rounded-xl border bg-white p-4 shadow-sm hover:shadow-md" to="/ops/dispatch">
-          <div className="font-semibold">Dispatch Control</div>
-          <div className="text-sm text-neutral-600">Live board: pending/active/failed/return.</div>
+          <div className="font-semibold">{t("Dispatch Control")}</div>
+          <div className="text-sm text-neutral-600">{t("Live board: pending/active/failed/return.")}</div>
         </Link>
 
         <Link className="rounded-xl border bg-white p-4 shadow-sm hover:shadow-md" to="/ops/way">
-          <div className="font-semibold">Way Management</div>
-          <div className="text-sm text-neutral-600">Parcel movement oversight & exceptions.</div>
+          <div className="font-semibold">{t("Way Management")}</div>
+          <div className="text-sm text-neutral-600">{t("Parcel movement oversight & exceptions.")}</div>
         </Link>
       </div>
     </div>

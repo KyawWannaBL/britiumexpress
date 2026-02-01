@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Camera, PenTool, DollarSign, ChevronLeft, Check } from 'lucide-react';
+import { useI18n } from "@/i18n/I18nProvider";
 
 const RiderDeliveryConfirm = () => {
+  const { t } = useI18n();
+
   const { jobId } = useParams();
   const navigate = useNavigate();
 
@@ -32,7 +35,7 @@ const RiderDeliveryConfirm = () => {
     <div className="min-h-screen bg-gray-50 pb-24">
       <div className="bg-white p-4 shadow-sm flex items-center mb-4">
         <button onClick={() => navigate(-1)}><ChevronLeft /></button>
-        <h1 className="font-bold text-lg ml-4">Confirm Delivery</h1>
+        <h1 className="font-bold text-lg ml-4">{t("Confirm Delivery")}</h1>
       </div>
 
       <div className="p-4 space-y-6">
@@ -43,7 +46,7 @@ const RiderDeliveryConfirm = () => {
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2 text-red-700 font-bold">
                 <DollarSign />
-                <span>Collect Cash</span>
+                <span>{t("Collect Cash")}</span>
               </div>
               <span className="text-2xl font-bold text-red-800">{requiredCOD.toLocaleString()} Ks</span>
             </div>
@@ -55,14 +58,14 @@ const RiderDeliveryConfirm = () => {
                 onChange={() => setCodCollected(!codCollected)}
                 className="w-6 h-6 text-red-600 rounded focus:ring-red-500" 
               />
-              <span className="font-medium text-gray-800">I have collected the full amount</span>
+              <span className="font-medium text-gray-800">{t("I have collected the full amount")}</span>
             </label>
           </div>
         )}
 
         {/* 2. Proof of Delivery (Tabs) */}
         <div>
-          <h3 className="font-bold text-gray-700 mb-3">Proof of Delivery</h3>
+          <h3 className="font-bold text-gray-700 mb-3">{t("Proof of Delivery")}</h3>
           <div className="grid grid-cols-2 gap-4">
             {/* Signature Input */}
             <div 
@@ -74,12 +77,12 @@ const RiderDeliveryConfirm = () => {
               {signature ? (
                 <>
                   <Check size={32} className="text-green-600 mb-1" />
-                  <span className="text-green-700 font-bold text-sm">SIGNED</span>
+                  <span className="text-green-700 font-bold text-sm">{t("SIGNED")}</span>
                 </>
               ) : (
                 <>
                   <PenTool size={24} className="text-gray-400 mb-2" />
-                  <span className="text-gray-500 text-xs font-bold">GET SIGNATURE</span>
+                  <span className="text-gray-500 text-xs font-bold">{t("GET SIGNATURE")}</span>
                 </>
               )}
             </div>
@@ -93,13 +96,13 @@ const RiderDeliveryConfirm = () => {
               ) : (
                 <>
                   <Camera size={24} className="text-gray-400 mb-2" />
-                  <span className="text-gray-500 text-xs font-bold">TAKE PHOTO</span>
+                  <span className="text-gray-500 text-xs font-bold">{t("TAKE PHOTO")}</span>
                 </>
               )}
               <input type="file" accept="image/*" capture="environment" onChange={handlePhotoCapture} className="hidden" />
             </label>
           </div>
-          <p className="text-xs text-gray-400 mt-2 text-center">Either Signature or Photo is required.</p>
+          <p className="text-xs text-gray-400 mt-2 text-center">{t("Either Signature or Photo is required.")}</p>
         </div>
       </div>
 

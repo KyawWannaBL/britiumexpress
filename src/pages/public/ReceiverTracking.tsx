@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Truck, MapPin, Calendar, Box, ChevronRight, Clock, ShieldCheck } from 'lucide-react';
+import { useI18n } from "@/i18n/I18nProvider";
 
 const ReceiverTracking = () => {
+  const { t } = useI18n();
+
   const [showReschedule, setShowReschedule] = useState(false);
   
   const events = [
@@ -18,8 +21,8 @@ const ReceiverTracking = () => {
         <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-gray-50 to-transparent pt-20">
           <div className="bg-white rounded-xl shadow-lg p-5 flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Estimated Delivery</span>
-              <h1 className="text-2xl font-extrabold text-gray-900">Today, 2:00 PM</h1>
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">{t("Estimated Delivery")}</span>
+              <h1 className="text-2xl font-extrabold text-gray-900">{t("Today, 2:00 PM")}</h1>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
               <Truck size={24} />
@@ -30,7 +33,7 @@ const ReceiverTracking = () => {
 
       {/* 2. Timeline */}
       <div className="px-6 py-4">
-        <h2 className="font-bold text-gray-800 mb-4">Tracking History</h2>
+        <h2 className="font-bold text-gray-800 mb-4">{t("Tracking History")}</h2>
         <div className="space-y-6 pl-2 border-l-2 border-gray-200 ml-2">
           {events.map((e, i) => (
             <div key={i} className="relative pl-6">
@@ -45,7 +48,7 @@ const ReceiverTracking = () => {
 
       {/* 3. Receiver Actions */}
       <div className="px-6 mt-4">
-        <h2 className="font-bold text-gray-800 mb-3">Delivery Preferences</h2>
+        <h2 className="font-bold text-gray-800 mb-3">{t("Delivery Preferences")}</h2>
         <div className="grid gap-3">
           <button 
             onClick={() => setShowReschedule(true)}
@@ -54,8 +57,8 @@ const ReceiverTracking = () => {
             <div className="flex items-center gap-3">
               <div className="p-2 bg-orange-100 text-orange-600 rounded-lg"><Calendar size={20}/></div>
               <div className="text-left">
-                <span className="block font-bold text-gray-800 text-sm">Reschedule Delivery</span>
-                <span className="block text-xs text-gray-500">Not home today? Change date.</span>
+                <span className="block font-bold text-gray-800 text-sm">{t("Reschedule Delivery")}</span>
+                <span className="block text-xs text-gray-500">{t("Not home today? Change date.")}</span>
               </div>
             </div>
             <ChevronRight size={16} className="text-gray-400"/>
@@ -65,8 +68,8 @@ const ReceiverTracking = () => {
             <div className="flex items-center gap-3">
               <div className="p-2 bg-purple-100 text-purple-600 rounded-lg"><MapPin size={20}/></div>
               <div className="text-left">
-                <span className="block font-bold text-gray-800 text-sm">Redirect Package</span>
-                <span className="block text-xs text-gray-500">Change delivery address.</span>
+                <span className="block font-bold text-gray-800 text-sm">{t("Redirect Package")}</span>
+                <span className="block text-xs text-gray-500">{t("Change delivery address.")}</span>
               </div>
             </div>
             <ChevronRight size={16} className="text-gray-400"/>
@@ -76,8 +79,8 @@ const ReceiverTracking = () => {
             <div className="flex items-center gap-3">
               <div className="p-2 bg-green-100 text-green-600 rounded-lg"><ShieldCheck size={20}/></div>
               <div className="text-left">
-                <span className="block font-bold text-gray-800 text-sm">Leave with Neighbor / Guard</span>
-                <span className="block text-xs text-gray-500">Safe drop instructions.</span>
+                <span className="block font-bold text-gray-800 text-sm">{t("Leave with Neighbor / Guard")}</span>
+                <span className="block text-xs text-gray-500">{t("Safe drop instructions.")}</span>
               </div>
             </div>
             <ChevronRight size={16} className="text-gray-400"/>
@@ -89,10 +92,10 @@ const ReceiverTracking = () => {
       {showReschedule && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center">
           <div className="bg-white w-full sm:w-96 p-6 rounded-t-2xl sm:rounded-2xl animate-in slide-in-from-bottom">
-            <h3 className="font-bold text-lg mb-2">Verify Identity</h3>
-            <p className="text-sm text-gray-500 mb-4">We will send an OTP to 09****678 to verify you are the owner.</p>
-            <button className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl mb-3">Send OTP</button>
-            <button onClick={() => setShowReschedule(false)} className="w-full text-gray-500 font-bold py-3">Cancel</button>
+            <h3 className="font-bold text-lg mb-2">{t("Verify Identity")}</h3>
+            <p className="text-sm text-gray-500 mb-4">{t("We will send an OTP to 09****678 to verify you are the owner.")}</p>
+            <button className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl mb-3">{t("Send OTP")}</button>
+            <button onClick={() => setShowReschedule(false)} className="w-full text-gray-500 font-bold py-3">{t("Cancel")}</button>
           </div>
         </div>
       )}

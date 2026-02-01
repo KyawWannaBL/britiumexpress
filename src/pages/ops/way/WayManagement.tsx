@@ -2,6 +2,7 @@ import React from "react";
 import { collection, onSnapshot, orderBy, query, where, updateDoc, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebaseconfig";
 import { useAuthProfile, requireStation } from "../../../shared/useAuthProfile";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Parcel = {
   trackingId?: string;
@@ -22,6 +23,8 @@ const STATUS_BUCKETS = [
 ];
 
 export default function WayManagement() {
+  const { t } = useI18n();
+
   const { user, profile, loading } = useAuthProfile();
   const [rows, setRows] = React.useState<Array<{ id: string; data: Parcel }>>([]);
   const [search, setSearch] = React.useState("");
@@ -44,23 +47,23 @@ export default function WayManagement() {
     await updateDoc(doc(db, "parcels", id), { status, updatedAt: serverTimestamp() });
   };
 
-  if (loading) return <div className="p-6">Loading…</div>;
-  if (!user) return <div className="p-6">Please login.</div>;
+  if (loading) return <div className="p-6">{t("Loading…")}</div>;
+  if (!user) return <div className="p-6">{t("Please login.")}</div>;
 
   return (
     <div className="p-6 space-y-5">
       <div>
-        <div className="text-2xl font-extrabold">Way Management</div>
-        <div className="text-sm text-neutral-600">Operational control of parcel states (station scope).</div>
+        <div className="text-2xl font-extrabold">{t("Way Management")}</div>
+        <div className="text-sm text-neutral-600">{t("Operational control of parcel states (station scope).")}</div>
       </div>
 
       <div className="rounded-xl border bg-white p-4 shadow-sm">
-        <label className="text-xs font-bold uppercase text-neutral-500">Search tracking</label>
+        <label className="text-xs font-bold uppercase text-neutral-500">{t("Search tracking")}</label>
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="mt-1 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/20"
-          placeholder="Tracking ID"
+          placeholder={t("Tracking ID")}
         />
       </div>
 
@@ -75,7 +78,7 @@ export default function WayManagement() {
               </div>
               <div className="p-3 space-y-2">
                 {items.length === 0 ? (
-                  <div className="text-sm text-neutral-600">No parcels.</div>
+                  <div className="text-sm text-neutral-600">{t("No parcels.")}</div>
                 ) : (
                   items.map((p) => (
                     <div key={p.id} className="rounded-lg border p-3">

@@ -2,6 +2,7 @@ import React from "react";
 import { collection, onSnapshot, query, where, updateDoc, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebaseconfig";
 import { useAuthProfile, requireStation } from "../../../shared/useAuthProfile";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Driver = {
   displayName?: string;
@@ -13,6 +14,8 @@ type Driver = {
 };
 
 export default function Drivers() {
+  const { t } = useI18n();
+
   const { user, profile, loading } = useAuthProfile();
   const [rows, setRows] = React.useState<Array<{ uid: string; data: Driver }>>([]);
 
@@ -29,31 +32,31 @@ export default function Drivers() {
     await updateDoc(doc(db, "users", uid), { active, updatedAt: serverTimestamp() });
   };
 
-  if (loading) return <div className="p-6">Loading…</div>;
-  if (!user) return <div className="p-6">Please login.</div>;
+  if (loading) return <div className="p-6">{t("Loading…")}</div>;
+  if (!user) return <div className="p-6">{t("Please login.")}</div>;
 
   return (
     <div className="p-6 space-y-5">
       <div>
-        <div className="text-2xl font-extrabold">Drivers</div>
-        <div className="text-sm text-neutral-600">Manage driver roster for this station.</div>
+        <div className="text-2xl font-extrabold">{t("Drivers")}</div>
+        <div className="text-sm text-neutral-600">{t("Manage driver roster for this station.")}</div>
       </div>
 
       <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-        <div className="px-4 py-3 border-b text-sm font-semibold">Driver List</div>
+        <div className="px-4 py-3 border-b text-sm font-semibold">{t("Driver List")}</div>
         <div className="overflow-auto">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 text-neutral-600">
               <tr className="text-left">
-                <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Phone</th>
-                <th className="px-4 py-3">Active</th>
-                <th className="px-4 py-3 w-40">Action</th>
+                <th className="px-4 py-3">{t("Name")}</th>
+                <th className="px-4 py-3">{t("Phone")}</th>
+                <th className="px-4 py-3">{t("Active")}</th>
+                <th className="px-4 py-3 w-40">{t("Action")}</th>
               </tr>
             </thead>
             <tbody>
               {rows.length === 0 ? (
-                <tr><td colSpan={4} className="px-4 py-6 text-neutral-600">No drivers.</td></tr>
+                <tr><td colSpan={4} className="px-4 py-6 text-neutral-600">{t("No drivers.")}</td></tr>
               ) : (
                 rows.map((r) => (
                   <tr key={r.uid} className="border-t">
@@ -77,7 +80,7 @@ export default function Drivers() {
       </div>
 
       <div className="text-xs text-neutral-500">
-        If you need “warehouse helpers” here too, create users with role = <code>warehouse</code> and manage them in warehouse module or admin users.
+        If you need “warehouse helpers” here too, create users with role = <code>{t("warehouse")}</code> and manage them in warehouse module or admin users.
       </div>
     </div>
   );

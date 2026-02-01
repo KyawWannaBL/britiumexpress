@@ -120,10 +120,10 @@ export default function AppShell({
     <aside className="hidden md:flex md:w-72 md:flex-col md:border-r md:bg-white">
       <div className="h-16 px-5 flex items-center gap-3 border-b">
         {Brand}
-        <span className="ml-auto text-xs text-neutral-500">v1</span>
+        <span className="ml-auto text-xs text-neutral-500">{t("v1")}</span>
       </div>
 
-      <nav className="p-3" aria-label="Primary">
+      <nav className="p-3" aria-label={t("Primary")}>
         <ul className="space-y-1">
           {nav.map((item) => (
             <li key={item.to}>
@@ -148,8 +148,8 @@ export default function AppShell({
 
       <div className="mt-auto p-4 text-xs text-neutral-500">
         <div className="rounded-xl bg-neutral-50 p-3 border">
-          <div className="font-extrabold text-neutral-700">Tips</div>
-          <div className="mt-1">Use the sidebar to navigate quickly.</div>
+          <div className="font-extrabold text-neutral-700">{t("Tips")}</div>
+          <div className="mt-1">{t("Use the sidebar to navigate quickly.")}</div>
         </div>
       </div>
     </aside>
@@ -173,7 +173,7 @@ export default function AppShell({
         )}
         role="dialog"
         aria-modal="true"
-        aria-label="Navigation menu"
+        aria-label={t("Navigation menu")}
       >
         <div className="h-16 px-5 flex items-center gap-3 border-b">
           <a href={brand.href ?? "/"} className="flex items-center gap-3 font-extrabold tracking-tight" onClick={() => setMobileOpen(false)}>
@@ -184,13 +184,13 @@ export default function AppShell({
             type="button"
             className="ml-auto rounded-xl px-2 py-1 text-sm hover:bg-neutral-100"
             onClick={() => setMobileOpen(false)}
-            aria-label="Close menu"
+            aria-label={t("Close menu")}
           >
             ✕
           </button>
         </div>
 
-        <nav className="p-3" aria-label="Primary mobile">
+        <nav className="p-3" aria-label={t("Primary mobile")}>
           <ul className="space-y-1">
             {nav.map((item) => (
               <li key={item.to}>
@@ -232,7 +232,7 @@ export default function AppShell({
             type="button"
             className="md:hidden rounded-xl px-2 py-1 hover:bg-neutral-100"
             onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
+            aria-label={t("Open menu")}
           >
             ☰
           </button>

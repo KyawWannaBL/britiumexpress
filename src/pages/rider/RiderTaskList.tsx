@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Clock, AlertCircle, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import { useI18n } from "@/i18n/I18nProvider";
 
 type TaskType = 'pickup' | 'delivery' | 'return';
 
 const RiderTaskList = () => {
+  const { t } = useI18n();
+
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TaskType>('delivery');
 
@@ -21,7 +24,7 @@ const RiderTaskList = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white p-4 shadow-sm sticky top-0 z-10">
-        <h2 className="text-xl font-bold text-center mb-4">Job Queue</h2>
+        <h2 className="text-xl font-bold text-center mb-4">{t("Job Queue")}</h2>
         <div className="flex p-1 bg-gray-100 rounded-lg">
           {(['pickup', 'delivery', 'return'] as TaskType[]).map((tab) => (
             <button
@@ -48,9 +51,9 @@ const RiderTaskList = () => {
             <div className="flex justify-between items-start mb-2">
               <span className="font-mono text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">#{task.id}</span>
               <div className="flex gap-1">
-                {task.tags.includes('COD') && <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded">COD</span>}
-                {task.tags.includes('Express') && <span className="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded">EXP</span>}
-                {task.tags.includes('Fragile') && <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded">FRG</span>}
+                {task.tags.includes('COD') && <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded">{t("COD")}</span>}
+                {task.tags.includes('Express') && <span className="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded">{t("EXP")}</span>}
+                {task.tags.includes('Fragile') && <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded">{t("FRG")}</span>}
               </div>
             </div>
 
@@ -67,7 +70,7 @@ const RiderTaskList = () => {
                 <span>Due: {task.sla}</span>
               </div>
               <span className="text-blue-600 text-sm font-bold flex items-center gap-1">
-                View Details {activeTab === 'pickup' ? <ArrowUpCircle size={16}/> : <ArrowDownCircle size={16}/>}
+                View Details {activeTab === 'pickup' ? <ArrowUpCircle size={16}/>{t(":")}<ArrowDownCircle size={16}/>}
               </span>
             </div>
           </div>

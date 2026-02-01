@@ -20,7 +20,7 @@ export default function MerchantLayout() {
   return (
     <RequireRole anyOf={["merchant"]}>
       <AppShell
-        title="Merchant • Britium Express"
+        title={t("Merchant • Britium Express")}
         brand={{ name: "Britium Express", href: "/merchant/dashboard", logoSrc: "/assets/britium-logo.png" }}
         nav={nav}
         headerRight={

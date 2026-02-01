@@ -93,31 +93,31 @@ export default function BranchesPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader titleKey="admin.settings" subtitle="Branches (Firestore)" right={
+      <PageHeader titleKey="admin.settings" subtitle={t("Branches (Firestore)")} right={
         <button type="button" onClick={() => void load()} className="rounded-xl border bg-white px-3 py-2 text-sm font-extrabold hover:bg-slate-50">{t("common.refresh")}</button>
       } />
 
       <Card className="p-4">
         <form onSubmit={add} className="grid grid-cols-1 md:grid-cols-6 gap-3">
           <div className="md:col-span-1">
-            <div className="text-xs font-extrabold text-slate-600 mb-1">Code</div>
-            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={code} onChange={(e) => setCode(e.target.value)} placeholder="YGN" />
+            <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Code")}</div>
+            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={code} onChange={(e) => setCode(e.target.value)} placeholder={t("YGN")} />
           </div>
           <div className="md:col-span-2">
-            <div className="text-xs font-extrabold text-slate-600 mb-1">Name</div>
-            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={name} onChange={(e) => setName(e.target.value)} placeholder="Yangon HQ" />
+            <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Name")}</div>
+            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("Yangon HQ")} />
           </div>
           <div className="md:col-span-1">
-            <div className="text-xs font-extrabold text-slate-600 mb-1">Region</div>
-            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={region} onChange={(e) => setRegion(e.target.value)} placeholder="Yangon" />
+            <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Region")}</div>
+            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={region} onChange={(e) => setRegion(e.target.value)} placeholder={t("Yangon")} />
           </div>
           <div className="md:col-span-1">
-            <div className="text-xs font-extrabold text-slate-600 mb-1">Phone</div>
-            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+95 ..." />
+            <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Phone")}</div>
+            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("+95 ...")} />
           </div>
           <div className="md:col-span-6">
-            <div className="text-xs font-extrabold text-slate-600 mb-1">Address</div>
-            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Street, Township" />
+            <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Address")}</div>
+            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={address} onChange={(e) => setAddress(e.target.value)} placeholder={t("Street, Township")} />
           </div>
           <div className="md:col-span-6">
             <button type="submit" disabled={busy} className="rounded-xl px-4 py-2 font-extrabold brand-accent text-white disabled:opacity-60">{busy ? "Saving…" : t("common.save")}</button>
@@ -127,7 +127,7 @@ export default function BranchesPage() {
       </Card>
 
       <Card className="p-4">
-        <div className="font-extrabold text-slate-900">Branches</div>
+        <div className="font-extrabold text-slate-900">{t("Branches")}</div>
         <div className="mt-3 overflow-x-auto">
           {loading ? (
             <div className="py-8 text-center text-sm text-slate-600">{t("common.loading")}</div>
@@ -135,11 +135,11 @@ export default function BranchesPage() {
             <table className="w-full text-sm">
               <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-y">
                 <tr>
-                  <th className="px-3 py-3 text-left">Code</th>
-                  <th className="px-3 py-3 text-left">Name</th>
-                  <th className="px-3 py-3 text-left">Region</th>
-                  <th className="px-3 py-3 text-left">Phone</th>
-                  <th className="px-3 py-3 text-left">Created</th>
+                  <th className="px-3 py-3 text-left">{t("Code")}</th>
+                  <th className="px-3 py-3 text-left">{t("Name")}</th>
+                  <th className="px-3 py-3 text-left">{t("Region")}</th>
+                  <th className="px-3 py-3 text-left">{t("Phone")}</th>
+                  <th className="px-3 py-3 text-left">{t("Created")}</th>
                   <th className="px-3 py-3 text-right">{t("common.delete")}</th>
                 </tr>
               </thead>

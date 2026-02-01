@@ -14,6 +14,7 @@ import {
 import { Card, cn } from "@/components/ui/SharedComponents";
 import { useAuth } from "../../auth/AuthContext";
 import { loadAdminDashboardSnapshot, type AdminDashboardSnapshot, type DashboardShipmentStatus } from "../../data/adminDashboard";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Kpi = {
   key: string;
@@ -72,6 +73,8 @@ function isPermissionDenied(err: unknown): boolean {
 }
 
 export default function DashboardPage() {
+  const { t } = useI18n();
+
   const { user } = useAuth();
   const role = user?.role ?? "customer";
   const who = user?.email ?? "user";
@@ -168,7 +171,7 @@ export default function DashboardPage() {
     <div className="space-y-6 animate-slide-up">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-extrabold text-slate-900">Dashboard</h2>
+          <h2 className="text-2xl font-extrabold text-slate-900">{t("Dashboard")}</h2>
           <div className="text-sm text-slate-500">
             Welcome, <span className="font-semibold text-slate-700">{who}</span> • Role:{" "}
             <span className="font-semibold text-slate-700">{roleLabel(role)}</span>
@@ -187,7 +190,7 @@ export default function DashboardPage() {
 
       {error ? (
         <div className="rounded-2xl border bg-red-50 p-4 text-sm text-red-800">
-          <div className="font-extrabold mb-1">Dashboard cannot load</div>
+          <div className="font-extrabold mb-1">{t("Dashboard cannot load")}</div>
           <div className="text-xs text-red-700">{error}</div>
         </div>
       ) : null}
@@ -247,26 +250,26 @@ export default function DashboardPage() {
                 <CircleDollarSign size={18} className="text-[#0D47A1]" />
                 Finance Snapshot
               </div>
-              <div className="text-xs text-slate-500">Month-to-date</div>
+              <div className="text-xs text-slate-500">{t("Month-to-date")}</div>
             </div>
 
             <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="rounded-xl border bg-emerald-50 p-4">
-                <div className="text-xs text-emerald-700 font-bold">Revenue</div>
+                <div className="text-xs text-emerald-700 font-bold">{t("Revenue")}</div>
                 <div className="text-2xl font-extrabold text-emerald-900">{formatMMK(finRevenue)}</div>
               </div>
               <div className="rounded-xl border bg-rose-50 p-4">
-                <div className="text-xs text-rose-700 font-bold">Expenses</div>
+                <div className="text-xs text-rose-700 font-bold">{t("Expenses")}</div>
                 <div className="text-2xl font-extrabold text-rose-900">{formatMMK(finExpenses)}</div>
               </div>
               <div className="rounded-xl border bg-slate-50 p-4">
-                <div className="text-xs text-slate-700 font-bold">Net</div>
+                <div className="text-xs text-slate-700 font-bold">{t("Net")}</div>
                 <div className="text-2xl font-extrabold text-slate-900">{formatMMK(finNet)}</div>
               </div>
             </div>
 
             <div className="mt-4 text-xs text-slate-500">
-              Source: Firestore <span className="font-semibold">financials</span> collection.
+              Source: Firestore <span className="font-semibold">{t("financials")}</span> collection.
             </div>
           </Card>
 
@@ -277,16 +280,16 @@ export default function DashboardPage() {
             </div>
             <ul className="mt-4 space-y-3 text-sm">
               <li className="rounded-xl border bg-slate-50 p-3">
-                <div className="font-bold text-slate-800">Auth</div>
-                <div className="text-xs text-slate-500">Firebase Auth OK</div>
+                <div className="font-bold text-slate-800">{t("Auth")}</div>
+                <div className="text-xs text-slate-500">{t("Firebase Auth OK")}</div>
               </li>
               <li className="rounded-xl border bg-slate-50 p-3">
-                <div className="font-bold text-slate-800">RBAC</div>
-                <div className="text-xs text-slate-500">Roles enforced</div>
+                <div className="font-bold text-slate-800">{t("RBAC")}</div>
+                <div className="text-xs text-slate-500">{t("Roles enforced")}</div>
               </li>
               <li className="rounded-xl border bg-slate-50 p-3">
-                <div className="font-bold text-slate-800">Alerts</div>
-                <div className="text-xs text-slate-500">0 critical</div>
+                <div className="font-bold text-slate-800">{t("Alerts")}</div>
+                <div className="text-xs text-slate-500">{t("0 critical")}</div>
               </li>
             </ul>
           </Card>
@@ -296,12 +299,12 @@ export default function DashboardPage() {
       {/* Recent Shipments */}
       <Card className="p-5">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <div className="font-extrabold text-slate-800">Recent Shipments</div>
+          <div className="font-extrabold text-slate-800">{t("Recent Shipments")}</div>
 
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
             <input
               className="w-full sm:w-72 rounded-xl border px-3 py-2 text-sm"
-              placeholder="Search tracking / merchant / receiver / city…"
+              placeholder={t("Search tracking / merchant / receiver / city…")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               disabled={loading}
@@ -312,14 +315,14 @@ export default function DashboardPage() {
               onChange={(e) => setStatus(e.target.value as any)}
               disabled={loading}
             >
-              <option value="All">All statuses</option>
-              <option value="To Assign">To Assign</option>
-              <option value="Assigned">Assigned</option>
-              <option value="On Way">On Way</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Canceled">Canceled</option>
-              <option value="Return">Return</option>
-              <option value="Exception">Exception</option>
+              <option value="All">{t("All statuses")}</option>
+              <option value="To Assign">{t("To Assign")}</option>
+              <option value="Assigned">{t("Assigned")}</option>
+              <option value="On Way">{t("On Way")}</option>
+              <option value="Delivered">{t("Delivered")}</option>
+              <option value="Canceled">{t("Canceled")}</option>
+              <option value="Return">{t("Return")}</option>
+              <option value="Exception">{t("Exception")}</option>
             </select>
           </div>
         </div>
@@ -328,13 +331,13 @@ export default function DashboardPage() {
           <table className="w-full text-sm">
             <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-y">
               <tr>
-                <th className="px-3 py-3 text-left">Tracking</th>
-                <th className="px-3 py-3 text-left">Merchant</th>
-                <th className="px-3 py-3 text-left">Receiver</th>
-                <th className="px-3 py-3 text-left">City</th>
-                <th className="px-3 py-3 text-left">Status</th>
-                <th className="px-3 py-3 text-right">COD</th>
-                <th className="px-3 py-3 text-left">Updated</th>
+                <th className="px-3 py-3 text-left">{t("Tracking")}</th>
+                <th className="px-3 py-3 text-left">{t("Merchant")}</th>
+                <th className="px-3 py-3 text-left">{t("Receiver")}</th>
+                <th className="px-3 py-3 text-left">{t("City")}</th>
+                <th className="px-3 py-3 text-left">{t("Status")}</th>
+                <th className="px-3 py-3 text-right">{t("COD")}</th>
+                <th className="px-3 py-3 text-left">{t("Updated")}</th>
               </tr>
             </thead>
             <tbody>
@@ -367,7 +370,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-5">
-          <div className="font-extrabold text-slate-800">Quick Actions</div>
+          <div className="font-extrabold text-slate-800">{t("Quick Actions")}</div>
           <div className="mt-4 grid grid-cols-1 gap-2 text-sm">
             <a className="rounded-xl border bg-white hover:bg-slate-50 px-3 py-2 font-bold" href="/admin/management">
               Manage Users / Roles
@@ -382,17 +385,17 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="p-5 md:col-span-2">
-          <div className="font-extrabold text-slate-800">Operational Tasks</div>
+          <div className="font-extrabold text-slate-800">{t("Operational Tasks")}</div>
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="rounded-xl border bg-slate-50 p-4">
-              <div className="text-xs text-slate-500">Unassigned Deliveries</div>
+              <div className="text-xs text-slate-500">{t("Unassigned Deliveries")}</div>
               <div className="text-2xl font-extrabold text-slate-900">{data ? data.pendingPickups : 0}</div>
-              <div className="text-xs text-slate-500 mt-1">Dispatch riders for best SLA.</div>
+              <div className="text-xs text-slate-500 mt-1">{t("Dispatch riders for best SLA.")}</div>
             </div>
             <div className="rounded-xl border bg-slate-50 p-4">
-              <div className="text-xs text-slate-500">Exceptions / Returns</div>
+              <div className="text-xs text-slate-500">{t("Exceptions / Returns")}</div>
               <div className="text-2xl font-extrabold text-slate-900">{data ? data.exceptions : 0}</div>
-              <div className="text-xs text-slate-500 mt-1">Resolve issues quickly.</div>
+              <div className="text-xs text-slate-500 mt-1">{t("Resolve issues quickly.")}</div>
             </div>
           </div>
         </Card>

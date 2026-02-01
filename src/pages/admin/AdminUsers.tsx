@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Users, Shield, Lock, Search, MoreVertical, Plus, CheckCircle, XCircle } from 'lucide-react';
+import { useI18n } from "@/i18n/I18nProvider";
 
 const AdminUsers = () => {
+  const { t } = useI18n();
+
   const [showAddUser, setShowAddUser] = useState(false);
 
   // Mock User Data matching RBAC Roles 
@@ -19,7 +22,7 @@ const AdminUsers = () => {
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <Shield className="text-blue-600" /> User Management
           </h1>
-          <p className="text-gray-500">Manage system access and RBAC roles.</p>
+          <p className="text-gray-500">{t("Manage system access and RBAC roles.")}</p>
         </div>
         <button 
           onClick={() => setShowAddUser(true)}
@@ -34,14 +37,14 @@ const AdminUsers = () => {
         <div className="p-4 border-b border-gray-200 flex gap-4">
            <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-              <input type="text" placeholder="Search by name, email or ID..." className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+              <input type="text" placeholder={t("Search by name, email or ID...")} className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
            </div>
            <select className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-sm">
-             <option>All Roles</option>
-             <option>Super Admin</option>
-             <option>Manager</option>
-             <option>Rider</option>
-             <option>Merchant</option>
+             <option>{t("All Roles")}</option>
+             <option>{t("Super Admin")}</option>
+             <option>{t("Manager")}</option>
+             <option>{t("Rider")}</option>
+             <option>{t("Merchant")}</option>
            </select>
         </div>
 
@@ -49,11 +52,11 @@ const AdminUsers = () => {
         <table className="w-full text-left border-collapse">
           <thead className="bg-gray-50 text-gray-500 uppercase font-bold text-xs">
             <tr>
-              <th className="px-6 py-4">User Details</th>
-              <th className="px-6 py-4">Role [RBAC]</th>
-              <th className="px-6 py-4">Assigned Hub</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4 text-right">Action</th>
+              <th className="px-6 py-4">{t("User Details")}</th>
+              <th className="px-6 py-4">{t("Role [RBAC]")}</th>
+              <th className="px-6 py-4">{t("Assigned Hub")}</th>
+              <th className="px-6 py-4">{t("Status")}</th>
+              <th className="px-6 py-4 text-right">{t("Action")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -109,41 +112,41 @@ const AdminUsers = () => {
       {showAddUser && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg w-full max-w-md p-6">
-            <h2 className="text-xl font-bold mb-4">Create New User</h2>
+            <h2 className="text-xl font-bold mb-4">{t("Create New User")}</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-gray-700">Full Name</label>
-                <input type="text" className="w-full border p-2 rounded" placeholder="John Doe" />
+                <label className="block text-sm font-bold text-gray-700">{t("Full Name")}</label>
+                <input type="text" className="w-full border p-2 rounded" placeholder={t("John Doe")} />
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-700">Email (Login)</label>
-                <input type="email" className="w-full border p-2 rounded" placeholder="john@company.com" />
+                <label className="block text-sm font-bold text-gray-700">{t("Email (Login)")}</label>
+                <input type="email" className="w-full border p-2 rounded" placeholder={t("john@company.com")} />
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-700">Role</label>
+                <label className="block text-sm font-bold text-gray-700">{t("Role")}</label>
                 <select className="w-full border p-2 rounded">
-                  <option value="manager">Manager</option>
-                  <option value="supervisor">Supervisor</option>
-                  <option value="warehouse">Warehouse Staff</option>
-                  <option value="rider">Rider / Driver</option>
-                  <option value="accountant">Accountant</option>
+                  <option value="manager">{t("Manager")}</option>
+                  <option value="supervisor">{t("Supervisor")}</option>
+                  <option value="warehouse">{t("Warehouse Staff")}</option>
+                  <option value="rider">{t("Rider / Driver")}</option>
+                  <option value="accountant">{t("Accountant")}</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-700">Hub Assignment</label>
+                <label className="block text-sm font-bold text-gray-700">{t("Hub Assignment")}</label>
                 <select className="w-full border p-2 rounded">
-                  <option value="YGN-Main">Yangon Main Hub</option>
-                  <option value="YGN-DT">Downtown Station</option>
+                  <option value="YGN-Main">{t("Yangon Main Hub")}</option>
+                  <option value="YGN-DT">{t("Downtown Station")}</option>
                 </select>
               </div>
               <div className="bg-yellow-50 p-3 rounded text-xs text-yellow-800 border border-yellow-200 flex items-start gap-2">
                  <Lock size={14} className="mt-0.5 shrink-0"/>
-                 <p>A temporary password will be sent to the email address. The user must change it upon first login.</p>
+                 <p>{t("A temporary password will be sent to the email address. The user must change it upon first login.")}</p>
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setShowAddUser(false)} className="px-4 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded">Cancel</button>
-              <button onClick={() => { alert('User Created'); setShowAddUser(false); }} className="px-4 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700">Create Account</button>
+              <button onClick={() => setShowAddUser(false)} className="px-4 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded">{t("Cancel")}</button>
+              <button onClick={() => { alert('User Created'); setShowAddUser(false); }} className="px-4 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700">{t("Create Account")}</button>
             </div>
           </div>
         </div>

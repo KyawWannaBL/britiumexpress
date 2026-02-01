@@ -14,6 +14,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../../firebaseconfig";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type ParcelStatus =
   | "inbound_received"
@@ -72,6 +73,8 @@ async function findParcelByCode(code: string): Promise<{ id: string; data: Parce
 }
 
 export default function ScanOut() {
+  const { t } = useI18n();
+
   const { user, profile } = useUserProfile();
   const stationId = profile?.stationId ?? "";
   const stationName = profile?.stationName ?? "Station";
@@ -150,7 +153,7 @@ export default function ScanOut() {
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-2xl font-extrabold">Outbound • Scan Out</div>
+          <div className="text-2xl font-extrabold">{t("Outbound • Scan Out")}</div>
           <div className="text-sm text-neutral-600">
             Dispatch parcels from <span className="font-semibold">{stationName}</span>
           </div>
@@ -168,7 +171,7 @@ export default function ScanOut() {
         ) : null}
 
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-          <div className="text-sm font-semibold">Mode</div>
+          <div className="text-sm font-semibold">{t("Mode")}</div>
           <label className="inline-flex items-center gap-2 text-sm">
             <input
               type="radio"
@@ -196,7 +199,7 @@ export default function ScanOut() {
               value={code}
               onChange={(e) => setCode(e.target.value)}
               className="mt-1 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/20"
-              placeholder="Scan or enter tracking ID"
+              placeholder={t("Scan or enter tracking ID")}
               autoFocus
             />
           </div>
@@ -212,10 +215,10 @@ export default function ScanOut() {
       </div>
 
       <div className="rounded-xl border bg-white p-4 shadow-sm">
-        <div className="text-sm font-semibold">Recent Scans</div>
+        <div className="text-sm font-semibold">{t("Recent Scans")}</div>
         <div className="mt-3 space-y-2">
           {recent.length === 0 ? (
-            <div className="text-sm text-neutral-600">No scans yet.</div>
+            <div className="text-sm text-neutral-600">{t("No scans yet.")}</div>
           ) : (
             recent.map((s, idx) => (
               <div

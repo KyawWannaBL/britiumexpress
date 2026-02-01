@@ -1,3 +1,6 @@
+import { useI18n } from "@/i18n/I18nProvider";
 export const Demo = () => {
-  return <div>Hello World</div>;
+  const { t } = useI18n();
+
+  return <div>{t("Hello World")}</div>;
 };

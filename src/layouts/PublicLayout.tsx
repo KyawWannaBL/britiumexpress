@@ -19,14 +19,14 @@ export default function PublicLayout() {
 
   return (
     <AppShell
-      title="Britium Express"
+      title={t("Britium Express")}
       variant="public"
       brand={{ name: "Britium Express", href: "/", logoSrc: "/assets/britium-logo.png" }}
       nav={nav}
       headerRight={
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
-          <nav className="hidden md:flex items-center gap-1" aria-label="Public navigation">
+          <nav className="hidden md:flex items-center gap-1" aria-label={t("Public navigation")}>
             {nav.map((i) => (
               <NavLink
                 key={i.to}

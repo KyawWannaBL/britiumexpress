@@ -2,6 +2,7 @@
    File: src/pages/GreetingPage.tsx
    ========================================================= */
 import { ArrowRight, Plane, Truck, HandCoins, LogOut } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 function BrandLogo({ src = "/britium-logo.png" }: { src?: string }) {
   return (
@@ -17,17 +18,19 @@ function BrandLogo({ src = "/britium-logo.png" }: { src?: string }) {
             (e.currentTarget as HTMLImageElement).style.display = "none";
           }}
         />
-        <span className="text-[#0d2c54] font-extrabold text-xl">B</span>
+        <span className="text-[#0d2c54] font-extrabold text-xl">{t("B")}</span>
       </div>
       <div className="leading-tight">
-        <div className="text-white font-extrabold text-xl">Britium Express</div>
-        <div className="text-white/80 text-xs">Fast • Reliable • Door-to-door</div>
+        <div className="text-white font-extrabold text-xl">{t("Britium Express")}</div>
+        <div className="text-white/80 text-xs">{t("Fast • Reliable • Door-to-door")}</div>
       </div>
     </div>
   );
 }
 
 export function GreetingPage() {
+  const { t } = useI18n();
+
   const { user, logout } = useAuth();
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup">("login");
@@ -110,13 +113,13 @@ export function GreetingPage() {
                 </a>
               </div>
               <div className="mt-4 text-white/70 text-xs">
-                Tip: set this page as your route <span className="font-mono">"/"</span> so deploy won’t show a blank page.
+                Tip: set this page as your route <span className="font-mono">{t("\"/\"")}</span> so deploy won’t show a blank page.
               </div>
             </div>
 
             <div className="bg-white rounded-2xl shadow-xl border p-6">
-              <div className="text-xs font-bold text-gray-500 uppercase">Who we are</div>
-              <div className="mt-2 text-[#0d2c54] font-extrabold text-2xl">Britium Express</div>
+              <div className="text-xs font-bold text-gray-500 uppercase">{t("Who we are")}</div>
+              <div className="mt-2 text-[#0d2c54] font-extrabold text-2xl">{t("Britium Express")}</div>
               <p className="mt-3 text-gray-600">
                 We provide nationwide express delivery, COD support for e-commerce, and international air cargo with
                 chargeable-weight calculation and customs-ready handling.
@@ -124,16 +127,16 @@ export function GreetingPage() {
 
               <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="rounded-xl bg-[#0d2c54]/5 border p-3">
-                  <div className="font-extrabold text-[#0d2c54]">Fast</div>
-                  <div className="text-xs text-gray-600 mt-1">Same-day / Next-day options</div>
+                  <div className="font-extrabold text-[#0d2c54]">{t("Fast")}</div>
+                  <div className="text-xs text-gray-600 mt-1">{t("Same-day / Next-day options")}</div>
                 </div>
                 <div className="rounded-xl bg-[#0d2c54]/5 border p-3">
-                  <div className="font-extrabold text-[#0d2c54]">Trackable</div>
-                  <div className="text-xs text-gray-600 mt-1">End-to-end visibility</div>
+                  <div className="font-extrabold text-[#0d2c54]">{t("Trackable")}</div>
+                  <div className="text-xs text-gray-600 mt-1">{t("End-to-end visibility")}</div>
                 </div>
                 <div className="rounded-xl bg-[#0d2c54]/5 border p-3">
-                  <div className="font-extrabold text-[#0d2c54]">Reliable</div>
-                  <div className="text-xs text-gray-600 mt-1">Consistent delivery SLA</div>
+                  <div className="font-extrabold text-[#0d2c54]">{t("Reliable")}</div>
+                  <div className="text-xs text-gray-600 mt-1">{t("Consistent delivery SLA")}</div>
                 </div>
               </div>
             </div>
@@ -144,27 +147,27 @@ export function GreetingPage() {
       {/* Services */}
       <section className="max-w-6xl mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="text-xs font-bold uppercase text-[#0d2c54]">What we do</div>
-          <h2 className="mt-2 text-3xl font-extrabold text-[#0d2c54]">Core Services</h2>
+          <div className="text-xs font-bold uppercase text-[#0d2c54]">{t("What we do")}</div>
+          <h2 className="mt-2 text-3xl font-extrabold text-[#0d2c54]">{t("Core Services")}</h2>
         </div>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           <ServiceCard
-            title="Domestic Express"
+            title={t("Domestic Express")}
             icon={<Truck className="w-6 h-6 text-white" />}
             image="https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=1200&q=80"
             desc="Door-to-door delivery connecting Yangon, Mandalay, Nay Pyi Taw and major routes."
             cta={{ label: "Domestic Rates", href: "/calculator" }}
           />
           <ServiceCard
-            title="COD & E-Commerce"
+            title={t("COD & E-Commerce")}
             icon={<HandCoins className="w-6 h-6 text-white" />}
             image="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=1200&q=80"
             desc="Grow your shop with COD. We collect and remit quickly with clean reporting."
             cta={{ label: "Seller Info", href: "/services" }}
           />
           <ServiceCard
-            title="International Cargo"
+            title={t("International Cargo")}
             icon={<Plane className="w-6 h-6 text-white" />}
             image="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80"
             desc="Air freight forwarding to key destinations with chargeable-weight calculation."

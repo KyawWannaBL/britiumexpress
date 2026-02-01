@@ -11,6 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../../firebaseconfig";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type UserProfile = { stationId?: string; stationName?: string };
 
@@ -58,6 +59,8 @@ function toCsv(rows: Array<{ id: string; data: Parcel }>) {
 }
 
 export default function Inventory() {
+  const { t } = useI18n();
+
   const { user, profile } = useUserProfile();
   const stationId = profile?.stationId ?? "";
   const stationName = profile?.stationName ?? "Station";
@@ -102,7 +105,7 @@ export default function Inventory() {
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-2xl font-extrabold">Inventory</div>
+          <div className="text-2xl font-extrabold">{t("Inventory")}</div>
           <div className="text-sm text-neutral-600">
             Station: <span className="font-semibold">{stationName}</span>
           </div>
@@ -114,29 +117,29 @@ export default function Inventory() {
 
       <div className="rounded-xl border bg-white p-4 shadow-sm grid gap-3 md:grid-cols-4">
         <div className="md:col-span-2">
-          <label className="text-xs font-bold text-neutral-500 uppercase">Search</label>
+          <label className="text-xs font-bold text-neutral-500 uppercase">{t("Search")}</label>
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="mt-1 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/20"
-            placeholder="Tracking ID"
+            placeholder={t("Tracking ID")}
           />
         </div>
 
         <div>
-          <label className="text-xs font-bold text-neutral-500 uppercase">Status</label>
+          <label className="text-xs font-bold text-neutral-500 uppercase">{t("Status")}</label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             className="mt-1 w-full rounded-xl border px-4 py-3 bg-white"
           >
-            <option value="ALL">All</option>
-            <option value="inbound_received">Inbound received</option>
-            <option value="sorted">Sorted</option>
-            <option value="manifested">Manifested</option>
-            <option value="out_for_delivery">Out for delivery</option>
-            <option value="return_received">Return received</option>
-            <option value="transfer_dispatched">Transfer dispatched</option>
+            <option value="ALL">{t("All")}</option>
+            <option value="inbound_received">{t("Inbound received")}</option>
+            <option value="sorted">{t("Sorted")}</option>
+            <option value="manifested">{t("Manifested")}</option>
+            <option value="out_for_delivery">{t("Out for delivery")}</option>
+            <option value="return_received">{t("Return received")}</option>
+            <option value="transfer_dispatched">{t("Transfer dispatched")}</option>
           </select>
         </div>
 
@@ -152,7 +155,7 @@ export default function Inventory() {
 
       <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
         <div className="px-4 py-3 border-b flex items-center justify-between">
-          <div className="text-sm font-semibold">Parcels</div>
+          <div className="text-sm font-semibold">{t("Parcels")}</div>
           <div className="text-xs text-neutral-500">{filtered.length} shown / {rows.length} total</div>
         </div>
 
@@ -160,11 +163,11 @@ export default function Inventory() {
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 text-neutral-600">
               <tr className="text-left">
-                <th className="px-4 py-3">Tracking</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Bin</th>
-                <th className="px-4 py-3">Route</th>
-                <th className="px-4 py-3">Manifest</th>
+                <th className="px-4 py-3">{t("Tracking")}</th>
+                <th className="px-4 py-3">{t("Status")}</th>
+                <th className="px-4 py-3">{t("Bin")}</th>
+                <th className="px-4 py-3">{t("Route")}</th>
+                <th className="px-4 py-3">{t("Manifest")}</th>
               </tr>
             </thead>
             <tbody>

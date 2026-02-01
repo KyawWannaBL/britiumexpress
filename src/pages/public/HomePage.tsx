@@ -1,12 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Truck, Plane, HandCoins, ShieldCheck, ArrowRight } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return <div className={`rounded-2xl border bg-white shadow-soft ${className}`}>{children}</div>;
 }
 
 export default function HomePage() {
+  const { t } = useI18n();
+
   const nav = useNavigate();
   const [code, setCode] = React.useState("");
 
@@ -27,7 +30,7 @@ export default function HomePage() {
               className="h-28 w-auto rounded-2xl bg-white/95 p-3 shadow-soft"
             />
             <div>
-              <h1 className="text-4xl md:text-5xl font-extrabold">Britium Express</h1>
+              <h1 className="text-4xl md:text-5xl font-extrabold">{t("Britium Express")}</h1>
               <p className="mt-3 text-white/85 text-lg max-w-3xl">
                 A dedicated delivery arm of Britium Ventures Company Limited — fast, secure, and trackable logistics.
               </p>
@@ -39,7 +42,7 @@ export default function HomePage() {
                     <input
                       value={code}
                       onChange={(e) => setCode(e.target.value)}
-                      placeholder="Quick Track: Enter tracking number"
+                      placeholder={t("Quick Track: Enter tracking number")}
                       className="w-full py-3 text-sm outline-none bg-transparent"
                     />
                   </div>
@@ -86,8 +89,8 @@ export default function HomePage() {
         />
         <Card>
           <div className="p-8">
-            <div className="text-xs font-extrabold tracking-widest uppercase text-[var(--brand-orange)]">Who we are</div>
-            <div className="mt-2 text-3xl font-extrabold text-[var(--brand-blue)]">Reliable delivery, built for scale.</div>
+            <div className="text-xs font-extrabold tracking-widest uppercase text-[var(--brand-orange)]">{t("Who we are")}</div>
+            <div className="mt-2 text-3xl font-extrabold text-[var(--brand-blue)]">{t("Reliable delivery, built for scale.")}</div>
             <p className="mt-3 text-sm text-slate-600">
               Britium Express provides domestic courier, COD operations, warehousing support, and international forwarding.
               We focus on speed, proof-of-delivery, and friendly customer support.
@@ -99,8 +102,8 @@ export default function HomePage() {
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="font-extrabold text-slate-900">Secure + Trackable</div>
-                  <div className="text-sm text-slate-600">Shipment statuses, tracking, and clear service terms.</div>
+                  <div className="font-extrabold text-slate-900">{t("Secure + Trackable")}</div>
+                  <div className="text-sm text-slate-600">{t("Shipment statuses, tracking, and clear service terms.")}</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -108,8 +111,8 @@ export default function HomePage() {
                   <Truck className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="font-extrabold text-slate-900">Fast Operations</div>
-                  <div className="text-sm text-slate-600">Optimized pickup routes and delivery hubs.</div>
+                  <div className="font-extrabold text-slate-900">{t("Fast Operations")}</div>
+                  <div className="text-sm text-slate-600">{t("Optimized pickup routes and delivery hubs.")}</div>
                 </div>
               </div>
             </div>

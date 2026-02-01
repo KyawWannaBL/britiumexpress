@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpRight, ArrowDownLeft, Wallet, History, ChevronRight, DollarSign, ChevronLeft } from 'lucide-react';
+import { useI18n } from "@/i18n/I18nProvider";
 
 const RiderWallet = () => {
+  const { t } = useI18n();
+
   const navigate = useNavigate();
 
   // Mock Financial Data
@@ -28,15 +31,15 @@ const RiderWallet = () => {
       <div className="bg-blue-600 p-4 text-white rounded-b-3xl shadow-lg pt-6">
         <div className="flex items-center mb-6">
            <button onClick={() => navigate(-1)} className="p-1"><ChevronLeft /></button>
-           <h1 className="font-bold text-xl ml-2">My Wallet</h1>
+           <h1 className="font-bold text-xl ml-2">{t("My Wallet")}</h1>
         </div>
 
         {/* Main Balance Card */}
         <div className="bg-white text-gray-800 rounded-2xl p-5 shadow-xl mb-4">
           <div className="flex justify-between items-start border-b border-gray-100 pb-4 mb-4">
             <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Cash to Remit (COD)</p>
-              <h2 className="text-3xl font-extrabold text-red-600">{financials.codOnHand.toLocaleString()} <span className="text-sm text-gray-500">Ks</span></h2>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t("Cash to Remit (COD)")}</p>
+              <h2 className="text-3xl font-extrabold text-red-600">{financials.codOnHand.toLocaleString()} <span className="text-sm text-gray-500">{t("Ks")}</span></h2>
             </div>
             <div className="p-3 bg-red-50 rounded-full">
               <DollarSign className="text-red-500" size={24} />
@@ -45,11 +48,11 @@ const RiderWallet = () => {
 
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-xs text-gray-400">Today's Earnings</p>
+              <p className="text-xs text-gray-400">{t("Today's Earnings")}</p>
               <p className="font-bold text-green-600">+{financials.todaysEarnings.toLocaleString()} Ks</p>
             </div>
             <div className="text-right">
-              <p className="text-xs text-gray-400">Total Wallet Balance</p>
+              <p className="text-xs text-gray-400">{t("Total Wallet Balance")}</p>
               <p className="font-bold text-gray-800">{financials.walletBalance.toLocaleString()} Ks</p>
             </div>
           </div>
@@ -68,7 +71,7 @@ const RiderWallet = () => {
           <h3 className="font-bold text-gray-700 flex items-center gap-2">
             <History size={18} /> History
           </h3>
-          <span className="text-xs text-blue-600 font-bold">View All</span>
+          <span className="text-xs text-blue-600 font-bold">{t("View All")}</span>
         </div>
 
         <div className="space-y-3">
@@ -76,7 +79,7 @@ const RiderWallet = () => {
             <div key={tx.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className={`p-2 rounded-lg ${tx.type === 'cod' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
-                   {tx.type === 'cod' ? <DollarSign size={18} /> : <Wallet size={18} />}
+                   {tx.type === 'cod' ? <DollarSign size={18} />{t(":")}<Wallet size={18} />}
                 </div>
                 <div>
                   <p className="font-bold text-sm text-gray-800">{tx.desc}</p>

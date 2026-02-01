@@ -5,6 +5,7 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { BRAND } from "@/lib/brand";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type IconProps = { className?: string; "aria-hidden"?: true };
 type AppNavItem = { to: string; label: string; end?: boolean; icon?: keyof typeof Icons };
@@ -100,6 +101,8 @@ export default function AppShell({
   title,
   variant = "app",
 }: AppShellProps) {
+  const { t } = useI18n();
+
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -152,13 +155,13 @@ export default function AppShell({
       <div className="h-16 px-5 flex items-center border-b">
         <BrandMark brand={brand} />
       </div>
-      <nav className="p-3" aria-label="Primary">
+      <nav className="p-3" aria-label={t("Primary")}>
         {NavItems}
       </nav>
       <div className="mt-auto p-4 text-xs text-neutral-500">
         <div className="rounded-2xl bg-neutral-50 p-3 border">
-          <div className="font-extrabold text-neutral-700">Tips</div>
-          <div className="mt-1">Use the sidebar to move fast.</div>
+          <div className="font-extrabold text-neutral-700">{t("Tips")}</div>
+          <div className="mt-1">{t("Use the sidebar to move fast.")}</div>
         </div>
       </div>
     </aside>
@@ -182,7 +185,7 @@ export default function AppShell({
         )}
         role="dialog"
         aria-modal="true"
-        aria-label="Navigation menu"
+        aria-label={t("Navigation menu")}
       >
         <div className="h-16 px-5 flex items-center gap-3 border-b">
           <BrandMark brand={brand} />
@@ -190,12 +193,12 @@ export default function AppShell({
             type="button"
             className="ml-auto rounded-2xl px-3 py-2 text-sm font-extrabold hover:bg-neutral-100"
             onClick={() => setMobileOpen(false)}
-            aria-label="Close menu"
+            aria-label={t("Close menu")}
           >
             ✕
           </button>
         </div>
-        <nav className="p-3" aria-label="Primary mobile">
+        <nav className="p-3" aria-label={t("Primary mobile")}>
           {NavItems}
         </nav>
       </div>
@@ -229,7 +232,7 @@ export default function AppShell({
             variant === "public" ? "hover:bg-white/10" : "hover:bg-neutral-100"
           )}
           onClick={() => setMobileOpen(true)}
-          aria-label="Open menu"
+          aria-label={t("Open menu")}
         >
           ☰
         </button>
@@ -239,7 +242,7 @@ export default function AppShell({
         </div>
 
         {variant === "public" ? (
-          <nav className="hidden md:flex items-center gap-2 ml-6" aria-label="Public navigation">
+          <nav className="hidden md:flex items-center gap-2 ml-6" aria-label={t("Public navigation")}>
             {nav.map((i) => (
               <NavLink
                 key={i.to}

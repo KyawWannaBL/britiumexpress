@@ -4,8 +4,11 @@ import { Lock, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import { updatePassword } from "firebase/auth";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../../firebaseconfig";
+import { useI18n } from "@/i18n/I18nProvider";
 
 function passwordStrength(pw: string) {
+  const { t } = useI18n();
+
   // Simple, predictable checks (no external deps)
   const hasMin = pw.length >= 8;
   const hasUpper = /[A-Z]/.test(pw);
@@ -91,7 +94,7 @@ export default function ChangePassword(): JSX.Element {
           <ShieldCheck className="h-8 w-8 text-[#0D47A1]" />
         </div>
 
-        <h2 className="mb-2 text-center text-2xl font-bold text-gray-900">Secure Your Account</h2>
+        <h2 className="mb-2 text-center text-2xl font-bold text-gray-900">{t("Secure Your Account")}</h2>
         <p className="mb-8 text-center text-sm text-gray-500">
           For security reasons, you must change your temporary password before proceeding.
         </p>
@@ -117,7 +120,7 @@ export default function ChangePassword(): JSX.Element {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 outline-none transition-all focus:ring-2 focus:ring-[#0D47A1]"
-                placeholder="••••••••"
+                placeholder={t("••••••••")}
                 autoComplete="new-password"
                 minLength={8}
               />
@@ -127,14 +130,14 @@ export default function ChangePassword(): JSX.Element {
                 className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600"
                 aria-label={showNew ? "Hide password" : "Show password"}
               >
-                {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showNew ? <EyeOff className="h-4 w-4" />{t(":")}<Eye className="h-4 w-4" />}
               </button>
             </div>
 
             {/* Strength helper */}
             <div className="mt-3 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-500">Strength</span>
+                <span className="text-gray-500">{t("Strength")}</span>
                 <span
                   className={
                     strength.score <= 2
@@ -166,11 +169,11 @@ export default function ChangePassword(): JSX.Element {
               </div>
 
               <ul className="grid grid-cols-1 gap-1 text-xs text-gray-500">
-                <li className={strength.hasMin ? "text-green-700" : ""}>• At least 8 characters</li>
-                <li className={strength.hasUpper ? "text-green-700" : ""}>• One uppercase letter</li>
-                <li className={strength.hasLower ? "text-green-700" : ""}>• One lowercase letter</li>
-                <li className={strength.hasNumber ? "text-green-700" : ""}>• One number</li>
-                <li className={strength.hasSymbol ? "text-green-700" : ""}>• One symbol</li>
+                <li className={strength.hasMin ? "text-green-700" : ""}>{t("• At least 8 characters")}</li>
+                <li className={strength.hasUpper ? "text-green-700" : ""}>{t("• One uppercase letter")}</li>
+                <li className={strength.hasLower ? "text-green-700" : ""}>{t("• One lowercase letter")}</li>
+                <li className={strength.hasNumber ? "text-green-700" : ""}>{t("• One number")}</li>
+                <li className={strength.hasSymbol ? "text-green-700" : ""}>{t("• One symbol")}</li>
               </ul>
             </div>
           </div>
@@ -189,7 +192,7 @@ export default function ChangePassword(): JSX.Element {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 outline-none transition-all focus:ring-2 focus:ring-[#0D47A1]"
-                placeholder="••••••••"
+                placeholder={t("••••••••")}
                 autoComplete="new-password"
               />
               <button
@@ -198,12 +201,12 @@ export default function ChangePassword(): JSX.Element {
                 className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600"
                 aria-label={showConfirm ? "Hide password" : "Show password"}
               >
-                {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showConfirm ? <EyeOff className="h-4 w-4" />{t(":")}<Eye className="h-4 w-4" />}
               </button>
             </div>
 
             {confirmPassword.length > 0 && confirmPassword !== newPassword && (
-              <p className="mt-2 text-xs text-red-600">Passwords do not match.</p>
+              <p className="mt-2 text-xs text-red-600">{t("Passwords do not match.")}</p>
             )}
           </div>
 

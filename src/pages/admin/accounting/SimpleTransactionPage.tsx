@@ -94,38 +94,38 @@ export default function SimpleTransactionPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader titleKey="acct.simpleTxn" subtitle="Firestore: financials" right={
+      <PageHeader titleKey="acct.simpleTxn" subtitle={t("Firestore: financials")} right={
         <button type="button" onClick={() => void load()} className="rounded-xl border bg-white px-3 py-2 text-sm font-extrabold hover:bg-slate-50">{t("common.refresh")}</button>
       } />
 
       <Card className="p-4">
         <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-6 gap-3">
           <div className="md:col-span-1">
-            <div className="text-xs font-extrabold text-slate-600 mb-1">Type</div>
+            <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Type")}</div>
             <select className="w-full rounded-xl border px-3 py-2 text-sm" value={type} onChange={(e) => setType(e.target.value as any)}>
-              <option value="revenue">Revenue</option>
-              <option value="expense">Expense</option>
-              <option value="transfer">Transfer</option>
+              <option value="revenue">{t("Revenue")}</option>
+              <option value="expense">{t("Expense")}</option>
+              <option value="transfer">{t("Transfer")}</option>
             </select>
           </div>
           <div className="md:col-span-2">
-            <div className="text-xs font-extrabold text-slate-600 mb-1">Amount</div>
-            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0" inputMode="decimal" />
+            <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Amount")}</div>
+            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder={t("0")} inputMode="decimal" />
           </div>
           <div className="md:col-span-1">
-            <div className="text-xs font-extrabold text-slate-600 mb-1">Currency</div>
+            <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Currency")}</div>
             <select className="w-full rounded-xl border px-3 py-2 text-sm" value={currency} onChange={(e) => setCurrency(e.target.value)}>
-              <option value="MMK">MMK</option>
-              <option value="USD">USD</option>
+              <option value="MMK">{t("MMK")}</option>
+              <option value="USD">{t("USD")}</option>
             </select>
           </div>
           <div className="md:col-span-2">
-            <div className="text-xs font-extrabold text-slate-600 mb-1">Reference</div>
-            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={ref} onChange={(e) => setRef(e.target.value)} placeholder="INV-0001" />
+            <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Reference")}</div>
+            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={ref} onChange={(e) => setRef(e.target.value)} placeholder={t("INV-0001")} />
           </div>
           <div className="md:col-span-6">
-            <div className="text-xs font-extrabold text-slate-600 mb-1">Note</div>
-            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Description" />
+            <div className="text-xs font-extrabold text-slate-600 mb-1">{t("Note")}</div>
+            <input className="w-full rounded-xl border px-3 py-2 text-sm" value={note} onChange={(e) => setNote(e.target.value)} placeholder={t("Description")} />
           </div>
 
           <div className="md:col-span-6 flex items-center gap-2">
@@ -139,7 +139,7 @@ export default function SimpleTransactionPage() {
       </Card>
 
       <Card className="p-4">
-        <div className="font-extrabold text-slate-900">Latest entries</div>
+        <div className="font-extrabold text-slate-900">{t("Latest entries")}</div>
         <div className="mt-3 overflow-x-auto">
           {loading ? (
             <div className="py-8 text-center text-sm text-slate-600">{t("common.loading")}</div>
@@ -147,12 +147,12 @@ export default function SimpleTransactionPage() {
             <table className="w-full text-sm">
               <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-y">
                 <tr>
-                  <th className="px-3 py-3 text-left">Type</th>
-                  <th className="px-3 py-3 text-right">Amount</th>
-                  <th className="px-3 py-3 text-left">Currency</th>
-                  <th className="px-3 py-3 text-left">Ref</th>
-                  <th className="px-3 py-3 text-left">Note</th>
-                  <th className="px-3 py-3 text-left">Created</th>
+                  <th className="px-3 py-3 text-left">{t("Type")}</th>
+                  <th className="px-3 py-3 text-right">{t("Amount")}</th>
+                  <th className="px-3 py-3 text-left">{t("Currency")}</th>
+                  <th className="px-3 py-3 text-left">{t("Ref")}</th>
+                  <th className="px-3 py-3 text-left">{t("Note")}</th>
+                  <th className="px-3 py-3 text-left">{t("Created")}</th>
                 </tr>
               </thead>
               <tbody>

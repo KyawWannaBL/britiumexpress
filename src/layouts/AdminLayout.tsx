@@ -58,7 +58,7 @@ export default function AdminLayout() {
       ]}
     >
       <AppShell
-        title="Admin • Britium Express"
+        title={t("Admin • Britium Express")}
         brand={{ name: "Britium Express", href: "/admin/dashboard", logoSrc: "/assets/britium-logo.png" }}
         nav={nav}
         headerRight={

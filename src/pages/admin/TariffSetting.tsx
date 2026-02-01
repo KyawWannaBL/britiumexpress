@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+import { useI18n } from "@/i18n/I18nProvider";
   Table,
   TableHeader,
   TableBody,
@@ -38,6 +39,8 @@ type IntlRate = {
 const COLLECTION = "pricing_international";
 
 export default function TariffSetting() {
+  const { t } = useI18n();
+
   const { user } = useAuth(); // you can enforce role guards in router; keep UI simple here
   const [intlRates, setIntlRates] = useState<IntlRate[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
@@ -133,8 +136,8 @@ export default function TariffSetting() {
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tariff Configuration</h1>
-          <p className="text-sm text-gray-500">Manage international shipping rates.</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t("Tariff Configuration")}</h1>
+          <p className="text-sm text-gray-500">{t("Manage international shipping rates.")}</p>
         </div>
 
         {hasChanges && (
@@ -165,10 +168,10 @@ export default function TariffSetting() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Country</TableHead>
-              <TableHead>Base Rate (5-10kg)</TableHead>
-              <TableHead>Est. Duration</TableHead>
-              <TableHead>Region</TableHead>
+              <TableHead>{t("Country")}</TableHead>
+              <TableHead>{t("Base Rate (5-10kg)")}</TableHead>
+              <TableHead>{t("Est. Duration")}</TableHead>
+              <TableHead>{t("Region")}</TableHead>
               <TableHead className="w-[60px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -193,7 +196,7 @@ export default function TariffSetting() {
                         handleRateChange(rate.id, "base_rate_5_10kg", Number(e.target.value))
                       }
                     />
-                    <span className="text-xs text-gray-500">MMK</span>
+                    <span className="text-xs text-gray-500">{t("MMK")}</span>
                   </div>
                 </TableCell>
 
@@ -210,9 +213,9 @@ export default function TariffSetting() {
                     value={rate.region || "Asia"}
                     onChange={(e) => handleRateChange(rate.id, "region", e.target.value)}
                   >
-                    <option value="Asia">Asia</option>
-                    <option value="Europe">Europe</option>
-                    <option value="North America">North America</option>
+                    <option value="Asia">{t("Asia")}</option>
+                    <option value="Europe">{t("Europe")}</option>
+                    <option value="North America">{t("North America")}</option>
                   </select>
                 </TableCell>
 
@@ -223,8 +226,8 @@ export default function TariffSetting() {
                     size="icon"
                     className="text-red-500"
                     onClick={() => deleteFromFirestore(rate.id)}
-                    aria-label="Delete row"
-                    title="Delete"
+                    aria-label={t("Delete row")}
+                    title={t("Delete")}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

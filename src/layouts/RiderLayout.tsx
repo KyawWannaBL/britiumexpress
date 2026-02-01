@@ -19,7 +19,7 @@ export default function RiderLayout() {
   return (
     <RequireRole anyOf={["rider", "driver"] as any}>
       <AppShell
-        title="Rider • Britium Express"
+        title={t("Rider • Britium Express")}
         brand={{ name: "Britium Express", href: "/rider/home", logoSrc: "/assets/britium-logo.png" }}
         nav={nav}
         headerRight={

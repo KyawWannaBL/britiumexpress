@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Camera, Scan, CheckCircle, ChevronLeft, Package } from 'lucide-react';
+import { useI18n } from "@/i18n/I18nProvider";
 
 const RiderPickupConfirm = () => {
+  const { t } = useI18n();
+
   const { jobId } = useParams();
   const navigate = useNavigate();
   
@@ -38,7 +41,7 @@ const RiderPickupConfirm = () => {
       {/* Header */}
       <div className="bg-white p-4 shadow-sm flex items-center">
         <button onClick={() => navigate(-1)}><ChevronLeft /></button>
-        <h1 className="font-bold text-lg ml-4">Pickup Verification</h1>
+        <h1 className="font-bold text-lg ml-4">{t("Pickup Verification")}</h1>
       </div>
 
       <div className="flex-1 p-4 space-y-6">
@@ -46,7 +49,7 @@ const RiderPickupConfirm = () => {
         <div className="bg-blue-900 text-white rounded-2xl p-6 flex flex-col items-center justify-center shadow-lg">
           <div className="mb-4 text-center">
             <h2 className="text-2xl font-bold">{items.filter(i => i.scanned).length} / {items.length}</h2>
-            <p className="opacity-80 text-sm">Items Scanned</p>
+            <p className="opacity-80 text-sm">{t("Items Scanned")}</p>
           </div>
           
           <button 
@@ -60,7 +63,7 @@ const RiderPickupConfirm = () => {
 
         {/* 2. Item Checklist */}
         <div className="space-y-2">
-          <h3 className="font-bold text-gray-700">Manifest</h3>
+          <h3 className="font-bold text-gray-700">{t("Manifest")}</h3>
           {items.map((item) => (
             <div key={item.id} className={`p-4 rounded-xl border flex items-center justify-between ${item.scanned ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
               <div className="flex items-center gap-3">
@@ -74,14 +77,14 @@ const RiderPickupConfirm = () => {
 
         {/* 3. Proof Photo */}
         <div>
-          <h3 className="font-bold text-gray-700 mb-2">Pickup Proof</h3>
+          <h3 className="font-bold text-gray-700 mb-2">{t("Pickup Proof")}</h3>
           <label className="block w-full aspect-video bg-gray-200 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer relative overflow-hidden">
             {photoProof ? (
               <img src={photoProof} alt="Proof" className="absolute inset-0 w-full h-full object-cover" />
             ) : (
               <div className="text-gray-500 flex flex-col items-center">
                 <Camera size={32} className="mb-2" />
-                <span className="text-xs font-bold">TAKE PHOTO OF ITEMS</span>
+                <span className="text-xs font-bold">{t("TAKE PHOTO OF ITEMS")}</span>
               </div>
             )}
             <input type="file" accept="image/*" capture="environment" onChange={handlePhotoCapture} className="hidden" />

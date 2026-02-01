@@ -5,6 +5,7 @@
 
 import React, { useState } from "react";
 import { 
+import { useI18n } from "@/i18n/I18nProvider";
   Card, 
   CardBody, 
   CardHeader, 
@@ -31,6 +32,8 @@ const MERCHANT_ORDERS: MerchantOrder[] = [
 ];
 
 export default function MerchantDashboardPage() {
+  const { t } = useI18n();
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredRows = MERCHANT_ORDERS.filter((order) => {
@@ -43,13 +46,13 @@ export default function MerchantDashboardPage() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900">Merchant Dashboard</h1>
-          <p className="text-sm text-slate-500">Manage your store's shipments and COD collections.</p>
+          <h1 className="text-2xl font-extrabold text-slate-900">{t("Merchant Dashboard")}</h1>
+          <p className="text-sm text-slate-500">{t("Manage your store's shipments and COD collections.")}</p>
         </div>
         <TextInput 
           value={searchQuery} 
           onChange={(e) => setSearchQuery(e.target.value)} 
-          placeholder="Search by ID, customer, or township..." 
+          placeholder={t("Search by ID, customer, or township...")} 
           className="md:w-80 shadow-sm"
         />
       </div>
@@ -57,19 +60,19 @@ export default function MerchantDashboardPage() {
       {/* Stats Overview using StatCard with tone compliance */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard 
-          title="Orders This Week" 
+          title={t("Orders This Week")} 
           value="74" 
           hint="+12% from last week" 
           tone="blue" 
         />
         <StatCard 
-          title="Total COD Collected" 
+          title={t("Total COD Collected")} 
           value="1,420,000 MMK" 
           hint="Verified funds" 
           tone="green" 
         />
         <StatCard 
-          title="Pending Payout" 
+          title={t("Pending Payout")} 
           value="320,000 MMK" 
           hint="Next batch: Feb 2" 
           tone="orange" 
@@ -79,8 +82,8 @@ export default function MerchantDashboardPage() {
       {/* Recent Orders Table */}
       <Card className="overflow-hidden border-slate-100 shadow-soft">
         <CardHeader 
-          title="Recent Orders" 
-          subtitle="Real-time status updates for your latest store deliveries."
+          title={t("Recent Orders")} 
+          subtitle={t("Real-time status updates for your latest store deliveries.")}
         />
         <CardBody className="p-0">
           <DataTable<MerchantOrder>
