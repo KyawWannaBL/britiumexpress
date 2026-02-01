@@ -17,8 +17,8 @@ import SendParcelPage from "./pages/public/SendParcel";
 import BritiumCustomerTrackingApp from "./pages/public/BritiumCustomerTrackingApp";
 
 // Auth pages
-import LoginPage from "./pages/auth/LoginPage";
-import SignupPage from "./pages/auth/SignupPage";
+import LoginPage from "./pages/auth/Login";
+import SignupPage from "./pages/auth/Signup";
 import PortalRedirect from "./pages/auth/PortalRedirect";
 import ForceChangePassword from "./pages/auth/ForceChangePassword";
 

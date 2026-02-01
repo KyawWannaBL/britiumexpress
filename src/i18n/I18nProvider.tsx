@@ -18,9 +18,17 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("britium_lang", l);
   }, []);
 
-  const t = React.useCallback((k: string) => STRINGS[lang]?.[k] ?? STRINGS.en?.[k] ?? k, [lang]);
+const t = React.useCallback((k: string) => STRINGS[lang]?.[k] ?? STRINGS.en?.[k] ?? k, [lang]);
 
-  return <Ctx.Provider value={{ lang, setLang, t }}>{children}</Ctx.Provider>;
+React.useEffect(() => {
+  const el = document.documentElement;
+  const isMm = lang === "mm";
+  el.lang = isMm ? "my" : "en";
+  el.dataset.lang = lang;
+  el.classList.toggle("lang-mm", isMm);
+}, [lang]);
+
+return <Ctx.Provider value={{ lang, setLang, t }}>{children}</Ctx.Provider>;
 }
 
 export function useI18n() {

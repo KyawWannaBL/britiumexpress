@@ -14,9 +14,11 @@ function pickSafeRedirect(from?: unknown): string {
 }
 
 export default function LoginPage() {
-  const { signIn, refresh, error: profileError } = useAuth();
+  const { loading, user, signIn, refresh, error: profileError } = useAuth();
   const nav = useNavigate();
   const loc = useLocation() as any;
+
+  if (!loading && user) return <Navigate to="/portal" replace />;
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
