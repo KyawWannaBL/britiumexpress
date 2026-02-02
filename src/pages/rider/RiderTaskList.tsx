@@ -70,7 +70,7 @@ const RiderTaskList = () => {
                 <span>Due: {task.sla}</span>
               </div>
               <span className="text-blue-600 text-sm font-bold flex items-center gap-1">
-                View Details {activeTab === 'pickup' ? <ArrowUpCircle size={16}/>{t(":")}<ArrowDownCircle size={16}/>}
+              View Details {activeTab === 'pickup' ? <ArrowUpCircle size={16}/> : <ArrowDownCircle size={16}/>}
               </span>
             </div>
           </div>
