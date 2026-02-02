@@ -1,46 +1,37 @@
-import React from "react";
-import type { Lang } from "./strings";
-import { STRINGS } from "./strings";
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { STRINGS, Lang } from "./strings"; // Ensure strings.ts uses 'export const STRINGS'
 
-type I18nState = { lang: Lang; setLang: (l: Lang) => void; t: (k: string) => string };
-const Ctx = React.createContext<I18nState | null>(null);
-
-function initLang(): Lang {
-  try {
-    const saved = localStorage.getItem("britium_lang");
-    return saved === "mm" ? "mm" : "en";
-  } catch {
-    return "en";
-  }
+interface I18nContextType {
+  locale: Lang;
+  setLocale: (lang: Lang) => void;
+  t: (key: string) => string;
 }
 
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = React.useState<Lang>(initLang);
+const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
-  const setLang = React.useCallback((l: Lang) => {
-    setLangState(l);
+export const I18nProvider = ({ children, defaultLocale = "en" }: { children: ReactNode; defaultLocale?: Lang }) => {
+  const [locale, setLocale] = useState<Lang>(defaultLocale);
+
+  // Safety translation function to prevent white screen crashes
+  const t = (key: string): string => {
     try {
-      localStorage.setItem("britium_lang", l);
-    } catch {
-      // ignore
+      const translations = STRINGS[locale] as any;
+      return translations[key] || key;
+    } catch (error) {
+      console.error("I18n Error:", error);
+      return key; // Return raw key instead of crashing
     }
-  }, []);
+  };
 
-  const t = React.useCallback((k: string) => STRINGS[lang]?.[k] ?? STRINGS.en?.[k] ?? k, [lang]);
+  return (
+    <I18nContext.Provider value={{ locale, setLocale, t }}>
+      {children}
+    </I18nContext.Provider>
+  );
+};
 
-  React.useEffect(() => {
-    const el = document.documentElement;
-    const isMm = lang === "mm";
-    el.lang = isMm ? "my" : "en";
-    el.dataset.lang = lang;
-    el.classList.toggle("lang-mm", isMm);
-  }, [lang]);
-
-  return <Ctx.Provider value={{ lang, setLang, t }}>{children}</Ctx.Provider>;
-}
-
-export function useI18n() {
-  const v = React.useContext(Ctx);
-  if (!v) throw new Error("useI18n must be used within I18nProvider");
-  return v;
-}
+export const useI18n = () => {
+  const context = useContext(I18nContext);
+  if (!context) throw new Error("useI18n must be used within an I18nProvider");
+  return context;
+};
