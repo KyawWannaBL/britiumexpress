@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { STRINGS, Lang } from "./strings"; // Ensure strings.ts uses 'export const STRINGS'
+import { STRINGS, Lang } from "./strings"; 
 
 interface I18nContextType {
   locale: Lang;
@@ -12,14 +12,14 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 export const I18nProvider = ({ children, defaultLocale = "en" }: { children: ReactNode; defaultLocale?: Lang }) => {
   const [locale, setLocale] = useState<Lang>(defaultLocale);
 
-  // Safety translation function to prevent white screen crashes
   const t = (key: string): string => {
     try {
+      // Access translations based on current locale
       const translations = STRINGS[locale] as any;
-      return translations[key] || key;
+      return translations[key] || key; // Return the key itself if the translation is missing
     } catch (error) {
-      console.error("I18n Error:", error);
-      return key; // Return raw key instead of crashing
+      console.error("I18n Runtime Error:", error);
+      return key; // Prevents the white screen by returning raw text instead of crashing
     }
   };
 
