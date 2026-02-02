@@ -1,94 +1,60 @@
 import React, { useState } from 'react';
-import { UploadCloud, FileText, AlertTriangle, Check, X } from 'lucide-react';
+import { UploadCloud, FileText, AlertTriangle, Check } from 'lucide-react';
 import { useI18n } from "@/i18n/I18nProvider";
+import { IBulkRow } from '@/types/merchant';
 
-const BulkUpload = () => {
+export default function BulkUpload() {
   const { t } = useI18n();
-
   const [file, setFile] = useState<File | null>(null);
-  const [analyzing, setAnalyzing] = useState(false);
-  
-  // Mock Validation Results
-  const [rows, setRows] = useState([
-    { row: 1, receiver: 'Kyaw Kyaw', phone: '0912345678', address: 'Yangon', status: 'valid' },
-    { row: 2, receiver: 'Su Su', phone: '0987654321', address: 'Mandalay', status: 'valid' },
-    { row: 3, receiver: 'Aung Aung', phone: '123', address: '', status: 'error', msg: 'Invalid Phone & Missing Address' },
-  ]);
 
-  const handleFileDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setAnalyzing(true);
-    // Simulate parsing delay
-    setTimeout(() => { setAnalyzing(false); setFile(new File([""], "orders.csv")); }, 1500);
-  };
+  const rows: IBulkRow[] = [
+    { row: 1, receiver: 'Kyaw Kyaw', phone: '0912345678', address: 'Yangon', status: 'valid' },
+    { row: 3, receiver: 'Aung Aung', phone: '123', address: '', status: 'error', msg: t('Invalid Phone & Missing Address') },
+  ];
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t("Bulk Order Upload")}</h1>
+    <div className="p-8 max-w-6xl mx-auto animate-in fade-in">
+      <h1 className="text-3xl font-black text-[#0d2c54] mb-8 uppercase tracking-tight">{t("Bulk Order Upload")}</h1>
       
-      {/* 1. Upload Zone */}
-      {!file && (
-        <div 
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={handleFileDrop}
-          className="border-2 border-dashed border-gray-300 rounded-2xl p-16 text-center bg-gray-50 hover:bg-blue-50 hover:border-blue-400 transition-colors cursor-pointer group"
-        >
-          <div className="w-20 h-20 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-            <UploadCloud size={40} className="text-blue-500" />
+      {!file ? (
+        <div className="border-4 border-dashed border-gray-100 rounded-[3rem] p-20 text-center bg-white hover:border-[#ff6b00] transition-all cursor-pointer group shadow-sm">
+          <div className="w-24 h-24 bg-orange-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+            <UploadCloud size={48} className="text-[#ff6b00]" />
           </div>
-          <h3 className="text-xl font-bold text-gray-800">{t("Drag & Drop CSV / Excel file")}</h3>
-          <p className="text-gray-500 mt-2">{t("or")}<span className="text-blue-600 underline">{t("browse computer")}</span></p>
-          <button className="mt-8 text-sm font-bold text-gray-400 flex items-center justify-center gap-2 mx-auto hover:text-gray-600">
-            <FileText size={16} /> Download Template
-          </button>
+          <h3 className="text-2xl font-black text-[#0d2c54]">{t("Drag & Drop CSV / Excel file")}</h3>
+          <p className="text-gray-400 mt-2 font-bold uppercase text-xs tracking-widest">{t("or")} <span className="text-[#ff6b00] underline cursor-pointer">{t("browse computer")}</span></p>
         </div>
-      )}
-
-      {/* 2. Validation Table */}
-      {file && (
-        <div className="animate-in fade-in slide-in-from-bottom-4">
-          <div className="flex justify-between items-center mb-4">
+      ) : (
+        <div className="space-y-6">
+          <div className="flex justify-between items-end">
             <div>
-              <h3 className="font-bold text-lg text-gray-800">{t("Validation Results")}</h3>
-              <p className="text-sm text-gray-500">{t("2 Valid, 1 Error found.")}</p>
+              <h3 className="text-xl font-black text-[#0d2c54]">{t("Validation Results")}</h3>
+              <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">{t("Check records before submission")}</p>
             </div>
-            <div className="flex gap-2">
-              <button onClick={() => setFile(null)} className="px-4 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-lg">{t("Re-upload")}</button>
-              <button disabled={rows.some(r => r.status === 'error')} className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed">
-                Create Shipments
-              </button>
-            </div>
+            <button onClick={() => setFile(null)} className="px-6 py-3 bg-gray-100 text-gray-600 font-black rounded-2xl text-xs uppercase tracking-widest">{t("Re-upload")}</button>
           </div>
 
-          <div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-[2.5rem] shadow-xl border border-gray-50 overflow-hidden">
             <table className="w-full text-left">
-              <thead className="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-bold">
+              <thead className="bg-gray-50/50 text-[10px] font-black uppercase text-gray-400 tracking-widest">
                 <tr>
-                  <th className="p-4">{t("Row")}</th>
-                  <th className="p-4">{t("Receiver")}</th>
-                  <th className="p-4">{t("Phone")}</th>
-                  <th className="p-4">{t("Address")}</th>
-                  <th className="p-4 text-center">{t("Status")}</th>
+                  <th className="p-6">{t("Row")}</th>
+                  <th className="p-6">{t("Receiver")}</th>
+                  <th className="p-6">{t("Status")}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-50">
                 {rows.map((r) => (
-                  <tr key={r.row} className={r.status === 'error' ? 'bg-red-50' : 'bg-white'}>
-                    <td className="p-4 text-gray-500 font-mono">#{r.row}</td>
-                    <td className="p-4 font-medium">{r.receiver}</td>
-                    <td className="p-4">{r.phone}</td>
-                    <td className="p-4 text-gray-500 truncate max-w-xs">{r.address || '-'}</td>
-                    <td className="p-4 text-center">
-                      {r.status === 'valid' ? (
-                        <span className="inline-flex items-center gap-1 text-green-600 font-bold text-xs bg-green-100 px-2 py-1 rounded-full"><Check size={12}/>{t("Valid")}</span>
-                      ) : (
-                        <div className="group relative inline-block">
-                           <span className="inline-flex items-center gap-1 text-red-600 font-bold text-xs bg-red-100 px-2 py-1 rounded-full cursor-help"><AlertTriangle size={12}/>{t("Error")}</span>
-                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-gray-800 text-white text-xs rounded shadow-lg hidden group-hover:block">
-                             {r.msg}
-                           </div>
-                        </div>
-                      )}
+                  <tr key={r.row} className={r.status === 'error' ? 'bg-red-50/30' : 'hover:bg-gray-50/50'}>
+                    <td className="p-6 text-gray-400 font-mono text-xs">#{r.row}</td>
+                    <td className="p-6 font-bold text-[#0d2c54]">{r.receiver}</td>
+                    <td className="p-6">
+                      <span className={`inline-flex items-center gap-2 font-black text-[10px] uppercase px-3 py-1.5 rounded-full ${
+                        r.status === 'valid' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                      }`}>
+                        {r.status === 'valid' ? <Check size={12}/> : <AlertTriangle size={12}/>}
+                        {t(r.status === 'valid' ? "Valid" : "Error")}
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -99,6 +65,4 @@ const BulkUpload = () => {
       )}
     </div>
   );
-};
-
-export default BulkUpload;
+}

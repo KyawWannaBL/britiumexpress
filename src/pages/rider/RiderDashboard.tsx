@@ -1,115 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Map, Package, Truck, Wifi, WifiOff } from 'lucide-react';
-import { auth, db } from '../../firebase'; // Adjust path
-import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useI18n } from "@/i18n/I18nProvider";
+import { IRiderStats } from '@/types/rider';
 
-const RiderDashboard = () => {
+export default function RiderDashboard() {
   const { t } = useI18n();
-
   const navigate = useNavigate();
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [isOnDuty, setIsOnDuty] = useState(false);
-  const [stats, setStats] = useState({ pending: 0, completed: 0, failed: 0, cod: 0 });
-
-  // Mock fetching KPIs
-  useEffect(() => {
-    // In production, fetch from Firestore 'tasks' collection where riderId == auth.currentUser.uid
-    setStats({ pending: 12, completed: 5, failed: 1, cod: 45000 });
-    
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
+  
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+  const [isOnDuty, setIsOnDuty] = useState<boolean>(false);
+  const [stats, setStats] = useState<IRiderStats>({ pending: 12, completed: 5, failed: 1, cod: 45000 });
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* 1. Header & Status */}
-      <header className="bg-blue-600 text-white p-4 rounded-b-2xl shadow-lg">
-        <div className="flex justify-between items-center mb-4">
+      <header className="bg-[#0d2c54] text-white p-5 rounded-b-[2rem] shadow-lg">
+        <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-xl font-bold">Hello, {auth.currentUser?.displayName || 'Rider'}</h1>
-            <p className="text-sm opacity-90">{t("Zone: Downtown-A")}</p>
+            <h1 className="text-xl font-bold">{t("Hello")}, Kyaw Kyaw</h1>
+            <p className="text-xs opacity-80">{t("Zone: Downtown-A")}</p>
           </div>
-          <button onClick={() => navigate('/rider/notifications')} className="relative p-2">
-            <Bell size={24} />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          <button className="p-2 bg-white/10 rounded-full relative">
+            <Bell size={20} />
+            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#0d2c54]"></span>
           </button>
         </div>
 
-        {/* Connectivity & Duty Toggle */}
-        <div className="flex justify-between items-center bg-blue-700/50 p-3 rounded-xl">
+        <div className="flex justify-between items-center bg-white/10 p-4 rounded-2xl border border-white/5">
           <div className="flex items-center gap-2">
-            {isOnline ? <Wifi size={18} className="text-green-300"/>{t(":")}<WifiOff size={18} className="text-red-300"/>}
-            <span className="text-sm font-medium">{isOnline ? 'Online' : 'Offline Mode'}</span>
+            {isOnline ? <Wifi size={18} className="text-green-400"/> : <WifiOff size={18} className="text-red-400"/>}
+            <span className="text-sm font-bold">{isOnline ? t("Online") : t("Offline Mode")}</span>
           </div>
           <button 
             onClick={() => setIsOnDuty(!isOnDuty)}
-            className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all ${
-              isOnDuty ? 'bg-green-400 text-green-900' : 'bg-gray-300 text-gray-700'
+            className={`px-6 py-2 rounded-xl text-xs font-black transition-all ${
+              isOnDuty ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
             }`}
           >
-            {isOnDuty ? 'ON DUTY' : 'START ROUTE'}
+            {isOnDuty ? t("ON DUTY") : t("START ROUTE")}
           </button>
         </div>
       </header>
 
-      {/* 2. KPI Cards */}
-      <div className="p-4 grid grid-cols-2 gap-4 -mt-2">
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center" onClick={() => navigate('/rider/tasks?filter=pending')}>
-          <Package className="text-blue-500 mb-2" />
-          <span className="text-2xl font-bold text-gray-800">{stats.pending}</span>
-          <span className="text-xs text-gray-500">{t("Pending Tasks")}</span>
-        </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
-          <Truck className="text-green-500 mb-2" />
-          <span className="text-2xl font-bold text-gray-800">{stats.completed}</span>
-          <span className="text-xs text-gray-500">{t("Completed")}</span>
-        </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
-          <span className="text-2xl font-bold text-red-500">{stats.failed}</span>
-          <span className="text-xs text-gray-500">{t("Failed/Return")}</span>
-        </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center" onClick={() => navigate('/rider/wallet')}>
-          <span className="text-lg font-bold text-gray-800">{stats.cod.toLocaleString()} Ks</span>
-          <span className="text-xs text-gray-500">{t("COD On-Hand")}</span>
-        </div>
-      </div>
-
-      {/* 3. Quick Actions */}
-      <div className="p-4">
-        <h3 className="text-lg font-bold text-gray-800 mb-3">{t("Today's Route")}</h3>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-l-4 border-l-orange-500 mb-3">
-          <div className="flex justify-between items-start">
-            <div>
-              <h4 className="font-bold text-gray-800">{t("Next Stop: Golden City Condo")}</h4>
-              <p className="text-sm text-gray-500">{t("Delivery • 2.4 km away")}</p>
-            </div>
-            <span className="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded">{t("Exp")}</span>
-          </div>
-          <button 
-            onClick={() => navigate('/rider/map')}
-            className="w-full mt-3 bg-gray-900 text-white py-2 rounded-lg flex items-center justify-center gap-2"
-          >
-            <Map size={16} /> Navigate
-          </button>
-        </div>
-        
-        <button 
-          onClick={() => navigate('/rider/tasks')}
-          className="w-full py-3 text-blue-600 font-bold bg-blue-50 rounded-xl"
-        >
-          View Full Task List
-        </button>
+      <div className="p-4 grid grid-cols-2 gap-4 -mt-4">
+        <StatCard icon={Package} label={t("Pending Tasks")} value={stats.pending.toString()} color="blue" onClick={() => navigate('/rider/tasks')} />
+        <StatCard icon={Truck} label={t("Completed")} value={stats.completed.toString()} color="green" />
+        <StatCard label={t("Failed/Return")} value={stats.failed.toString()} color="red" />
+        <StatCard label={t("COD On-Hand")} value={`${stats.cod.toLocaleString()} Ks`} color="orange" onClick={() => navigate('/rider/wallet')} />
       </div>
     </div>
   );
-};
+}
 
-export default RiderDashboard;
+function StatCard({ icon: Icon, label, value, color, onClick }: any) {
+  const colors = {
+    blue: "text-blue-600 bg-blue-50",
+    green: "text-green-600 bg-green-50",
+    red: "text-red-600 bg-red-50",
+    orange: "text-orange-600 bg-orange-50"
+  };
+  return (
+    <div onClick={onClick} className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col items-center text-center active:scale-95 transition-transform">
+      {Icon && <Icon className={`mb-2 ${colors[color as keyof typeof colors]}`} size={24} />}
+      <span className="text-2xl font-black text-gray-900">{value}</span>
+      <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{label}</span>
+    </div>
+  );
+}

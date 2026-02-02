@@ -1,254 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getCountFromServer,
-  getDoc,
-  query,
-  where,
-} from "firebase/firestore";
-import { auth, db } from "../../firebaseconfig";
+import React, { useEffect, useState } from "react";
 import { useI18n } from "@/i18n/I18nProvider";
+import { collection, query, where, getCountFromServer } from "firebase/firestore";
+import { db } from "../../firebaseconfig";
+import { IWarehouseStats } from "@/types/britium";
 
-type Role =
-  | "super_admin"
-  | "manager"
-  | "sub_station_manager"
-  | "supervisor"
-  | "warehouse"
-  | "rider_driver"
-  | "merchant"
-  | "vendor"
-  | "customer"
-  | "accountant"
-  | string;
+export default function WarehouseDashboard({ stationId }: { stationId: string }) {
+  const { t } = useI18n();
+  const [stats, setStats] = useState<IWarehouseStats>({ inbound: 0, sorted: 0, manifested: 0, outForDelivery: 0 });
 
-type ParcelStatus =
-  | "created"
-  | "inbound_received"
-  | "sorting"
-  | "sorted"
-  | "manifested"
-  | "out_for_delivery"
-  | "delivered"
-  | "return_requested"
-  | "return_received"
-  | "transfer_dispatched"
-  | "transfer_arrived"
-  | "cancelled";
+  useEffect(() => {
+    async function fetchKPIs() {
+      const baseQ = query(collection(db, "parcels"), where("currentStationId", "==", stationId));
+      
+      const counts = await Promise.all([
+        getCountFromServer(query(baseQ, where("status", "==", "inbound_received"))),
+        getCountFromServer(query(baseQ, where("status", "==", "sorted"))),
+        getCountFromServer(query(baseQ, where("status", "==", "manifested"))),
+        getCountFromServer(query(baseQ, where("status", "==", "out_for_delivery")))
+      ]);
 
-type UserProfile = {
-  role?: Role;
-  stationId?: string;
-  stationName?: string;
-  branchId?: string;
-  displayName?: string;
-};
+      setStats({
+        inbound: counts[0].data().count,
+        sorted: counts[1].data().count,
+        manifested: counts[2].data().count,
+        outForDelivery: counts[3].data().count,
+      });
+    }
+    if (stationId) fetchKPIs();
+  }, [stationId]);
 
-function cn(...p: Array<string | false | null | undefined>) {
-  return p.filter(Boolean).join(" ");
-}
-
-function StatCard({
-  label,
-  value,
-  sub,
-  loading,
-}: {
-  label: string;
-  value: number | null;
-  sub?: string;
-  loading?: boolean;
-}) {
   return (
-    <div className="rounded-xl border bg-white p-4 shadow-sm">
-      <div className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-        {label}
+    <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
+      <h1 className="text-2xl font-black text-[#0d2c54] uppercase tracking-tight">{t("Station Monitoring")}</h1>
+      
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <KPICard label={t("Inbound")} value={stats.inbound} color="blue" />
+        <KPICard label={t("Sorted")} value={stats.sorted} color="orange" />
+        <KPICard label={t("Ready to Load")} value={stats.manifested} color="green" />
+        <KPICard label={t("On Route")} value={stats.outForDelivery} color="red" />
       </div>
-      <div className="mt-2 text-3xl font-extrabold">
-        {loading ? "…" : value ?? 0}
-      </div>
-      {sub ? <div className="mt-1 text-sm text-neutral-600">{sub}</div> : null}
     </div>
   );
 }
 
-function QuickLink({
-  to,
-  title,
-  desc,
-}: {
-  to: string;
-  title: string;
-  desc: string;
-}) {
+function KPICard({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <Link
-      to={to}
-      className={cn(
-        "rounded-xl border bg-white p-4 shadow-sm transition",
-        "hover:shadow-md hover:border-neutral-300",
-        "focus:outline-none focus:ring-2 focus:ring-black/20"
-      )}
-    >
-      <div className="text-base font-semibold">{title}</div>
-      <div className="mt-1 text-sm text-neutral-600">{desc}</div>
-    </Link>
-  );
-}
-
-function useUserProfile() {
-  const [user, setUser] = React.useState<FirebaseUser | null>(null);
-  const [profile, setProfile] = React.useState<UserProfile | null>(null);
-  const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (u) => {
-      setUser(u);
-      setProfile(null);
-      if (!u) {
-        setLoading(false);
-        return;
-      }
-      try {
-        const snap = await getDoc(doc(db, "users", u.uid));
-        setProfile((snap.data() as UserProfile) ?? null);
-      } finally {
-        setLoading(false);
-      }
-    });
-    return () => unsub();
-  }, []);
-
-  return { user, profile, loading };
-}
-
-async function countParcels(stationId: string, status?: ParcelStatus) {
-  const base = query(collection(db, "parcels"), where("currentStationId", "==", stationId));
-  const q = status ? query(collection(db, "parcels"), where("currentStationId", "==", stationId), where("status", "==", status)) : base;
-  const res = await getCountFromServer(q);
-  return res.data().count;
-}
-
-export default function WarehouseDashboard() {
-  const { t } = useI18n();
-
-  const { user, profile, loading: profileLoading } = useUserProfile();
-  const stationId = profile?.stationId ?? "";
-  const stationName = profile?.stationName ?? "Warehouse";
-
-  const [loading, setLoading] = React.useState(true);
-  const [stats, setStats] = React.useState({
-    inbound: 0,
-    sorted: 0,
-    manifested: 0,
-    outForDelivery: 0,
-    returns: 0,
-    transfers: 0,
-  });
-
-  React.useEffect(() => {
-    let alive = true;
-    (async () => {
-      if (!stationId) {
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      try {
-        const [
-          inbound,
-          sorted,
-          manifested,
-          outForDelivery,
-          returns,
-          transfers,
-        ] = await Promise.all([
-          countParcels(stationId, "inbound_received"),
-          countParcels(stationId, "sorted"),
-          countParcels(stationId, "manifested"),
-          countParcels(stationId, "out_for_delivery"),
-          countParcels(stationId, "return_received"),
-          countParcels(stationId, "transfer_dispatched"),
-        ]);
-        if (!alive) return;
-        setStats({ inbound, sorted, manifested, outForDelivery, returns, transfers });
-      } catch {
-        // ignore, show zeros
-      } finally {
-        if (alive) setLoading(false);
-      }
-    })();
-    return () => {
-      alive = false;
-    };
-  }, [stationId]);
-
-  if (profileLoading) {
-    return <div className="p-6">{t("Loading…")}</div>;
-  }
-
-  if (!user) {
-    return (
-      <div className="p-6">
-        <div className="rounded-xl border bg-white p-6">
-          <div className="text-lg font-semibold">{t("Please sign in")}</div>
-          <div className="mt-1 text-sm text-neutral-600">
-            You must be logged in to access warehouse operations.
-          </div>
-          <Link className="mt-4 inline-block rounded-md bg-black px-4 py-2 text-white" to="/login">
-            Go to Login
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (!stationId) {
-    return (
-      <div className="p-6">
-        <div className="rounded-xl border bg-white p-6">
-          <div className="text-lg font-semibold">{t("Station not configured")}</div>
-          <div className="mt-1 text-sm text-neutral-600">
-            Your user profile is missing <code>{t("stationId")}</code>. Add it in Firestore under{" "}
-            <code>users/{user.uid}</code>.
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="p-6 space-y-6">
-      <div className="flex flex-col gap-1">
-        <div className="text-2xl font-extrabold">{stationName} • Warehouse</div>
-        <div className="text-sm text-neutral-600">
-          Station: <span className="font-mono">{stationId}</span> • Role:{" "}
-          <span className="font-semibold">{profile?.role ?? "unknown"}</span>
-        </div>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <StatCard label={t("Inbound (Received)")} value={stats.inbound} loading={loading} />
-        <StatCard label={t("Sorted")} value={stats.sorted} loading={loading} />
-        <StatCard label={t("Manifested")} value={stats.manifested} loading={loading} />
-        <StatCard label={t("Out for Delivery")} value={stats.outForDelivery} loading={loading} />
-        <StatCard label={t("Returns (Received)")} value={stats.returns} loading={loading} />
-        <StatCard label={t("Transfers (Dispatched)")} value={stats.transfers} loading={loading} />
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <QuickLink to="/warehouse/inbound" title={t("Scan In (Inbound)")} desc="Receive parcels into this station." />
-        <QuickLink to="/warehouse/outbound" title={t("Scan Out (Outbound)")} desc="Send parcels out for delivery or transfer." />
-        <QuickLink to="/warehouse/sorting" title={t("Sorting Board")} desc="Assign inbound parcels to bins/routes." />
-        <QuickLink to="/warehouse/loading" title={t("Load Manifest")} desc="Create manifests and load parcels to vehicles." />
-        <QuickLink to="/warehouse/transfers" title={t("Transit Routes")} desc="Inter-station transfer management." />
-        <QuickLink to="/warehouse/returns" title={t("Returns")} desc="Handle return parcels and reasons." />
-        <QuickLink to="/warehouse/labels" title={t("Print Labels")} desc="Print shipping labels for parcels." />
-        <QuickLink to="/warehouse/inventory" title={t("Inventory")} desc="Search and export inventory list." />
-      </div>
+    <div className="bg-white p-5 rounded-[2rem] shadow-sm border border-gray-100 text-center">
+      <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">{label}</p>
+      <p className={`text-3xl font-black text-${color}-600`}>{value}</p>
     </div>
   );
 }

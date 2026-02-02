@@ -1,97 +1,66 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Truck, Settings, LogOut, Globe, Phone, ChevronRight, Shield } from 'lucide-react';
-import { auth } from '../../firebase'; // Mock import
+import { User, Truck, LogOut, Globe, Phone, ChevronRight, Shield } from 'lucide-react';
 import { useI18n } from "@/i18n/I18nProvider";
 
-const RiderProfile = () => {
-  const { t } = useI18n();
-
+export default function RiderProfile() {
+  const { t, locale, setLocale } = useI18n();
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    // auth.signOut();
-    navigate('/login');
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
-      {/* Profile Header */}
-      <div className="bg-white p-6 pt-10 flex flex-col items-center border-b border-gray-200">
-        <div className="w-24 h-24 bg-gray-200 rounded-full mb-4 overflow-hidden border-4 border-white shadow-lg">
-          <img src="https://ui-avatars.com/api/?name=Kyaw+Kyaw&background=0D8ABC&color=fff" alt="Profile" className="w-full h-full object-cover" />
+      <div className="bg-white p-8 flex flex-col items-center border-b border-gray-100 rounded-b-[3rem] shadow-sm">
+        <div className="w-28 h-28 rounded-[2.5rem] overflow-hidden border-4 border-white shadow-xl mb-4 bg-gray-100">
+          <img src="https://ui-avatars.com/api/?name=Kyaw+Kyaw&background=0d2c54&color=fff" alt="Profile" />
         </div>
-        <h1 className="text-xl font-bold text-gray-900">{t("Kyaw Kyaw")}</h1>
-        <p className="text-gray-500 text-sm">{t("ID: RIDER-MM-0042")}</p>
-        
-        <div className="flex gap-2 mt-4">
-            <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">{t("4.8 ★")}</span>
-            <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">{t("Senior Rider")}</span>
-        </div>
+        <h1 className="text-2xl font-black text-[#0d2c54]">Kyaw Kyaw</h1>
+        <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-widest">{t("ID: RIDER-MM-0042")}</p>
       </div>
 
-      {/* Settings Sections */}
-      <div className="p-4 space-y-4">
-        
-        {/* Vehicle Info */}
-        <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-4 bg-gray-50 border-b border-gray-100 font-bold text-gray-700 text-sm">{t("Vehicle Details")}</div>
-            <div className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <Truck className="text-blue-500" />
-                    <div>
-                        <p className="font-bold text-gray-800">{t("Honda Click 125i")}</p>
-                        <p className="text-sm text-gray-500">{t("YGN-12345")}</p>
-                    </div>
-                </div>
-                <button className="text-blue-600 text-sm font-bold">{t("Edit")}</button>
+      <div className="p-6 space-y-4">
+        <ProfileSection title={t("Vehicle Details")}>
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-50 text-[#0d2c54] rounded-2xl"><Truck size={20}/></div>
+              <div>
+                <p className="font-black text-gray-900 text-sm">Honda Click 125i</p>
+                <p className="text-[10px] font-bold text-gray-400">YGN-12345</p>
+              </div>
             </div>
-        </section>
+            <button className="text-[#ff6b00] text-xs font-black uppercase">{t("Edit")}</button>
+          </div>
+        </ProfileSection>
 
-        {/* General Settings */}
-        <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-4 bg-gray-50 border-b border-gray-100 font-bold text-gray-700 text-sm">{t("App Settings")}</div>
-            
-            <button className="w-full p-4 flex items-center justify-between border-b border-gray-100 active:bg-gray-50">
-                <div className="flex items-center gap-3 text-gray-700">
-                    <Globe size={20} />
-                    <span>{t("Language")}</span>
-                </div>
-                <div className="flex items-center gap-2 text-gray-400 text-sm">
-                    English <ChevronRight size={16} />
-                </div>
-            </button>
-            
-            <button className="w-full p-4 flex items-center justify-between border-b border-gray-100 active:bg-gray-50">
-                <div className="flex items-center gap-3 text-gray-700">
-                    <Shield size={20} />
-                    <span>{t("Privacy & Security")}</span>
-                </div>
-                <ChevronRight size={16} className="text-gray-400" />
-            </button>
+        <ProfileSection title={t("App Settings")}>
+          <button 
+            onClick={() => setLocale(locale === 'en' ? 'my' : 'en')}
+            className="w-full p-4 flex items-center justify-between border-b border-gray-50"
+          >
+            <div className="flex items-center gap-4 text-gray-700 font-bold text-sm">
+              <Globe size={18} /> {t("Language")}
+            </div>
+            <span className="text-[10px] font-black uppercase text-[#ff6b00]">
+              {locale === 'en' ? 'English' : 'မြန်မာ'}
+            </span>
+          </button>
+        </ProfileSection>
 
-             <button className="w-full p-4 flex items-center justify-between active:bg-gray-50">
-                <div className="flex items-center gap-3 text-gray-700">
-                    <Phone size={20} />
-                    <span>{t("Dispatcher Support")}</span>
-                </div>
-                <ChevronRight size={16} className="text-gray-400" />
-            </button>
-        </section>
-
-        {/* Logout */}
         <button 
-            onClick={handleLogout}
-            className="w-full bg-red-50 text-red-600 py-4 rounded-xl font-bold flex items-center justify-center gap-2 border border-red-100 mt-4 active:bg-red-100 transition-colors"
+          onClick={() => navigate('/login')}
+          className="w-full bg-red-50 text-red-600 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 border border-red-100 active:scale-95 transition-all"
         >
-            <LogOut size={20} />
-            Log Out
+          <LogOut size={18} /> {t("Log Out")}
         </button>
-
-        <p className="text-center text-gray-400 text-xs mt-4">{t("App Version 2.0.1 (Build 405)")}</p>
       </div>
     </div>
   );
-};
+}
 
-export default RiderProfile;
+function ProfileSection({ title, children }: any) {
+  return (
+    <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
+      <div className="px-6 py-3 bg-gray-50 border-b border-gray-100 font-black text-[10px] uppercase text-gray-400 tracking-widest">{title}</div>
+      {children}
+    </div>
+  );
+}

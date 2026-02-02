@@ -1,135 +1,69 @@
 import React, { useState } from 'react';
 import { Truck, Calendar, MapPin, Plus, Clock, ChevronRight } from 'lucide-react';
 import { useI18n } from "@/i18n/I18nProvider";
+import { IPickupRequest } from '@/types/merchant';
 
-const MerchantPickups = () => {
+export default function MerchantPickups() {
   const { t } = useI18n();
-
-  const [showModal, setShowModal] = useState(false);
-
-  // Mock Data
-  const pickups = [
-    { id: 'PK-202', status: 'assigned', date: 'Today', time: '10:00 AM - 12:00 PM', location: 'Main Warehouse', rider: 'Kyaw Kyaw', count: 12 },
-    { id: 'PK-203', status: 'pending', date: 'Tomorrow', time: '02:00 PM - 04:00 PM', location: 'Downtown Store', rider: null, count: 50 },
-    { id: 'PK-199', status: 'completed', date: 'Yesterday', time: '04:30 PM', location: 'Main Warehouse', rider: 'Aung Aung', count: 24 },
+  
+  const pickups: IPickupRequest[] = [
+    { id: 'PK-202', status: 'assigned', date: 'Today', time: '10:00 AM', location: 'Main Warehouse', rider: 'Kyaw Kyaw', count: 12 },
+    { id: 'PK-203', status: 'pending', date: 'Tomorrow', time: '02:00 PM', location: 'Downtown Store', rider: null, count: 50 },
   ];
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-8 max-w-6xl mx-auto space-y-8">
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t("Pickup Requests")}</h1>
-          <p className="text-gray-500">{t("Manage your scheduled pickups.")}</p>
+          <h1 className="text-3xl font-black text-[#0d2c54] uppercase tracking-tight">{t("Pickup Requests")}</h1>
+          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1">{t("Manage your scheduled pickups.")}</p>
         </div>
-        <button 
-          onClick={() => setShowModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 shadow-lg"
-        >
-          <Plus size={18} /> New Pickup Request
+        <button className="bg-[#0d2c54] text-white font-black py-4 px-8 rounded-2xl flex items-center gap-3 shadow-xl active:scale-95 transition-all text-sm uppercase tracking-widest">
+          <Plus size={20} /> {t("New Pickup Request")}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="space-y-4">
         {pickups.map((p) => (
-          <div key={p.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col md:flex-row items-start md:items-center justify-between hover:border-blue-400 transition-colors group">
-            
-            {/* Left: Info */}
-            <div className="flex items-start gap-4">
-              <div className={`p-3 rounded-xl ${
-                p.status === 'completed' ? 'bg-green-100 text-green-600' : 
-                p.status === 'assigned' ? 'bg-blue-100 text-blue-600' : 'bg-orange-100 text-orange-600'
+          <div key={p.id} className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 flex flex-col md:flex-row items-center justify-between hover:shadow-lg transition-all group">
+            <div className="flex items-center gap-6">
+              <div className={`p-5 rounded-3xl ${
+                p.status === 'assigned' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'
               }`}>
-                <Truck size={24} />
+                <Truck size={32} />
               </div>
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-bold text-gray-900 text-lg">
-                    {p.count} Parcels 
-                    <span className="text-gray-400 font-medium text-sm ml-2">#{p.id}</span>
-                  </h3>
-                  <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
-                    p.status === 'completed' ? 'bg-green-100 text-green-700' : 
-                    p.status === 'assigned' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'
-                  }`}>
-                    {p.status}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-1"><Calendar size={14}/> {p.date}</div>
-                  <div className="flex items-center gap-1"><Clock size={14}/> {p.time}</div>
-                  <div className="flex items-center gap-1"><MapPin size={14}/> {p.location}</div>
+                <h3 className="text-xl font-black text-[#0d2c54]">
+                  {p.count} {t("Parcels")} 
+                  <span className="text-gray-300 ml-3 font-mono text-sm">#{p.id}</span>
+                </h3>
+                <div className="flex gap-6 mt-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                  <span className="flex items-center gap-1"><Calendar size={14}/> {p.date}</span>
+                  <span className="flex items-center gap-1"><Clock size={14}/> {p.time}</span>
+                  <span className="flex items-center gap-1 text-[#ff6b00]"><MapPin size={14}/> {p.location}</span>
                 </div>
               </div>
             </div>
 
-            {/* Right: Rider Info & Action */}
-            <div className="mt-4 md:mt-0 flex items-center gap-6">
+            <div className="mt-6 md:mt-0 flex items-center gap-8">
               {p.rider && (
-                <div className="text-right hidden md:block">
-                  <p className="text-xs text-gray-400 uppercase font-bold">{t("Assigned Rider")}</p>
-                  <p className="font-bold text-gray-800">{p.rider}</p>
+                <div className="text-right">
+                  <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">{t("Assigned Rider")}</p>
+                  <p className="font-black text-[#0d2c54]">{p.rider}</p>
                 </div>
               )}
-              <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors">
+              <div className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${
+                p.status === 'assigned' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'
+              }`}>
+                {t(p.status)}
+              </div>
+              <button className="p-3 text-gray-300 hover:text-[#0d2c54] hover:bg-gray-50 rounded-2xl transition-all">
                 <ChevronRight size={24} />
               </button>
             </div>
           </div>
         ))}
       </div>
-
-      {/* New Pickup Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="bg-gray-50 p-4 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="font-bold text-gray-800">{t("Schedule New Pickup")}</h3>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 font-bold">{t("✕")}</button>
-            </div>
-            
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">{t("Pickup Location")}</label>
-                <select className="w-full p-2 border border-gray-300 rounded-lg">
-                  <option>{t("Main Warehouse (Default)")}</option>
-                  <option>{t("Downtown Branch")}</option>
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">{t("Date")}</label>
-                  <input type="date" className="w-full p-2 border border-gray-300 rounded-lg" />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">{t("Time Slot")}</label>
-                  <select className="w-full p-2 border border-gray-300 rounded-lg">
-                    <option>{t("Morning (10am - 12pm)")}</option>
-                    <option>{t("Afternoon (2pm - 4pm)")}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">{t("Estimated Parcel Count")}</label>
-                <input type="number" className="w-full p-2 border border-gray-300 rounded-lg" placeholder={t("e.g., 20")} />
-              </div>
-
-              <div>
-                 <label className="block text-sm font-bold text-gray-700 mb-1">{t("Notes for Rider")}</label>
-                 <textarea className="w-full p-2 border border-gray-300 rounded-lg" rows={2} placeholder={t("Gate code, parking info...")}></textarea>
-              </div>
-            </div>
-
-            <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-2">
-              <button onClick={() => setShowModal(false)} className="px-4 py-2 text-gray-600 font-bold hover:bg-gray-200 rounded-lg">{t("Cancel")}</button>
-              <button onClick={() => { alert('Request Sent!'); setShowModal(false); }} className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">{t("Confirm Request")}</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
-};
-
-export default MerchantPickups;
+}
