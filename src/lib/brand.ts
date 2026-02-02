@@ -1,11 +1,10 @@
 export const BRAND = {
   name: "Britium Express",
-  logoSrc: "/britium-logo.png",
   colors: {
-    blue: "#0d2c54",       // Brand Primary
-    blueLight: "#123d73",  // Secondary Blue
-    orange: "#ff6b00",     // Accent
-    orangeLight: "#ff9a57",// Highlight
+    blue: "#0d2c54",       // Primary Navy
+    orange: "#ff6b00",     // Primary Orange
+    blueLight: "#123d73",
+    orangeLight: "#ff9a57",
   },
   ui: {
     radius: "1rem",

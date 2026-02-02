@@ -2,8 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 /**
- * Merges Tailwind CSS classes and handles conflicts using tailwind-merge.
- * Required for the Britium Express design system components.
+ * Merges Tailwind classes safely to prevent conflicts.
+ * Ensure you have run: npm install clsx tailwind-merge
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

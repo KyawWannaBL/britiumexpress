@@ -4,8 +4,17 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  // This helps you see the error in the browser console (F12)
-  console.error("Supabase environment variables are missing from Vercel settings.");
+  throw new Error(
+    'Missing required Supabase environment variables. ' +
+    'Please check your .env file or deployment settings.'
+  );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce', // Recommended for modern SPAs
+  }
+});

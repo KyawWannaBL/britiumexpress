@@ -3,14 +3,15 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { AuthProvider, useAuth } from "@/auth/AuthContext";
 import { I18nProvider } from "@/i18n/I18nProvider";
 
-// Import Portals
+// Import your rewritten pages
 import HomePage from "@/pages/public/HomePage";
-import MerchantDashboard from "@/pages/merchant/MerchantDashboardPage";
-import RiderDashboard from "@/pages/rider/RiderDashboard";
-import WarehouseDashboard from "@/pages/warehouse/Dashboard";
 import LoginPage from "@/pages/auth/LoginPage";
+import WarehouseDashboard from "@/pages/warehouse/Dashboard";
+import SortingBoard from "@/pages/warehouse/SortingBoard";
+import ScanIn from "@/pages/warehouse/ScanIn";
+import ScanOut from "@/pages/warehouse/ScanOut";
 
-// Protected Route Guard
+// Guard to protect routes based on login and roles
 const ProtectedRoute = ({ children, role }: { children: React.ReactNode, role?: string }) => {
   const { user, profile, loading } = useAuth();
 
@@ -27,41 +28,22 @@ export default function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            {/* Public Routes */}
+            {/* Public Access */}
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
 
-            {/* Merchant Portal */}
-            <Route path="/merchant/*" element={
-              <ProtectedRoute role="merchant">
-                <Routes>
-                  <Route path="dashboard" element={<MerchantDashboard />} />
-                  {/* Other Merchant routes... */}
-                </Routes>
-              </ProtectedRoute>
-            } />
-
-            {/* Rider Portal */}
-            <Route path="/rider/*" element={
-              <ProtectedRoute role="rider">
-                <Routes>
-                  <Route path="dashboard" element={<RiderDashboard />} />
-                  {/* Other Rider routes... */}
-                </Routes>
-              </ProtectedRoute>
-            } />
-
-            {/* Warehouse Portal */}
+            {/* Warehouse Portal - Protected */}
             <Route path="/warehouse/*" element={
               <ProtectedRoute role="warehouse">
                 <Routes>
                   <Route path="dashboard" element={<WarehouseDashboard stationId="YGN-01" />} />
-                  {/* Other Warehouse routes... */}
+                  <Route path="scan-in" element={<ScanIn />} />
+                  <Route path="scan-out" element={<ScanOut />} />
+                  <Route path="sorting" element={<SortingBoard />} />
                 </Routes>
               </ProtectedRoute>
             } />
 
-            {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>
