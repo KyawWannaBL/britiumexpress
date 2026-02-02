@@ -1,6 +1,5 @@
-// src/i18n/I18nProvider.tsx  (persist + html lang + lang-my class)
-import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode } from "react";
-import { STRINGS, Lang } from "./strings";
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { STRINGS, Lang } from "./strings"; 
 
 interface I18nContextType {
   locale: Lang;
@@ -10,53 +9,25 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
-function safeReadLocale(defaultLocale: Lang): Lang {
-  try {
-    const stored = localStorage.getItem("be.locale");
-    if (stored === "my" || stored === "en") return stored;
-  } catch {}
-  return defaultLocale;
-}
+export const I18nProvider = ({ children, defaultLocale = "en" }: { children: ReactNode; defaultLocale?: Lang }) => {
+  const [locale, setLocale] = useState<Lang>(defaultLocale);
 
-function applyLocaleSideEffects(locale: Lang) {
-  try {
-    document.documentElement.lang = locale === "my" ? "my" : "en";
-    document.documentElement.classList.toggle("lang-my", locale === "my");
-  } catch {}
+  const t = (key: string): string => {
+    try {
+      // Ensure STRINGS and the specific locale exist before accessing
+      const translations = (STRINGS as any)[locale];
+      return translations?.[key] || key; 
+    } catch (e) {
+      console.error("I18n Runtime Crash Prevented:", e);
+      return key; // Prevents the white screen by returning raw text
+    }
+  };
 
-  try {
-    localStorage.setItem("be.locale", locale);
-  } catch {}
-}
-
-export const I18nProvider = ({
-  children,
-  defaultLocale = "en",
-}: {
-  children: ReactNode;
-  defaultLocale?: Lang;
-}) => {
-  const [locale, setLocaleState] = useState<Lang>(() => safeReadLocale(defaultLocale));
-
-  useEffect(() => {
-    applyLocaleSideEffects(locale);
-  }, [locale]);
-
-  const setLocale = (lang: Lang) => setLocaleState(lang);
-
-  const t = useMemo(() => {
-    return (key: string): string => {
-      try {
-        const translations = STRINGS[locale] as any;
-        return translations?.[key] || key;
-      } catch (error) {
-        console.error("I18n Runtime Error:", error);
-        return key;
-      }
-    };
-  }, [locale]);
-
-  return <I18nContext.Provider value={{ locale, setLocale, t }}>{children}</I18nContext.Provider>;
+  return (
+    <I18nContext.Provider value={{ locale, setLocale, t }}>
+      {children}
+    </I18nContext.Provider>
+  );
 };
 
 export const useI18n = () => {
