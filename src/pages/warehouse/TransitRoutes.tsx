@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { collection, query, where, onSnapshot, doc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../../firebaseconfig";
+import { db } from "../../firebaseconfig";
 import { useI18n } from "@/i18n/I18nProvider";
 import { Truck, MapPin, CheckCircle, Navigation } from "lucide-react";
 
