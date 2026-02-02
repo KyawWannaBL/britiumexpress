@@ -1,14 +1,15 @@
-// src/i18n/strings.ts
+/**
+ * Bilingual dictionary for Myanmar-English support
+ * Exported as named constant to resolve I18nProvider import
+ */
 export const STRINGS = {
   en: {
-    loading: "Loading...",
-    "Synchronizing Portal...": "Synchronizing Portal...",
-    "Loading Profile...": "Loading Profile..."
+    loading: "Loading profile...",
+    dashboard: "Dashboard",
   },
   my: {
     loading: "ခေတ္တစောင့်ဆိုင်းပါ...",
-    "Synchronizing Portal...": "စနစ်အား ချိတ်ဆက်နေပါသည်...",
-    "Loading Profile...": "အချက်အလက်များ ရယူနေပါသည်..."
+    dashboard: "စီမံခန့်ခွဲမှု",
   }
 } as const;
 
