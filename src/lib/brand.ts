@@ -1,17 +1,14 @@
-/**
- * File: src/lib/brand.ts
- * Description: Design-compliant tokens for Britium Express.
- */
 export const BRAND = {
   name: "Britium Express",
+  logoSrc: "/britium-logo.png",
   colors: {
-    blue: "#0d2c54",       // --brand-blue
-    blueLight: "#123d73",  // --brand-blue2
-    orange: "#ff6b00",     // --brand-orange
-    orangeLight: "#ff9a57",// Accent highlight
+    blue: "#0d2c54",       // Brand Primary
+    blueLight: "#123d73",  // Secondary Blue
+    orange: "#ff6b00",     // Accent
+    orangeLight: "#ff9a57",// Highlight
   },
   ui: {
-    radius: "1rem",        // --radius: 16px
-    shadow: "0 18px 46px rgba(2,6,23,.12)", // shadow-soft
+    radius: "1rem",
+    shadow: "0 18px 46px rgba(2,6,23,.12)",
   }
 } as const;
