@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
-import { STRINGS, Lang } from "./strings"; 
+// src/i18n/I18nProvider.tsx  (persist + html lang + lang-my class)
+import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode } from "react";
+import { STRINGS, Lang } from "./strings";
 
 interface I18nContextType {
   locale: Lang;
@@ -9,25 +10,53 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
-export const I18nProvider = ({ children, defaultLocale = "en" }: { children: ReactNode; defaultLocale?: Lang }) => {
-  const [locale, setLocale] = useState<Lang>(defaultLocale);
+function safeReadLocale(defaultLocale: Lang): Lang {
+  try {
+    const stored = localStorage.getItem("be.locale");
+    if (stored === "my" || stored === "en") return stored;
+  } catch {}
+  return defaultLocale;
+}
 
-  const t = (key: string): string => {
-    try {
-      // Access translations based on current locale
-      const translations = STRINGS[locale] as any;
-      return translations[key] || key; // Return the key itself if the translation is missing
-    } catch (error) {
-      console.error("I18n Runtime Error:", error);
-      return key; // Prevents the white screen by returning raw text instead of crashing
-    }
-  };
+function applyLocaleSideEffects(locale: Lang) {
+  try {
+    document.documentElement.lang = locale === "my" ? "my" : "en";
+    document.documentElement.classList.toggle("lang-my", locale === "my");
+  } catch {}
 
-  return (
-    <I18nContext.Provider value={{ locale, setLocale, t }}>
-      {children}
-    </I18nContext.Provider>
-  );
+  try {
+    localStorage.setItem("be.locale", locale);
+  } catch {}
+}
+
+export const I18nProvider = ({
+  children,
+  defaultLocale = "en",
+}: {
+  children: ReactNode;
+  defaultLocale?: Lang;
+}) => {
+  const [locale, setLocaleState] = useState<Lang>(() => safeReadLocale(defaultLocale));
+
+  useEffect(() => {
+    applyLocaleSideEffects(locale);
+  }, [locale]);
+
+  const setLocale = (lang: Lang) => setLocaleState(lang);
+
+  const t = useMemo(() => {
+    return (key: string): string => {
+      try {
+        const translations = STRINGS[locale] as any;
+        return translations?.[key] || key;
+      } catch (error) {
+        console.error("I18n Runtime Error:", error);
+        return key;
+      }
+    };
+  }, [locale]);
+
+  return <I18nContext.Provider value={{ locale, setLocale, t }}>{children}</I18nContext.Provider>;
 };
 
 export const useI18n = () => {

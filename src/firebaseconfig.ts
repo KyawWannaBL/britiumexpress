@@ -1,1 +1,2 @@
-export { db } from "./lib/firebase";
+// src/firebaseconfig.ts  (legacy alias compat)
+export * from "./lib/firebase";

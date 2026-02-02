@@ -1,20 +1,13 @@
+// src/pages/auth/PortalRedirect.tsx
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { auth } from "../../lib/firebase";
 import { useI18n } from "@/i18n/I18nProvider";
 
-function roleToDashboard(role: string): string {
-  const r = role.toLowerCase();
-  const staff = ["super_admin", "admin", "manager", "accountant", "supervisor", "sub_station_manager", "warehouse"];
-  
-  if (staff.includes(r)) return "/admin/dashboard";
-  if (r === "merchant") return "/merchant/dashboard";
-  if (r === "rider" || r === "driver") return "/rider/home";
-  if (r === "vendor") return "/vendor/dashboard";
-  return "/customer/home";
-}
-
+/**
+ * Use DEFAULT export to match the import in routes.tsx
+ */
 export default function PortalRedirect() {
   const { t } = useI18n();
   const { loading, user, refresh } = useAuth();
@@ -40,5 +33,10 @@ export default function PortalRedirect() {
   if (user.status?.toLowerCase() !== "approved") return <Navigate to="/pending" replace />;
   if (user.mustChangePassword) return <Navigate to="/force-change-password" replace />;
 
-  return <Navigate to={roleToDashboard(user.role)} replace />;
+  const r = user.role.toLowerCase();
+  if (["super_admin", "admin", "manager", "accountant", "supervisor", "sub_station_manager", "warehouse"].includes(r)) return <Navigate to="/admin/dashboard" replace />;
+  if (r === "merchant") return <Navigate to="/merchant/dashboard" replace />;
+  if (r === "rider" || r === "driver") return <Navigate to="/rider/home" replace />;
+  
+  return <Navigate to="/customer/home" replace />;
 }

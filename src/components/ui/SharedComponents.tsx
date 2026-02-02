@@ -1,8 +1,7 @@
 import React from "react";
 
 /**
- * Shared UI components for the Britium Express portal.
- * Corrected to remove duplicate declarations.
+ * Explicit named exports to resolve App.tsx resolution errors
  */
 export const Toaster = () => (
   <div id="toast-portal" className="fixed bottom-5 right-5 z-[9999]" />

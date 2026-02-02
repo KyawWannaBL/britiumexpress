@@ -1,27 +1,16 @@
 /**
- * Bilingual String Dictionary (MM-ENG)
- * Named export required for build resolution
+ * Ensure 'STRINGS' is a named export for I18nProvider
  */
 export const STRINGS = {
   en: {
-    dashboard: "Dashboard",
-    login: "Login",
-    logout: "Logout",
-    welcome: "Welcome to Britium Express",
-    pending: "Pending Approval",
-    save: "Save",
-    cancel: "Cancel",
-    loading: "Loading..."
+    "Synchronizing Portal...": "Synchronizing Portal...",
+    "Loading Profile...": "Loading Profile...",
+    // ... add other keys used in your components
   },
   my: {
-    dashboard: "စီမံခန့်ခွဲမှု",
-    login: "အကောင့်ဝင်ရန်",
-    logout: "အကောင့်ထွက်ရန်",
-    welcome: "Britium Express မှ ကြိုဆိုပါသည်",
-    pending: "ခွင့်ပြုချက်စောင့်ဆိုင်းဆဲ",
-    save: "သိမ်းဆည်းရန်",
-    cancel: "ပယ်ဖျက်ရန်",
-    loading: "ခေတ္တစောင့်ဆိုင်းပါ..."
+    "Synchronizing Portal...": "စနစ်အား ချိတ်ဆက်နေပါသည်...",
+    "Loading Profile...": "အချက်အလက်များ ရယူနေပါသည်...",
+    // ... add Myanmar translations
   }
 } as const;
 
