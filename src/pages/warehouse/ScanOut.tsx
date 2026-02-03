@@ -1,1 +1,1 @@
-export { default } from './Scanout';
+export { default } from "./outbound/ScanOut";
