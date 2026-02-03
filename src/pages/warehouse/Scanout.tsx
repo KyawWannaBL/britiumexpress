@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useI18n } from "@/i18n/I18nProvider";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../../firebaseconfig";
+import { db } from "../../firebaseconfig";
 import { Truck, CheckCircle, XCircle } from "lucide-react";
 import { ParcelStatus } from "@/types/britium";
 

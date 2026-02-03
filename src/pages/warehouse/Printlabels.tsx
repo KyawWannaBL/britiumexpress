@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useI18n } from "@/i18n/I18nProvider";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../../firebaseconfig";
+import { db } from "../../firebaseconfig";
 import { RotateCcw, AlertTriangle } from "lucide-react";
 
 export default function ReturnsManagement() {

@@ -1,37 +1,20 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
-import { STRINGS, Lang } from "./strings"; 
+// src/i18n/I18nProvider.tsx
+import React, { ReactNode } from "react";
+import { I18nextProvider, useTranslation } from "react-i18next";
+import i18n, { Lang } from "./i18n";
 
-interface I18nContextType {
-  locale: Lang;
-  setLocale: (lang: Lang) => void;
-  t: (key: string) => string;
+export function I18nProvider({ children }: { children: ReactNode }) {
+  return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;
 }
 
-const I18nContext = createContext<I18nContextType | undefined>(undefined);
+export function useI18n() {
+  const { t, i18n: inst } = useTranslation();
+  const locale = (inst.language as Lang) || "en";
 
-export const I18nProvider = ({ children, defaultLocale = "en" }: { children: ReactNode; defaultLocale?: Lang }) => {
-  const [locale, setLocale] = useState<Lang>(defaultLocale);
-
-  const t = (key: string): string => {
-    try {
-      // Ensure STRINGS and the specific locale exist before accessing
-      const translations = (STRINGS as any)[locale];
-      return translations?.[key] || key; 
-    } catch (e) {
-      console.error("I18n Runtime Crash Prevented:", e);
-      return key; // Prevents the white screen by returning raw text
-    }
+  const setLocale = (lang: Lang) => {
+    localStorage.setItem("lang", lang);
+    inst.changeLanguage(lang);
   };
 
-  return (
-    <I18nContext.Provider value={{ locale, setLocale, t }}>
-      {children}
-    </I18nContext.Provider>
-  );
-};
-
-export const useI18n = () => {
-  const context = useContext(I18nContext);
-  if (!context) throw new Error("useI18n must be used within an I18nProvider");
-  return context;
-};
+  return { locale, setLocale, t };
+}
