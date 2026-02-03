@@ -16,8 +16,12 @@ function normalizeRole(v: unknown): AppRole {
     "admin",
     "manager",
     "accountant",
+    "sub_station_manager",
+    "supervisor",
+    "warehouse",
     "merchant",
     "rider",
+    "vendor",
     "customer",
   ];
   return (ok.includes(s as AppRole) ? (s as AppRole) : "customer");

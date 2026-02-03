@@ -6,21 +6,49 @@ import { useI18n } from "../../i18n/I18nProvider";
 import { humanizeFirebaseAuthError } from "../../auth/firebaseErrors";
 import { auth } from "../../lib/firebase";
 
-function pickSafeRedirect(from?: unknown): string {
-  if (typeof from !== "string") return "/portal";
-  if (!from.startsWith("/")) return "/portal";
-  // Only redirect back into protected areas; public pages should go to /portal
-  if (from.startsWith("/admin") || from.startsWith("/merchant") || from.startsWith("/rider")) return from;
-  return "/portal";
+type Role = "warehouse" | "admin" | "merchant" | "rider" | string | undefined;
+
+function defaultRouteForRole(role: Role): string {
+  switch (role) {
+    case "warehouse":
+      return "/warehouse/dashboard";
+    case "admin":
+      return "/admin";
+    case "merchant":
+      return "/merchant";
+    case "rider":
+      return "/rider";
+    default:
+      return "/";
+  }
+}
+
+/**
+ * Only allow redirecting back into protected areas.
+ * Everything else falls back to a role-based default.
+ */
+function pickSafeRedirect(from: unknown, role: Role): string {
+  if (typeof from !== "string") return defaultRouteForRole(role);
+  if (!from.startsWith("/")) return defaultRouteForRole(role);
+
+  const allowed = ["/admin", "/merchant", "/rider", "/warehouse"];
+  if (allowed.some((p) => from.startsWith(p))) return from;
+
+  return defaultRouteForRole(role);
 }
 
 export default function LoginPage() {
   const { t } = useI18n();
-  const { loading, user, signIn, refresh, error: profileError } = useAuth();
+  const { loading, user, profile, signIn, refresh, error: profileError } = useAuth();
   const nav = useNavigate();
   const loc = useLocation() as any;
 
-  if (!loading && user) return <Navigate to="/portal" replace />;
+  // If already logged in, redirect immediately based on role / previous intended route
+  if (!loading && user) {
+    const fromPath = loc?.state?.from?.pathname ?? loc?.state?.from;
+    const to = pickSafeRedirect(fromPath, profile?.role);
+    return <Navigate to={to} replace />;
+  }
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -38,8 +66,13 @@ export default function LoginPage() {
 
     try {
       await signIn(email.trim(), password);
-      await refresh(); // ensure profile is loaded before redirect
-      nav("/portal", { replace: true });
+
+      // Ensure profile is loaded before redirect decision
+      const p = await refresh();
+      const fromPath = loc?.state?.from?.pathname ?? loc?.state?.from;
+      const to = pickSafeRedirect(fromPath, p?.role);
+
+      nav(to, { replace: true });
     } catch (e: unknown) {
       setErr(humanizeFirebaseAuthError(e));
     } finally {
@@ -90,11 +123,15 @@ export default function LoginPage() {
         ) : null}
 
         {err ? (
-          <div className="mt-4 rounded-xl border bg-red-50 text-red-700 text-sm font-semibold p-3">{err}</div>
+          <div className="mt-4 rounded-xl border bg-red-50 text-red-700 text-sm font-semibold p-3">
+            {err}
+          </div>
         ) : null}
 
         {info ? (
-          <div className="mt-4 rounded-xl border bg-emerald-50 text-emerald-800 text-sm font-semibold p-3">{info}</div>
+          <div className="mt-4 rounded-xl border bg-emerald-50 text-emerald-800 text-sm font-semibold p-3">
+            {info}
+          </div>
         ) : null}
 
         <form onSubmit={submit} className="mt-5 space-y-3">

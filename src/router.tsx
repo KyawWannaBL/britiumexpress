@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 
 import RootLayout from "./layouts/RootLayout";
 import RequireRole from "./guards/RequireRole";

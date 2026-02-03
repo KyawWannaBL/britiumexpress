@@ -1,8 +1,10 @@
 /* =========================================================
    File: src/components/AuthModal.tsx
    ========================================================= */
+import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useI18n } from "@/i18n/I18nProvider";
+import { useAuth } from "@/auth/AuthContext";
 
 export function AuthModal({
   open,
@@ -13,7 +15,9 @@ export function AuthModal({
   mode: "login" | "signup";
   onClose: () => void;
 }) {
-  const { login, signUp } = useAuth();
+  const { t } = useI18n();
+  const { loginWith, signUpWith } = useAuth();
+
   const [tab, setTab] = useState<"login" | "signup">(mode);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -33,15 +37,13 @@ export function AuthModal({
   if (!open) return null;
 
   async function onSubmit() {
-  const { t } = useI18n();
-
     setErr(null);
     setBusy(true);
     try {
       if (tab === "signup") {
-        await signUp({ name, email, password: pw });
+        await signUpWith({ name, email, password: pw });
       } else {
-        await login({ email, password: pw });
+        await loginWith({ email, password: pw });
       }
       onClose();
     } catch (e: any) {
@@ -56,79 +58,87 @@ export function AuthModal({
       <div className="w-full sm:w-[420px] bg-white rounded-t-2xl sm:rounded-2xl shadow-xl overflow-hidden">
         <div className="p-4 border-b flex items-center justify-between">
           <div className="font-extrabold text-[#0d2c54]">{t("Britium Express")}</div>
-          <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100">
+          <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100" aria-label={t("Close")}>
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="p-4">
-          <div className="grid grid-cols-2 bg-gray-100 rounded-xl p-1">
+          <div className="flex gap-2 mb-4">
             <button
+              type="button"
               onClick={() => setTab("login")}
-              className={`py-2 rounded-lg font-bold text-sm ${
-                tab === "login" ? "bg-white shadow" : "text-gray-600"
+              className={`flex-1 rounded-xl px-3 py-2 text-sm font-semibold ${
+                tab === "login" ? "bg-[#0d2c54] text-white" : "bg-gray-100 text-gray-700"
               }`}
             >
-              Login
+              {t("Login")}
             </button>
             <button
+              type="button"
               onClick={() => setTab("signup")}
-              className={`py-2 rounded-lg font-bold text-sm ${
-                tab === "signup" ? "bg-white shadow" : "text-gray-600"
+              className={`flex-1 rounded-xl px-3 py-2 text-sm font-semibold ${
+                tab === "signup" ? "bg-[#0d2c54] text-white" : "bg-gray-100 text-gray-700"
               }`}
             >
-              Sign Up
+              {t("Sign up")}
             </button>
           </div>
 
-          <div className="mt-4 space-y-3">
+          {err && <div className="mb-3 text-sm text-red-600">{err}</div>}
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void onSubmit();
+            }}
+            className="space-y-3"
+          >
             {tab === "signup" && (
               <div>
-                <label className="text-xs font-bold text-gray-600 uppercase">{t("Full Name")}</label>
+                <label className="text-xs font-semibold text-gray-600">{t("Name")}</label>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="mt-1 w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0d2c54]"
+                  className="mt-1 w-full rounded-xl border px-3 py-2"
                   placeholder={t("Your name")}
+                  autoComplete="name"
                 />
               </div>
             )}
 
             <div>
-              <label className="text-xs font-bold text-gray-600 uppercase">{t("Email")}</label>
+              <label className="text-xs font-semibold text-gray-600">{t("Email")}</label>
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0d2c54]"
-                placeholder={t("name@email.com")}
+                className="mt-1 w-full rounded-xl border px-3 py-2"
+                placeholder="you@example.com"
+                type="email"
+                autoComplete="email"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold text-gray-600 uppercase">{t("Password")}</label>
+              <label className="text-xs font-semibold text-gray-600">{t("Password")}</label>
               <input
                 value={pw}
                 onChange={(e) => setPw(e.target.value)}
+                className="mt-1 w-full rounded-xl border px-3 py-2"
+                placeholder="••••••••"
                 type="password"
-                className="mt-1 w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0d2c54]"
-                placeholder={t("••••••••")}
+                autoComplete={tab === "signup" ? "new-password" : "current-password"}
               />
             </div>
 
-            {err && <div className="text-sm text-red-600 bg-red-50 border border-red-200 p-3 rounded-xl">{err}</div>}
-
             <button
-              onClick={onSubmit}
-              disabled={busy || !email || !pw || (tab === "signup" && !name.trim())}
-              className="w-full py-3 rounded-xl font-extrabold text-white bg-[#0d2c54] hover:bg-blue-950 disabled:opacity-50"
+              disabled={busy}
+              className="w-full rounded-xl bg-[#0d2c54] text-white font-semibold px-3 py-2 disabled:opacity-60"
+              type="submit"
             >
-              {busy ? "Please wait..." : tab === "signup" ? "Create Account" : "Login"}
+              {busy ? t("Please wait…") : tab === "signup" ? t("Create account") : t("Login")}
             </button>
-
-            <div className="text-xs text-gray-500">
-              Demo auth stores users in your browser. For production, wire this UI to Firebase/Supabase Auth.
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

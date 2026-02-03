@@ -35,7 +35,7 @@ export default function AppRoutes() {
       {/* Management Exclusive (isHighAuthority rule) */}
       <Route element={<RequireRole allowedRoles={["super_admin", "admin", "manager"]} />}>
         <Route path="/admin/users" element={<AdminUsers />} />
-        <th path="/admin/tariffs" element={<TariffSetting />} />
+        <Route path="/admin/tariffs" element={<TariffSetting />} />
         <Route path="/admin/bulk-upload" element={<BulkUpload />} />
       </Route>
 

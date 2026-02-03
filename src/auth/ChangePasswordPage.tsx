@@ -1,11 +1,11 @@
 import React from "react";
 import { updatePassword } from "firebase/auth";
-import { firebaseAuth } from "../../lib/firebase";
-import { clearMustChangePassword } from "../../auth/userProfile";
-import { useAuth } from "../../auth/AuthContext";
+import { auth } from "../lib/firebase";
+import { clearMustChangePassword } from "./userProfile";
+import { useAuth } from "./AuthContext";
 
 export default function ChangePasswordPage() {
-  const { user, refreshProfile } = useAuth();
+  const { user, refresh } = useAuth();
   const [p1, setP1] = React.useState("");
   const [p2, setP2] = React.useState("");
   const [busy, setBusy] = React.useState(false);
@@ -30,7 +30,7 @@ export default function ChangePasswordPage() {
       return;
     }
 
-    const fb = firebaseAuth.currentUser;
+    const fb = auth.currentUser;
     if (!fb) {
       setErr("Not signed in.");
       return;
@@ -40,7 +40,7 @@ export default function ChangePasswordPage() {
     try {
       await updatePassword(fb, p1);
       await clearMustChangePassword(user.uid);
-      await refreshProfile();
+      await refresh();
       setOk("Password updated successfully.");
       setP1("");
       setP2("");

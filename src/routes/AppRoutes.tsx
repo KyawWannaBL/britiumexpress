@@ -8,10 +8,10 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Layouts
-import PublicLayout from "../PublicLayout";
-import AdminLayout from "../AdminLayout";
-import MerchantLayout from "../MerchantLayout";
-import RiderLayout from "../RiderLayout";
+import PublicLayout from "../layouts/PublicLayout";
+import AdminLayout from "../layouts/AdminLayout";
+import MerchantLayout from "../layouts/MerchantLayout";
+import RiderLayout from "../layouts/RiderLayout";
 
 // Public Pages
 import HomePage from "../pages/public/HomePage";
@@ -24,7 +24,7 @@ import Forbidden from "../pages/errors/Forbidden";
 import RequireAuth from "../auth/RequireAuth";
 
 // Dashboard Pages
-import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
+import AdminDashboardPage from "../pages/admin/Dashboard";
 import MerchantDashboardPage from "../pages/merchant/MerchantDashboardPage";
 import RiderDashboardPage from "../pages/rider/RiderDashboardPage";
 

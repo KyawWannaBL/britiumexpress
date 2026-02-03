@@ -3,8 +3,12 @@ export type AppRole =
   | "admin"
   | "manager"
   | "accountant"
+  | "sub_station_manager"
+  | "supervisor"
+  | "warehouse"
   | "merchant"
   | "rider"
+  | "vendor"
   | "customer";
 
 export type UserStatus = "approved" | "pending" | "rejected";

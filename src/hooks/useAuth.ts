@@ -1,9 +1,3 @@
-// src/hooks/useAuth.ts
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within <AuthProvider />");
-  return ctx;
-}
+// src/hooks/useAuth.ts (compat)
+export { useAuth, AuthProvider } from "../auth/AuthContext";
+export type { AuthUser, AppRole, UserProfile, UserStatus } from "../auth/AuthContext";
